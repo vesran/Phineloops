@@ -3,15 +3,11 @@ package model;
 public class X extends Piece {
 
 	@Override
-	public void translation_right() {
+	public void translation(Side side) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void translation_left() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 	
 }

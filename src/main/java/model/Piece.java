@@ -31,8 +31,6 @@ public abstract class Piece {
 		this.orientation = orientation;
 	}
 
-	public abstract void translation_right();
-
-	public abstract void translation_left();
+	public abstract void translation(Side side);
 
 }
