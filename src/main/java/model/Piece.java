@@ -1,5 +1,8 @@
 package model;
 
+import view.PieceDrawing;
+
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 public abstract class Piece {
@@ -65,5 +68,7 @@ public abstract class Piece {
 	}
 
 	public abstract void translation(Side side);
+
+	public abstract PieceDrawing createDrawing() throws FileNotFoundException;
 
 }

@@ -1,5 +1,10 @@
 package model;
 
+import view.BarPieceDrawing;
+import view.PieceDrawing;
+
+import java.io.FileNotFoundException;
+
 public class Bar extends Piece {
 
 	public Bar(int orientation, int line_number, int column_number) {
@@ -15,6 +20,11 @@ public class Bar extends Piece {
 			this.orientation = 0;
 		else
 			this.orientation = 1;
+	}
+
+	@Override
+	public PieceDrawing createDrawing() throws FileNotFoundException {
+		return new BarPieceDrawing(this);
 	}
 
 }

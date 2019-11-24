@@ -1,5 +1,10 @@
 package model;
 
+import view.LPieceDrawing;
+import view.PieceDrawing;
+
+import java.io.FileNotFoundException;
+
 public class L extends Piece {
 
 	public L(int orientation, int line_number, int column_number) {
@@ -23,5 +28,10 @@ public class L extends Piece {
 		else
 			this.orientation++;
 
+	}
+
+	@Override
+	public PieceDrawing createDrawing() throws FileNotFoundException {
+		return new LPieceDrawing(this);
 	}
 }

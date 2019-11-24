@@ -1,5 +1,10 @@
 package model;
 
+import view.PieceDrawing;
+import view.XPieceDrawing;
+
+import java.io.FileNotFoundException;
+
 public class X extends Piece {
 
 	public X(int orientation, int line_number, int column_number) {
@@ -14,6 +19,10 @@ public class X extends Piece {
 		
 	}
 
-	 
-	
+	@Override
+	public PieceDrawing createDrawing() throws FileNotFoundException {
+		return new XPieceDrawing(this);
+	}
+
+
 }

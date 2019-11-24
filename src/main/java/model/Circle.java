@@ -1,5 +1,10 @@
 package model;
 
+import view.CirclePieceDrawing;
+import view.PieceDrawing;
+
+import java.io.FileNotFoundException;
+
 public class Circle extends Piece {
 
 	public Circle(int orientation, int line_number, int column_number) {
@@ -21,6 +26,11 @@ public class Circle extends Piece {
 		else
 			this.orientation++;
 
+	}
+
+	@Override
+	public PieceDrawing createDrawing() throws FileNotFoundException {
+		return new CirclePieceDrawing(this);
 	}
 
 }
