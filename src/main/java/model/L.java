@@ -2,10 +2,13 @@ package model;
 
 public class L extends Piece {
 
-	public L(int orientation) {
+	public L(int orientation, int line_number, int column_number) {
+		super(orientation, line_number, column_number);
 		this.id = 5;
-		this.orientation = orientation;
+		// TODO Auto-generated constructor stub
 	}
+	
+	
 
 	@Override
 	public void translation(Side side) {
