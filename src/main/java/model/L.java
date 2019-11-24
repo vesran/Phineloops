@@ -8,7 +8,7 @@ public class L extends Piece {
 		// TODO Auto-generated constructor stub
 	}
 	
-	
+	  
 
 	@Override
 	public void translation(Side side) {

@@ -14,6 +14,6 @@ public class X extends Piece {
 		
 	}
 
-	
+	 
 	
 }

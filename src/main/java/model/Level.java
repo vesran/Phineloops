@@ -6,3 +6,4 @@ public class Level {
 		grid = new Piece[height][width];
 	}
 }
+ 

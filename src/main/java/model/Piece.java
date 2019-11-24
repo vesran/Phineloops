@@ -61,7 +61,7 @@ public abstract class Piece {
 
 	public HashMap<Orientation, Piece> init_neighbors() {// à travailler
 		
-		return neighbor;
+		return neighbor; 
 	}
 
 	public abstract void translation(Side side);

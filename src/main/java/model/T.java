@@ -6,7 +6,7 @@ public class T extends Piece {
 		super(orientation, line_number, column_number);
 		this.id = 3;
 		// TODO Auto-generated constructor stub
-	}
+	} 
 
 	@Override
 	public void translation(Side side) {

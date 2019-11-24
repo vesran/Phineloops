@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class Empty {
 	protected HashMap<Orientation, Piece> neighbor;
 	protected int id;
-	protected int line_number;
+	protected int line_number; 
 	protected int column_number;
 
 	public Empty(int id, int line_number, int column_number) {
