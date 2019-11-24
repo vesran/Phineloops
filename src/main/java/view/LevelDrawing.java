@@ -22,14 +22,18 @@ public class LevelDrawing {
     public void draw(GridPane grid) throws FileNotFoundException {
 
         ImageView iv = null;
-        Piece currentPiece = new L(2, 0, 0);
-        iv = new LPieceDrawing(currentPiece);
-        iv.setFitWidth(100);
-        iv.setFitHeight(100);
-        iv.setPreserveRatio(false);
-        iv.setPickOnBounds(true);
-        grid.add(iv, currentPiece.getLine_number(), currentPiece.getColumn_number());
-
+        for (Piece[] col : this.model.getGrid()) {
+            for (Piece currentPiece : col) {
+                if (currentPiece != null) {
+                    iv = new LPieceDrawing(currentPiece);
+                    iv.setFitWidth(100);
+                    iv.setFitHeight(100);
+                    iv.setPreserveRatio(false);
+                    iv.setPickOnBounds(true);
+                    grid.add(iv, currentPiece.getLine_number(), currentPiece.getColumn_number());
+                }
+            }
+        }
 
     }
 

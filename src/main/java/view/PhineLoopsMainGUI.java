@@ -11,7 +11,9 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import model.L;
 import model.Level;
+import model.Piece;
 
 import java.util.Iterator;
 
@@ -32,7 +34,7 @@ public class PhineLoopsMainGUI extends Application {
         grid.setAlignment(Pos.CENTER);
         grid.setGridLinesVisible(true);
 
-        Level model = new Level(10, 10);
+        Level model = this.initLevel();
         LevelDrawing view = new LevelDrawing(model);
 
         view.draw(grid);
@@ -46,5 +48,23 @@ public class PhineLoopsMainGUI extends Application {
         stage.setTitle("Phine Loops Game");
         stage.setScene(scene);
         stage.show();
+    }
+
+    // Tmp method : for debugging only
+    private Level initLevel() {
+        int width = 2;
+        int height = 2;
+        Level lvl = new Level(2, 2);
+        Piece[][] grid = lvl.getGrid();
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                grid[i][j] = new L(2, i, j);
+                System.out.println(grid[i][j]);
+            }
+        }
+        System.out.println(grid);
+
+        return lvl;
     }
 }
