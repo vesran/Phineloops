@@ -24,7 +24,7 @@ public class RotationController implements EventHandler<MouseEvent> {
         rotate.setAxis(Rotate.Z_AXIS);
         rotate.setByAngle(90 - (this.item.getRotate() % 90));
         rotate.setCycleCount(1);
-        rotate.setDuration(Duration.millis(1)); // Duration of the animation
+        rotate.setDuration(Duration.millis(100)); // Duration of the animation
         rotate.setNode(this.item);
         rotate.play();
 
