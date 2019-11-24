@@ -1,5 +1,6 @@
 package view;
 
+import controller.RotationController;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import model.Level;
@@ -30,6 +31,8 @@ public class LevelDrawing {
                 }
             }
         }
+
+        grid.getChildren().forEach(item -> item.setOnMouseClicked(new RotationController(item)));
 
     }
 
