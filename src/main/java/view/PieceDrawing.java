@@ -5,13 +5,13 @@ import model.Piece;
 
 abstract public class PieceDrawing extends ImageView {
 
-    protected Piece piece;
+    protected Piece m_piece;
 
     public PieceDrawing(Piece piece) {
-        this.piece = piece;
+        this.m_piece = piece;
     }
 
     public Piece getPiece() {
-        return this.piece;
+        return this.m_piece;
     }
 }

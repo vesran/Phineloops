@@ -11,10 +11,10 @@ import view.PieceDrawing;
 
 public class RotationController implements EventHandler<MouseEvent> {
 
-    private Node item;
+    private Node m_item;
 
     public RotationController(Node node) {
-        this.item = node;
+        this.m_item = node;
     }
 
     @Override
@@ -22,13 +22,13 @@ public class RotationController implements EventHandler<MouseEvent> {
         System.out.println("event");
         RotateTransition rotate = new RotateTransition();
         rotate.setAxis(Rotate.Z_AXIS);
-        rotate.setByAngle(90 - (this.item.getRotate() % 90));
+        rotate.setByAngle(90 - (this.m_item.getRotate() % 90));
         rotate.setCycleCount(1);
         rotate.setDuration(Duration.millis(100)); // Duration of the animation
-        rotate.setNode(this.item);
+        rotate.setNode(this.m_item);
         rotate.play();
 
-        PieceDrawing p = (PieceDrawing) this.item;
+        PieceDrawing p = (PieceDrawing) this.m_item;
         Piece piece = p.getPiece();
         System.out.println("Set the orientation for piece : " + piece);
 

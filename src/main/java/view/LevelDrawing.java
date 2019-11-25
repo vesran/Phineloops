@@ -9,18 +9,18 @@ import java.io.FileNotFoundException;
 
 public class LevelDrawing {
 
-    private Level model;
+    private Level m_model;
 
     public LevelDrawing(Level model) {
-        this.model = model;
-        System.out.println("In LevelDrawing " + this.model);
+        this.m_model = model;
+        System.out.println("In LevelDrawing " + this.m_model);
     }
 
     public void draw(GridPane grid) throws FileNotFoundException {
 
         ImageView iv = null;
-        double unit = Math.max(this.model.getGrid().length, this.model.getGrid()[0].length);
-        for (Piece[] col : this.model.getGrid()) {
+        double unit = Math.max(this.m_model.getGrid().length, this.m_model.getGrid()[0].length);
+        for (Piece[] col : this.m_model.getGrid()) {
             for (Piece currentPiece : col) {
                 if (currentPiece != null) {
                     iv = currentPiece.createDrawing();
