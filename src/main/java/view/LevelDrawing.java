@@ -1,6 +1,7 @@
 package view;
 
 import controller.RotationController;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import model.Level;
@@ -24,7 +25,7 @@ public class LevelDrawing {
             for (Piece currentPiece : col) {
                 if (currentPiece != null) {
                     iv = currentPiece.createDrawing();
-                    iv.setFitWidth(PhineLoopsMainGUI.GRID_WIDTH / unit);         // TODO : Fix a dynamic value
+                    iv.setFitWidth(PhineLoopsMainGUI.GRID_WIDTH / unit);
                     iv.setFitHeight(PhineLoopsMainGUI.GRID_HEIGHT / unit);
                     iv.setPreserveRatio(false);
                     iv.setPickOnBounds(true);
@@ -33,7 +34,12 @@ public class LevelDrawing {
             }
         }
 
-        grid.getChildren().forEach(item -> item.setOnMouseClicked(new RotationController(item)));
+        // Adding a controller to each node so that we don't need to retrieve which one was clicked
+        for (Node item : grid.getChildren()) {
+            if (item != grid) {
+                item.setOnMouseClicked(new RotationController(item));
+            }
+        }
 
     }
 

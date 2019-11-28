@@ -15,8 +15,6 @@ import model.L;
 import model.Level;
 import model.Piece;
 
-import java.util.Iterator;
-
 public class PhineLoopsMainGUI extends Application {
 
     static final int WIDTH = 500;
@@ -24,6 +22,13 @@ public class PhineLoopsMainGUI extends Application {
 
     static final int GRID_WIDTH = 400;
     static final int GRID_HEIGHT = 400;
+
+    private static Level level;
+
+    public void display(Level lvl) {
+        level = lvl;
+        Application.launch();
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -39,8 +44,8 @@ public class PhineLoopsMainGUI extends Application {
         grid.setMaxSize(WIDTH, HEIGHT);
         grid.setAlignment(Pos.CENTER);
 
-        Level model = this.initLevel();
-        LevelDrawing view = new LevelDrawing(model);
+        System.out.println("In start : " + level);
+        LevelDrawing view = new LevelDrawing(level);
 
         view.draw(grid);
         grid.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -56,7 +61,7 @@ public class PhineLoopsMainGUI extends Application {
     }
 
     // Tmp method : for debugging only
-    private Level initLevel() {
+    public Level initLevel() {
         int width = 3;
         int height = 9;
         Level lvl = new Level(height, width);
@@ -71,5 +76,13 @@ public class PhineLoopsMainGUI extends Application {
         System.out.println(grid);
 
         return lvl;
+    }
+
+    public static void main(String [] args) {
+        PhineLoopsMainGUI window = new PhineLoopsMainGUI();
+        Level level = window.initLevel();
+        window.display(level);
+
+        System.out.println("This instruction will not be executed if the window is not closed");
     }
 }
