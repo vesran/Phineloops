@@ -11,9 +11,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import model.L;
-import model.Level;
-import model.Piece;
+import model.*;
 
 public class PhineLoopsMainGUI extends Application {
 
@@ -69,7 +67,7 @@ public class PhineLoopsMainGUI extends Application {
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                grid[j][i] = new L(0, j, i);
+                grid[j][i] = new T(3, j, i);
                 System.out.println(grid[j][i]);
             }
         }
