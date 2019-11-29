@@ -69,7 +69,7 @@ public class PhineLoopsMainGUI extends Application {
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                grid[j][i] = new L(2, j, i);
+                grid[j][i] = new L(0, j, i);
                 System.out.println(grid[j][i]);
             }
         }
@@ -85,4 +85,8 @@ public class PhineLoopsMainGUI extends Application {
 
         System.out.println("This instruction will not be executed if the window is not closed");
     }
+
+    // TODO : handle window size
+    // TODO : handle numerous clicks as one click
+    // TODO : consider orientation when reading a piece in createDrwing()
 }
