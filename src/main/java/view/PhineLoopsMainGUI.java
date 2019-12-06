@@ -86,5 +86,4 @@ public class PhineLoopsMainGUI extends Application {
 
     // TODO : handle window size
     // TODO : handle numerous clicks as one click
-    // TODO : consider orientation when reading a piece in createDrwing()
 }
