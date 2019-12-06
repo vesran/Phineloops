@@ -1,16 +1,28 @@
 package model;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 
-public class Empty {
-	protected HashMap<Orientation, Piece> neighbor;
-	protected int id;
-	protected int line_number; 
-	protected int column_number;
+import view.PieceDrawing;
 
-	public Empty(int id, int line_number, int column_number) {
-		this.id = id;
-		this.line_number = line_number;
-		this.column_number = column_number;
+public class Empty extends Piece {
+	
+
+	public Empty(int orientation, int line_number, int column_number) {
+		super(orientation, line_number, column_number);
+		this.id = 0 ;
+		
+	}
+
+	@Override
+	public void translation(Side side) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public PieceDrawing createDrawing() throws FileNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
