@@ -42,4 +42,26 @@ public class L extends Piece {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public String toString() {
+		String str = "";
+		switch(this.orientation) {
+			case 0:
+				str = "\u2514";
+				break;
+			case 1:
+				str = "\u250C";
+				break;
+			case 2:
+				str = "\u2510";
+				break;
+			case 3:
+				str = "\u2518";
+				break;
+			default:
+				throw new IllegalStateException("Orientation of L piece " + this.orientation + "should not exist");
+		}
+		return str;
+	}
 }

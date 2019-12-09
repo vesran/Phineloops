@@ -33,4 +33,20 @@ public class Bar extends Piece {
 		return 0;
 	}
 
+	@Override
+	public String toString() {
+		String str = "";
+		switch(this.orientation) {
+			case 0:
+				str = "\u2502";
+				break;
+			case 1:
+				str = "\u2500";
+				break;
+			default:
+				throw new IllegalStateException("Orientation of Bar piece " + this.orientation + "should not exist");
+		}
+		return str;
+	}
+
 }

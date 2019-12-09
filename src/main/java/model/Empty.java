@@ -31,4 +31,9 @@ public class Empty extends Piece {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public String toString() {
+		return " ";	// Empty piece should not be seen on screen. See later what character we can print instead if needed
+	}
 }

@@ -30,5 +30,8 @@ public class X extends Piece {
 		return 0;
 	}
 
-
+	@Override
+	public String toString() {
+		return "\u253C";
+	}
 }

@@ -58,4 +58,26 @@ public class Level {
 			}
 		}
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder strb = new StringBuilder();
+		for (int i = -2; i < this.height; i++) {
+			strb.append("||   ");
+
+			for (int j = 0; j < this.width; j++) {
+				if (i == -2) {
+					strb.append("# ");
+				} else if (i == -1) {
+					strb.append(" ");
+				} else {
+					strb.append(this.grid[i][j]);
+					strb.append(" ");
+				}
+
+			}
+			strb.append("\n");
+		}
+		return strb.toString();
+	}
 }

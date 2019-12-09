@@ -77,6 +77,7 @@ public class PhineLoopsMainGUI extends Application {
     }
 
     public static void main(String [] args) {
+        System.out.println('\u2500');
         PhineLoopsMainGUI window = new PhineLoopsMainGUI();
         Level level = window.initLevel();
         window.display(level);
