@@ -30,7 +30,7 @@ public class LevelDrawing {
         for (Piece[] col : this.m_model.getGrid()) {
             for (Piece currentPiece : col) {
                 // Adding image view for each non empty piece
-                if (currentPiece != null) {
+                if (currentPiece.getId() != 0) {
                     iv = currentPiece.createDrawing();
                     this.setOrientation(iv, currentPiece.getOrientation());
                     iv.setFitWidth(PhineLoopsMainGUI.GRID_WIDTH / unit);

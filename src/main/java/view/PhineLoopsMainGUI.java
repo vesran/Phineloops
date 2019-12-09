@@ -52,10 +52,6 @@ public class PhineLoopsMainGUI extends Application {
         stage.setTitle("Phine Loops Game");
         stage.setScene(scene);
         stage.show();
-
-        stage.setTitle("Phine Loops Game");
-        stage.setScene(scene);
-        stage.show();
     }
 
     // Tmp method : for debugging only
@@ -67,8 +63,12 @@ public class PhineLoopsMainGUI extends Application {
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                grid[j][i] = new T(3, j, i);
-                System.out.println(grid[j][i]);
+                if (j != i) {
+                    grid[j][i] = new T(3, j, i);
+                } else {
+                    grid[j][i] = new Empty(0, 0, 0);
+                }
+//                System.out.println(grid[j][i]);
             }
         }
         System.out.println(grid);
