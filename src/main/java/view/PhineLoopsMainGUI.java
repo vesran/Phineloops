@@ -23,7 +23,7 @@ public class PhineLoopsMainGUI extends Application {
 
     private static Level level;
 
-    public void display(Level lvl) {
+    public static void display(Level lvl) {
         level = lvl;
         Application.launch();
     }
@@ -55,7 +55,7 @@ public class PhineLoopsMainGUI extends Application {
     }
 
     // Tmp method : for debugging only
-    public Level initLevel() {
+    public static Level initLevel() {
         int width = 3;
         int height = 9;
         Level lvl = new Level(height, width);
@@ -77,10 +77,8 @@ public class PhineLoopsMainGUI extends Application {
     }
 
     public static void main(String [] args) {
-        System.out.println('\u2500');
-        PhineLoopsMainGUI window = new PhineLoopsMainGUI();
-        Level level = window.initLevel();
-        window.display(level);
+        Level level = initLevel();
+        display(level);
 
         System.out.println("This instruction will not be executed if the window is not closed");
     }
