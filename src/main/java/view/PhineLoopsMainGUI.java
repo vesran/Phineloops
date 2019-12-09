@@ -15,11 +15,11 @@ import model.*;
 
 public class PhineLoopsMainGUI extends Application {
 
-    static final int WIDTH = 500;
-    static final int HEIGHT = 500;
+    static final int WIDTH = 700;
+    static final int HEIGHT = 700;
 
-    static final int GRID_WIDTH = 400;
-    static final int GRID_HEIGHT = 400;
+    static final int GRID_WIDTH = 700;
+    static final int GRID_HEIGHT = 700;
 
     private static Level level;
 
@@ -64,7 +64,7 @@ public class PhineLoopsMainGUI extends Application {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 if (j != i) {
-                    grid[j][i] = new T(3, j, i);
+                    grid[j][i] = new X(3, j, i);
                 } else {
                     grid[j][i] = new Empty(0, 0, 0);
                 }

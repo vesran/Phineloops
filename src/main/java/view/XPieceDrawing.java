@@ -17,6 +17,6 @@ public class XPieceDrawing extends PieceDrawing {
 	 */
     public XPieceDrawing(Piece piece) throws FileNotFoundException {
         super(piece);
-        super.setImage(new Image(new FileInputStream("resource/pieces/X_piece.png")));
+        super.setImage(new Image(new FileInputStream("resources/pieces/X_piece.png")));
     }
 }
