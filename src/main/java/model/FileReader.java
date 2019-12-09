@@ -91,7 +91,8 @@ public class FileReader {
 			}
 			
 			
-			
+		return grid;
+
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Path must specifiy a file");
 		}
@@ -101,7 +102,7 @@ public class FileReader {
     	
 		
 		
-		return null;
+//		return null;
 		
 		
 		
