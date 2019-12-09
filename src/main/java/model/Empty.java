@@ -25,4 +25,10 @@ public class Empty extends Piece {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public int numberOfConnection() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

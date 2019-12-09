@@ -62,13 +62,28 @@ public abstract class Piece {
 		this.column_number = column_number;
 	}
 
-	public HashMap<Orientation, Piece> init_neighbors() {// à travailler
-		
-		return neighbor; 
+	public Piece() {
+
+	}
+
+	public HashMap<Orientation, Piece> init_neighbors() {// ï¿½ travailler
+
+		return neighbor;
+	}
+
+//	public void initNeighbor(Piece north, Piece south, Piece east, Piece west) {
+//		this.neighbor.put(Orientation.NORTH, north);
+//		this.neighbor.put(Orientation.SOUTH, south);
+//		this.neighbor.put(Orientation.EAST, east);
+//		this.neighbor.put(Orientation.WEST, west);
+//	}
+	public void addNeighbor(Piece piece, Orientation orientation) {
+		this.neighbor.put(orientation, piece);
 	}
 
 	public abstract void translation(Side side);
 
 	public abstract PieceDrawing createDrawing() throws FileNotFoundException;
 
+	public abstract int numberOfConnection();
 }

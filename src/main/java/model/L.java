@@ -34,4 +34,12 @@ public class L extends Piece {
 	public PieceDrawing createDrawing() throws FileNotFoundException {
 		return new LPieceDrawing(this);
 	}
+
+
+
+	@Override
+	public int numberOfConnection() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

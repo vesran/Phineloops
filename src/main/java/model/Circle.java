@@ -33,4 +33,10 @@ public class Circle extends Piece {
 		return new CirclePieceDrawing(this);
 	}
 
+	@Override
+	public int numberOfConnection() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

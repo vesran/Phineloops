@@ -27,4 +27,10 @@ public class Bar extends Piece {
 		return new BarPieceDrawing(this);
 	}
 
+	@Override
+	public int numberOfConnection() {
+		
+		return 0;
+	}
+
 }

@@ -24,5 +24,11 @@ public class X extends Piece {
 		return new XPieceDrawing(this);
 	}
 
+	@Override
+	public int numberOfConnection() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 
 }

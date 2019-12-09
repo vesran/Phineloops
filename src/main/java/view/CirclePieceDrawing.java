@@ -6,9 +6,18 @@ import model.Piece;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+/**
+ * @author KBY
+ * 
+ *         Representation of the Circle piece
+ */
 public class CirclePieceDrawing extends PieceDrawing {
-    public CirclePieceDrawing(Piece piece) throws FileNotFoundException {
-        super(piece);
-        super.setImage(new Image(new FileInputStream("resources/pieces/Circle_piece.png")));
-    }
+	/**
+	 * @param piece the Circle to draw
+	 * @throws FileNotFoundException in case where the image file is not found
+	 */
+	public CirclePieceDrawing(Piece piece) throws FileNotFoundException {
+		super(piece);
+		super.setImage(new Image(new FileInputStream("resources/pieces/Circle_piece.png")));
+	}
 }

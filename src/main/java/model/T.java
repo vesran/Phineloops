@@ -33,4 +33,10 @@ public class T extends Piece {
 		return new TPieceDrawing(this);
 	}
 
+	@Override
+	public int numberOfConnection() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

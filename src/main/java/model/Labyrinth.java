@@ -7,11 +7,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Set;
 
-import org.jgrapht.alg.util.UnionFind;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
 
-import com.google.common.graph.Graph;
 
 public class Labyrinth {
 	private HashMap<Orientation, Boolean>[][] m_grid;
