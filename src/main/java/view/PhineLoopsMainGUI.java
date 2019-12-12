@@ -15,15 +15,15 @@ import model.*;
 
 public class PhineLoopsMainGUI extends Application {
 
-    static final int WIDTH = 500;
-    static final int HEIGHT = 500;
+    static final int WIDTH = 700;
+    static final int HEIGHT = 700;
 
-    static final int GRID_WIDTH = 400;
-    static final int GRID_HEIGHT = 400;
+    static final int GRID_WIDTH = 700;
+    static final int GRID_HEIGHT = 700;
 
     private static Level level;
 
-    public void display(Level lvl) {
+    public static void display(Level lvl) {
         level = lvl;
         Application.launch();
     }
@@ -52,14 +52,10 @@ public class PhineLoopsMainGUI extends Application {
         stage.setTitle("Phine Loops Game");
         stage.setScene(scene);
         stage.show();
-
-        stage.setTitle("Phine Loops Game");
-        stage.setScene(scene);
-        stage.show();
     }
 
     // Tmp method : for debugging only
-    public Level initLevel() {
+    public static Level initLevel() {
         int width = 3;
         int height = 9;
         Level lvl = new Level(height, width);
@@ -67,8 +63,12 @@ public class PhineLoopsMainGUI extends Application {
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                grid[j][i] = new T(3, j, i);
-                System.out.println(grid[j][i]);
+                if (j != i) {
+                    grid[j][i] = new X(3, j, i);
+                } else {
+                    grid[j][i] = new Empty(0, 0, 0);
+                }
+//                System.out.println(grid[j][i]);
             }
         }
         System.out.println(grid);
@@ -77,14 +77,12 @@ public class PhineLoopsMainGUI extends Application {
     }
 
     public static void main(String [] args) {
-        PhineLoopsMainGUI window = new PhineLoopsMainGUI();
-        Level level = window.initLevel();
-        window.display(level);
+        Level level = initLevel();
+        display(level);
 
         System.out.println("This instruction will not be executed if the window is not closed");
     }
 
     // TODO : handle window size
     // TODO : handle numerous clicks as one click
-    // TODO : consider orientation when reading a piece in createDrwing()
 }

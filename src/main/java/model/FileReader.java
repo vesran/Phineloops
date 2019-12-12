@@ -78,12 +78,13 @@ public class FileReader {
 
 			}
 
+			return grid;
+
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Path must specifiy a file");
 		}
 
-		return null;
-
+//		return null;
 	}
 
 }

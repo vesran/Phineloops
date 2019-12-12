@@ -65,4 +65,25 @@ public class Circle extends Piece {
 		return this.numberOfConnection() == 1;
 	}
 
+	public String toString() {
+		String str = "";
+		switch(this.orientation) {
+			case 0:
+				str = "\u2575";
+				break;
+			case 1:
+				str = "\u2576";
+				break;
+			case 2:
+				str = "\u2577";
+				break;
+			case 3:
+				str = "\u2574";
+				break;
+			default:
+				throw new IllegalStateException("Orientation of Circle piece " + this.orientation + "should not exist");
+		}
+		return str;
+	}
+
 }

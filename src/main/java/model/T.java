@@ -93,4 +93,26 @@ public class T extends Piece {
 		return this.numberOfConnection() == 3;
 	}
 
+	@Override
+	public String toString() {
+		String str = "";
+		switch(this.orientation) {
+			case 0:
+				str = "\u2534";
+				break;
+			case 1:
+				str = "\u251C";
+				break;
+			case 2:
+				str = "\u252C";
+				break;
+			case 3:
+				str = "\u2524";
+				break;
+			default:
+				throw new IllegalStateException("Orientation of T piece " + this.orientation + "should not exist");
+		}
+		return str;
+	}
+
 }
