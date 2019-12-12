@@ -12,8 +12,10 @@ public abstract class Piece {
 	protected int line_number;
 	protected int column_number;
 
-	public HashMap<Orientation, Piece> getNear() {
-		return neighbor;
+	public Piece getOneNeighbor(Orientation orientation) { // rajouter une exception ? pour le cas ou le voisin n'existe
+															// pas ? ou bien on suppose que le jeu est parfaitement créé
+															// avant de commencer à verifier
+		return this.neighbor.get(orientation);
 	}
 
 	public HashMap<Orientation, Piece> getNeighbor() {
@@ -71,19 +73,17 @@ public abstract class Piece {
 		return neighbor;
 	}
 
-//	public void initNeighbor(Piece north, Piece south, Piece east, Piece west) {
-//		this.neighbor.put(Orientation.NORTH, north);
-//		this.neighbor.put(Orientation.SOUTH, south);
-//		this.neighbor.put(Orientation.EAST, east);
-//		this.neighbor.put(Orientation.WEST, west);
-//	}
 	public void addNeighbor(Piece piece, Orientation orientation) {
 		this.neighbor.put(orientation, piece);
 	}
+	
+	public abstract boolean connectedAll();
 
 	public abstract void translation(Side side);
 
 	public abstract PieceDrawing createDrawing() throws FileNotFoundException;
 
 	public abstract int numberOfConnection();
+
+	public abstract boolean isConnectedTo(Orientation orientation);
 }

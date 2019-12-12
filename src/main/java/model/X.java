@@ -16,7 +16,7 @@ public class X extends Piece {
 	@Override
 	public void translation(Side side) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -26,9 +26,27 @@ public class X extends Piece {
 
 	@Override
 	public int numberOfConnection() {
-		// TODO Auto-generated method stub
-		return 0;
+		int r = 0;
+		if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
+			r++;
+		if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
+			r++;
+		if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
+			r++;
+		if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
+			r++;
+		return r;
 	}
 
+	@Override
+	public boolean isConnectedTo(Orientation orientation) {
+		return true;
+	}
+
+	@Override
+	public boolean connectedAll() {
+		// TODO Auto-generated method stub
+		return this.numberOfConnection() == 4;
+	}
 
 }

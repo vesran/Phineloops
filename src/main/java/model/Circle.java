@@ -35,8 +35,34 @@ public class Circle extends Piece {
 
 	@Override
 	public int numberOfConnection() {
+		if ((this.orientation == 0 && this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
+				|| (this.id == 1 && this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
+				|| (this.id == 2 && this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
+				|| (this.id == 3 && this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST)))
+			return 1;
+		else
+			return 0;
+	}
+
+	@Override
+	public boolean isConnectedTo(Orientation orientation) {
+		if (this.neighbor.containsKey(orientation)) {
+			if (orientation == Orientation.NORTH && this.id == 0)
+				return true;
+			if (orientation == Orientation.EAST && this.id == 1)
+				return true;
+			if (orientation == Orientation.SOUTH && this.id == 2)
+				return true;
+			if (orientation == Orientation.WEST && this.id == 3)
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean connectedAll() {
 		// TODO Auto-generated method stub
-		return 0;
+		return this.numberOfConnection() == 1;
 	}
 
 }

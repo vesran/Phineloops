@@ -12,8 +12,6 @@ public class L extends Piece {
 		this.id = 5;
 		// TODO Auto-generated constructor stub
 	}
-	
-	  
 
 	@Override
 	public void translation(Side side) {
@@ -35,11 +33,55 @@ public class L extends Piece {
 		return new LPieceDrawing(this);
 	}
 
-
-
 	@Override
 	public int numberOfConnection() {
+		int r =0;
+		if(this.orientation == 0) {
+			if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
+				r++;
+			if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
+				r++;
+		}
+		if(this.orientation ==1) {
+			if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
+				r++;
+			if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
+				r++;
+		}
+		if(this.orientation == 2) {
+			if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
+				r++;
+			if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
+				r++;
+		}
+		if(this.orientation == 3) {
+			if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
+				r++;
+			if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
+				r++;
+		}
+			
+		return r;
+	}
+
+	@Override
+	public boolean isConnectedTo(Orientation orientation) {
+		if (this.neighbor.containsKey(orientation)) {
+			if (orientation == Orientation.NORTH && (this.id == 0 || this.id == 3))
+				return true;
+			if (orientation == Orientation.EAST && (this.id == 1 || this.id == 0))
+				return true;
+			if (orientation == Orientation.SOUTH && (this.id == 2 || this.id == 1))
+				return true;
+			if (orientation == Orientation.WEST && (this.id == 3 || this.id == 2))
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean connectedAll() {
 		// TODO Auto-generated method stub
-		return 0;
+		return this.numberOfConnection() == 2;
 	}
 }

@@ -29,8 +29,36 @@ public class Bar extends Piece {
 
 	@Override
 	public int numberOfConnection() {
-		
-		return 0;
+		int r = 0;
+		if (this.orientation == 0) {
+			if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
+				r++;
+			if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
+				r++;
+		} else {
+			if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
+				r++;
+			if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
+				r++;
+		}
+		return r;
+	}
+
+	@Override
+	public boolean isConnectedTo(Orientation orientation) {
+		if (this.neighbor.containsKey(orientation)) {
+			if (((orientation == Orientation.NORTH) || (orientation == Orientation.SOUTH)) && (this.id == 0))
+				return true;
+			if (((orientation == Orientation.EAST) || (orientation == Orientation.WEST)) && (this.id == 1))
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean connectedAll() {
+		// TODO Auto-generated method stub
+		return this.numberOfConnection() == 2;
 	}
 
 }

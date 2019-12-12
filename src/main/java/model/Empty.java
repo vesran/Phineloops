@@ -11,7 +11,7 @@ public class Empty extends Piece {
 	public Empty(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 0 ;
-		
+	
 	}
 
 	@Override
@@ -30,5 +30,17 @@ public class Empty extends Piece {
 	public int numberOfConnection() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public boolean isConnectedTo(Orientation orientation) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean connectedAll() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
