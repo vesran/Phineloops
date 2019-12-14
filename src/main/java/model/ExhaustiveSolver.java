@@ -36,7 +36,7 @@ public class ExhaustiveSolver {
         // Turn the same piece over and over
         // Once this piece made an entire rotation => update the following piece
         while (!this.madeEntireRotation(m_pieces.get(this.m_pieces.size() - 1))) {
-            if (false && this.m_level.checkGrid()) {
+            if (this.m_level.checkGrid()) { // <------ null pointeur excpetion
                 return;
 
             } else {

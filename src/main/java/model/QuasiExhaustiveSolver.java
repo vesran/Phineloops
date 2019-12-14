@@ -6,6 +6,7 @@ import java.util.LinkedList;
 public class QuasiExhaustiveSolver {
 
     private Level m_level;
+    private Deque<Piece> stack;
 
     public QuasiExhaustiveSolver(Level lvl) {
         this.read(lvl);
@@ -16,8 +17,6 @@ public class QuasiExhaustiveSolver {
     }
 
     public void solve() {
-        Deque<Piece> stack = new LinkedList<>();
-
 
     }
 
