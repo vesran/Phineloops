@@ -84,5 +84,4 @@ public class PhineLoopsMainGUI extends Application {
     }
 
     // TODO : handle window size
-    // TODO : handle numerous clicks as one click
 }
