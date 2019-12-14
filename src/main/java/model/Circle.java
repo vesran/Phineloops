@@ -35,25 +35,31 @@ public class Circle extends Piece {
 
 	@Override
 	public int numberOfConnection() {
-		if ((this.orientation == 0 && this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
-				|| (this.id == 1 && this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
-				|| (this.id == 2 && this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
-				|| (this.id == 3 && this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST)))
-			return 1;
-		else
-			return 0;
+		if (this.orientation == 0 && this.getOneNeighbor(Orientation.NORTH) != null)
+			if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
+				return 1;
+		if (this.orientation == 1 && this.getOneNeighbor(Orientation.EAST) != null)
+			if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
+				return 1;
+		if (this.orientation == 2 && this.getOneNeighbor(Orientation.SOUTH) != null)
+			if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
+				return 1;
+		if (this.orientation == 3 && this.getOneNeighbor(Orientation.WEST) != null)
+			if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
+				return 1;
+		return 0;
 	}
 
 	@Override
 	public boolean isConnectedTo(Orientation orientation) {
 		if (this.neighbor.containsKey(orientation)) {
-			if (orientation == Orientation.NORTH && this.id == 0)
+			if (orientation == Orientation.NORTH && this.orientation == 0)
 				return true;
-			if (orientation == Orientation.EAST && this.id == 1)
+			if (orientation == Orientation.EAST && this.orientation == 1)
 				return true;
-			if (orientation == Orientation.SOUTH && this.id == 2)
+			if (orientation == Orientation.SOUTH && this.orientation == 2)
 				return true;
-			if (orientation == Orientation.WEST && this.id == 3)
+			if (orientation == Orientation.WEST && this.orientation == 3)
 				return true;
 		}
 		return false;
@@ -67,21 +73,21 @@ public class Circle extends Piece {
 
 	public String toString() {
 		String str = "";
-		switch(this.orientation) {
-			case 0:
-				str = "\u2575";
-				break;
-			case 1:
-				str = "\u2576";
-				break;
-			case 2:
-				str = "\u2577";
-				break;
-			case 3:
-				str = "\u2574";
-				break;
-			default:
-				throw new IllegalStateException("Orientation of Circle piece " + this.orientation + "should not exist");
+		switch (this.orientation) {
+		case 0:
+			str = "\u2575";
+			break;
+		case 1:
+			str = "\u2576";
+			break;
+		case 2:
+			str = "\u2577";
+			break;
+		case 3:
+			str = "\u2574";
+			break;
+		default:
+			throw new IllegalStateException("Orientation of Circle piece " + this.orientation + "should not exist");
 		}
 		return str;
 	}

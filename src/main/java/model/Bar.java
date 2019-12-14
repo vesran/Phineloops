@@ -31,15 +31,19 @@ public class Bar extends Piece {
 	public int numberOfConnection() {
 		int r = 0;
 		if (this.orientation == 0) {
-			if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
-				r++;
-			if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
-				r++;
+			if (this.getOneNeighbor(Orientation.NORTH) != null)
+				if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
+					r++;
+			if (this.getOneNeighbor(Orientation.SOUTH) != null)
+				if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
+					r++;
 		} else {
-			if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
-				r++;
-			if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
-				r++;
+			if (this.getOneNeighbor(Orientation.EAST) != null)
+				if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
+					r++;
+			if (this.getOneNeighbor(Orientation.WEST) != null)
+				if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
+					r++;
 		}
 		return r;
 	}
@@ -47,9 +51,9 @@ public class Bar extends Piece {
 	@Override
 	public boolean isConnectedTo(Orientation orientation) {
 		if (this.neighbor.containsKey(orientation)) {
-			if (((orientation == Orientation.NORTH) || (orientation == Orientation.SOUTH)) && (this.id == 0))
+			if (((orientation == Orientation.NORTH) || (orientation == Orientation.SOUTH)) && (this.orientation == 0))
 				return true;
-			if (((orientation == Orientation.EAST) || (orientation == Orientation.WEST)) && (this.id == 1))
+			if (((orientation == Orientation.EAST) || (orientation == Orientation.WEST)) && (this.orientation == 1))
 				return true;
 		}
 		return false;
@@ -64,15 +68,15 @@ public class Bar extends Piece {
 	@Override
 	public String toString() {
 		String str = "";
-		switch(this.orientation) {
-			case 0:
-				str = "\u2502";
-				break;
-			case 1:
-				str = "\u2500";
-				break;
-			default:
-				throw new IllegalStateException("Orientation of Bar piece " + this.orientation + "should not exist");
+		switch (this.orientation) {
+		case 0:
+			str = "\u2502";
+			break;
+		case 1:
+			str = "\u2500";
+			break;
+		default:
+			throw new IllegalStateException("Orientation of Bar piece " + this.orientation + "should not exist");
 		}
 		return str;
 	}

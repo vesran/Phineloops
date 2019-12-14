@@ -29,7 +29,7 @@ public class ExhaustiveSolver {
         }
         this.m_motor = this.m_pieces.remove(0);
         this.m_originalOrientations.put(this.m_motor, this.m_motor.getOrientation());
-        System.out.println(this.m_motor + " " + this.m_pieces);
+//        System.out.println(this.m_motor + " " + this.m_pieces);
     }
 
     public void solve() {
@@ -41,7 +41,6 @@ public class ExhaustiveSolver {
 
             } else {
                 this.rotateMotor();
-                System.out.println(this.m_level);
             }
         }
     }
@@ -77,27 +76,26 @@ public class ExhaustiveSolver {
         int height = 2;
         Level lvl = new Level(height, width);
         Piece[][] grid = lvl.getGrid();
-
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (true | j != i) {
-                    grid[j][i] = new L(3, j, i);
-                } else {
-                    grid[j][i] = new Empty(0, 0, 0);
-                }
-            }
-        }
-
-        return lvl;
+        							// code d'essai 
+        grid[0][0] = new L(3, 0, 0);
+        grid[0][1] = new L(2, 0, 1);
+        grid[1][0] = new L(2, 1, 0);
+        grid[1][1] = new L(1, 1, 1);
+        
+        
+        	  return lvl;
     }
 
     public static void main(String [] args) {
         ExhaustiveSolver solver = new ExhaustiveSolver();
         Level lvl = initLevel();
         lvl.init_neighbors();
-        System.out.println(lvl);
         solver.read(lvl);
+        System.out.println(solver.m_level.checkGrid());
+        
         solver.solve();
-        System.out.println(lvl);
+        System.out.println(solver.m_level.checkGrid());
+        
     }
+    
 }

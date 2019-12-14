@@ -35,45 +35,55 @@ public class L extends Piece {
 
 	@Override
 	public int numberOfConnection() {
-		int r =0;
-		if(this.orientation == 0) {
-			if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
-				r++;
-			if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
-				r++;
+		int r = 0;
+
+		if (this.orientation == 0) {
+			if (this.getOneNeighbor(Orientation.NORTH) != null)
+				if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
+					r++;
+			if (this.getOneNeighbor(Orientation.EAST) != null)
+				if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
+					r++;
 		}
-		if(this.orientation ==1) {
-			if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
-				r++;
-			if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
-				r++;
+		if (this.orientation == 1) {
+			if (this.getOneNeighbor(Orientation.SOUTH) != null)
+				if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
+					r++;
+			if (this.getOneNeighbor(Orientation.EAST) != null)
+				if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
+					r++;
 		}
-		if(this.orientation == 2) {
-			if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
-				r++;
-			if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
-				r++;
+		if (this.orientation == 2) {
+			if (this.getOneNeighbor(Orientation.WEST) != null)
+				if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
+					r++;
+			if (this.getOneNeighbor(Orientation.SOUTH) != null)
+				if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
+					r++;
 		}
-		if(this.orientation == 3) {
-			if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
-				r++;
-			if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
-				r++;
+		if (this.orientation == 3) {
+			if (this.getOneNeighbor(Orientation.NORTH) != null)
+				if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
+					r++;
+			if (this.getOneNeighbor(Orientation.WEST) != null)
+				if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
+					r++;
 		}
-			
+
 		return r;
 	}
 
 	@Override
 	public boolean isConnectedTo(Orientation orientation) {
 		if (this.neighbor.containsKey(orientation)) {
-			if (orientation == Orientation.NORTH && (this.id == 0 || this.id == 3))
+			System.out.println();
+			if (orientation == Orientation.NORTH && (this.orientation == 0 || this.orientation == 3)) 
 				return true;
-			if (orientation == Orientation.EAST && (this.id == 1 || this.id == 0))
+			if (orientation == Orientation.EAST && (this.orientation == 1 || this.orientation == 0))
 				return true;
-			if (orientation == Orientation.SOUTH && (this.id == 2 || this.id == 1))
+			if (orientation == Orientation.SOUTH && (this.orientation == 2 || this.orientation == 1))
 				return true;
-			if (orientation == Orientation.WEST && (this.id == 3 || this.id == 2))
+			if (orientation == Orientation.WEST && (this.orientation == 3 || this.orientation == 2))
 				return true;
 		}
 		return false;
@@ -88,21 +98,21 @@ public class L extends Piece {
 	@Override
 	public String toString() {
 		String str = "";
-		switch(this.orientation) {
-			case 0:
-				str = "\u2514";
-				break;
-			case 1:
-				str = "\u250C";
-				break;
-			case 2:
-				str = "\u2510";
-				break;
-			case 3:
-				str = "\u2518";
-				break;
-			default:
-				throw new IllegalStateException("Orientation of L piece " + this.orientation + "should not exist");
+		switch (this.orientation) {
+		case 0:
+			str = "\u2514";
+			break;
+		case 1:
+			str = "\u250C";
+			break;
+		case 2:
+			str = "\u2510";
+			break;
+		case 3:
+			str = "\u2518";
+			break;
+		default:
+			throw new IllegalStateException("Orientation of L piece " + this.orientation + "should not exist");
 		}
 		return str;
 	}

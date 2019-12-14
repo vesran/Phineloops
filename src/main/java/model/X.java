@@ -27,14 +27,18 @@ public class X extends Piece {
 	@Override
 	public int numberOfConnection() {
 		int r = 0;
-		if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
-			r++;
-		if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
-			r++;
-		if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
-			r++;
-		if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
-			r++;
+		if (this.getOneNeighbor(Orientation.NORTH) != null)
+			if (this.getOneNeighbor(Orientation.NORTH).isConnectedTo(Orientation.SOUTH))
+				r++;
+		if (this.getOneNeighbor(Orientation.SOUTH) != null)
+			if (this.getOneNeighbor(Orientation.SOUTH).isConnectedTo(Orientation.NORTH))
+				r++;
+		if (this.getOneNeighbor(Orientation.EAST) != null)
+			if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
+				r++;
+		if (this.getOneNeighbor(Orientation.WEST) != null)
+			if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
+				r++;
 		return r;
 	}
 

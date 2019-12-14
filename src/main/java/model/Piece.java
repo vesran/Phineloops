@@ -14,8 +14,10 @@ public abstract class Piece {
 
 	public Piece getOneNeighbor(Orientation orientation) { // rajouter une exception ? pour le cas ou le voisin n'existe
 															// pas ? ou bien on suppose que le jeu est parfaitement créé
-															// avant de commencer à verifier
+		if(this.getNeighbor().containsKey(orientation))												// avant de commencer à verifier
 		return this.neighbor.get(orientation);
+		else
+			return null;
 	}
 
 	public HashMap<Orientation, Piece> getNeighbor() {
