@@ -62,6 +62,7 @@ public abstract class Piece {
 		this.orientation = orientation;
 		this.line_number = line_number;
 		this.column_number = column_number;
+		this.neighbor = new HashMap<Orientation, Piece>();
 	}
 
 	public Piece() {

@@ -33,7 +33,7 @@ public class X extends Piece {
 			r++;
 		if (this.getOneNeighbor(Orientation.EAST).isConnectedTo(Orientation.WEST))
 			r++;
-		if (this.getOneNeighbor(Orientatio	n.WEST).isConnectedTo(Orientation.EAST))
+		if (this.getOneNeighbor(Orientation.WEST).isConnectedTo(Orientation.EAST))
 			r++;
 		return r;
 	}
