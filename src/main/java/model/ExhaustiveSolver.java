@@ -36,7 +36,7 @@ public class ExhaustiveSolver {
         // Turn the same piece over and over
         // Once this piece made an entire rotation => update the following piece
         while (!this.madeEntireRotation(m_pieces.get(this.m_pieces.size() - 1))) {
-            if (this.m_level.checkGrid()) { // <------ null pointeur excpetion
+            if (this.m_level.checkGrid()) {
                 return;
 
             } else {
@@ -92,10 +92,13 @@ public class ExhaustiveSolver {
         lvl.init_neighbors();
         solver.read(lvl);
         System.out.println(solver.m_level.checkGrid());
-        
+
+        long start = System.currentTimeMillis();
         solver.solve();
+        long end = System.currentTimeMillis();
         System.out.println(solver.m_level.checkGrid());
-        
+
+        System.out.println("Time : " + (end - start));
     }
     
 }
