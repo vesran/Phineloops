@@ -75,7 +75,7 @@ public class PhineLoopsMainGUI extends Application {
 
     public static void main(String [] args) {
         Level level = initLevel();
-        Csp moncsp = new Csp(FileReader.getGrid("C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_16x16_dist.0_vflip.true_hflip.false_messedup.false_id.2.dat", " ")) ; 
+        Csp moncsp = new Csp(FileReader.getGrid("C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_256x256_dist.0_vflip.false_hflip.false_messedup.false_id.2.dat", " ")) ; 
         level.setGrid(moncsp.solving()) ; 
        
         display(level);

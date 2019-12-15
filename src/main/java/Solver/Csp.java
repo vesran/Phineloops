@@ -56,7 +56,11 @@ public class Csp implements Solving {
 			}
 		}
 		this.initGeneralConstraint();
-		System.out.println(this.m_myModel.getSolver().solve() ); 
+		long startTime = System.currentTimeMillis();
+		System.out.println(this.m_myModel.getSolver().solve());
+		long endTime = System.currentTimeMillis();
+		System.out.println((endTime - startTime) + " milliseconds");
+
 	}
 
 	private void addConstraintPiece0(int i, int j) {
@@ -256,9 +260,8 @@ public class Csp implements Solving {
 				test[z][j] = new Circle(0, z, j);
 			}
 		}
-		long startTime = System.currentTimeMillis();
-		long endTime = System.currentTimeMillis();
-		System.out.println((endTime - startTime) + " milliseconds");
+		
+		
 		Piece[][] test2 = new Piece[3][3];
 		test2[0][0] = new L(0, 0, 0);
 		test2[0][1] = new T(0, 0, 1);
@@ -273,7 +276,6 @@ public class Csp implements Solving {
 		moncsp.initConstraint();
 	}
 
-	
 	public Piece[][] solving() {
 		for (int i = 0; i < m_myLevelToSolve.length; i++) {
 			for (int j = 0; j < this.m_myLevelToSolve[0].length; j++) {
@@ -282,10 +284,10 @@ public class Csp implements Solving {
 				}
 			}
 		}
-		return this.m_myLevelToSolve ; 
+		return this.m_myLevelToSolve;
 	}
 
-	public void guessOrientation(int i, int j, BoolVar[] open) {
+	private void guessOrientation(int i, int j, BoolVar[] open) {
 		Class myClass = m_myLevelToSolve[i][j].getClass();
 		switch (myClass.getName()) {
 		case "model.Bar":
