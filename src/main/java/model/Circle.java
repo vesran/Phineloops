@@ -6,7 +6,14 @@ import view.PieceDrawing;
 import java.io.FileNotFoundException;
 
 public class Circle extends Piece {
-
+	/**
+	 * @param orientation   The orientation of the Circle
+	 * @param line_number   The line number of the Circle
+	 * @param column_number The column number of the Circle
+	 * 
+	 *                      initializes the attributes of the Circle
+	 * 
+	 */
 	public Circle(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 1;

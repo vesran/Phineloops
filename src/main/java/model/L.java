@@ -6,13 +6,22 @@ import view.PieceDrawing;
 import java.io.FileNotFoundException;
 
 public class L extends Piece {
-
+	/**
+	 * @param orientation The orientation of L
+	 * @param line_number The line number of L
+	 * @param column_number The column number of L
+	 * 
+	 *		initializes the attributes of L
+	 * 
+	 */
 	public L(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 5;
 		// TODO Auto-generated constructor stub
 	}
-
+	/**
+	 *	Translates the orientation of L 
+	 */
 	@Override
 	public void translation(Side side) {
 		// TODO Auto-generated method stub

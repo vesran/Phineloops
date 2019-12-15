@@ -6,7 +6,14 @@ import view.TPieceDrawing;
 import java.io.FileNotFoundException;
 
 public class T extends Piece {
-
+	/**
+	 * @param orientation The orientation of T
+	 * @param line_number The line number of T
+	 * @param column_number The column number of T
+	 * 
+	 *		initializes the attributes of T
+	 * 
+	 */
 	public T(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 3;

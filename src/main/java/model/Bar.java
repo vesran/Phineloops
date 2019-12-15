@@ -7,6 +7,14 @@ import java.io.FileNotFoundException;
 
 public class Bar extends Piece {
 
+	/**
+	 * @param orientation The orientation of the bar
+	 * @param line_number The line number of the bar
+	 * @param column_number The column number of the bar
+	 * 
+	 *		initializes the attributes of the Bar
+	 * 
+	 */
 	public Bar(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 2;
@@ -22,11 +30,13 @@ public class Bar extends Piece {
 			this.orientation = 1;
 	}
 
+	
 	@Override
 	public PieceDrawing createDrawing() throws FileNotFoundException {
 		return new BarPieceDrawing(this);
 	}
 
+	
 	@Override
 	public int numberOfConnection() {
 		int r = 0;
@@ -48,6 +58,7 @@ public class Bar extends Piece {
 		return r;
 	}
 
+	
 	@Override
 	public boolean isConnectedTo(Orientation orientation) {
 		if (this.neighbor.containsKey(orientation)) {
@@ -58,6 +69,7 @@ public class Bar extends Piece {
 		}
 		return false;
 	}
+
 
 	@Override
 	public boolean connectedAll() {

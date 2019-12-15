@@ -14,8 +14,8 @@ public abstract class Piece {
 
 	public Piece getOneNeighbor(Orientation orientation) { // rajouter une exception ? pour le cas ou le voisin n'existe
 															// pas ? ou bien on suppose que le jeu est parfaitement créé
-		if(this.getNeighbor().containsKey(orientation))												// avant de commencer à verifier
-		return this.neighbor.get(orientation);
+		if (this.getNeighbor().containsKey(orientation)) // avant de commencer à verifier
+			return this.neighbor.get(orientation);
 		else
 			return null;
 	}
@@ -60,6 +60,14 @@ public abstract class Piece {
 		this.column_number = column_number;
 	}
 
+	/**
+	 * @param orientation   The orientation of the Piece
+	 * @param line_number   The line number of the Piece
+	 * @param column_number The column number of the Piece
+	 * 
+	 *                      initializes the attributes of the Piece
+	 * 
+	 */
 	public Piece(int orientation, int line_number, int column_number) {
 		this.orientation = orientation;
 		this.line_number = line_number;
@@ -79,14 +87,31 @@ public abstract class Piece {
 	public void addNeighbor(Piece piece, Orientation orientation) {
 		this.neighbor.put(orientation, piece);
 	}
-	
+
+	/**
+	 * @return a boolean that indicates if the current Piece is connected to all his neighbors
+	 */
 	public abstract boolean connectedAll();
 
+	/**
+	 * @param side Direction of the translation
+	 * 
+	 *             Changes the orientation of the Piece
+	 */
 	public abstract void translation(Side side);
 
 	public abstract PieceDrawing createDrawing() throws FileNotFoundException;
 
+	/**
+	 * @return the number of Pieces that are linked to the current Piece
+	 */
 	public abstract int numberOfConnection();
 
+	/**
+	 * @param orientation The direction of the piece which will be checked if the
+	 *                    current piece is connected to it
+	 * @return a boolean which indicates if the current piece is connected to the
+	 *         piece whose orientation is indicated in parameter
+	 */
 	public abstract boolean isConnectedTo(Orientation orientation);
 }
