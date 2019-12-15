@@ -5,10 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.*;
@@ -38,14 +35,14 @@ public class PhineLoopsMainGUI extends Application {
         grid.setHgap(0);
         grid.setPadding(new Insets(10));
         grid.setGridLinesVisible(true); // For debugging : to remove
-        grid.setMinSize(GRID_WIDTH, GRID_HEIGHT);
-        grid.setMaxSize(WIDTH, HEIGHT);
         grid.setAlignment(Pos.CENTER);
+        grid.prefWidthProperty().bind(scene.widthProperty());
+        grid.prefHeightProperty().bind(scene.heightProperty());
 
         System.out.println("In start : " + level);
         LevelDrawing view = new LevelDrawing(level);
 
-        view.draw(grid);
+        view.draw(grid, scene);
         grid.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 
         root.getChildren().add(grid);
@@ -64,11 +61,10 @@ public class PhineLoopsMainGUI extends Application {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 if (j != i) {
-                    grid[j][i] = new X(3, j, i);
+                    grid[j][i] = new T(3, j, i);
                 } else {
-                    grid[j][i] = new Empty(0, 0, 0);
+                    grid[j][i] = new Empty(0, j, i);
                 }
-//                System.out.println(grid[j][i]);
             }
         }
         System.out.println(grid);
@@ -83,5 +79,4 @@ public class PhineLoopsMainGUI extends Application {
         System.out.println("This instruction will not be executed if the window is not closed");
     }
 
-    // TODO : handle window size
 }
