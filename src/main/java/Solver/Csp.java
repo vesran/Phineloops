@@ -21,12 +21,12 @@ public class Csp implements Solving {
 	private Model m_myModel;
 	private Piece[][] m_myLevelToSolve;
 	private BoolVar[][][] vars;
+	private boolean m_solved;
 
 	public Csp(Piece[][] myLevelToSolve) {
 		this.m_myLevelToSolve = myLevelToSolve;
 		this.m_myModel = new Model("My Problem");
 		vars = new BoolVar[this.m_myLevelToSolve.length][this.m_myLevelToSolve[0].length][Orientation.values().length];
-		this.initConstraint();
 	}
 
 	private void initConstraint() {
@@ -56,11 +56,7 @@ public class Csp implements Solving {
 			}
 		}
 		this.initGeneralConstraint();
-		long startTime = System.currentTimeMillis();
-		System.out.println(this.m_myModel.getSolver().solve());
-		long endTime = System.currentTimeMillis();
-		System.out.println((endTime - startTime) + " milliseconds");
-
+		this.m_solved = this.m_myModel.getSolver().solve();
 	}
 
 	private void addConstraintPiece0(int i, int j) {
@@ -276,15 +272,25 @@ public class Csp implements Solving {
 		moncsp.initConstraint();
 	}
 
-	public Piece[][] solving() {
-		for (int i = 0; i < m_myLevelToSolve.length; i++) {
-			for (int j = 0; j < this.m_myLevelToSolve[0].length; j++) {
-				for (int z = 0; z < Orientation.values().length; z++) {
-					this.guessOrientation(i, j, vars[i][j]);
+	public Piece[][] getMyLevelToSolve() {
+		return this.m_myLevelToSolve;
+	}
+
+	public boolean solving() {
+		this.initConstraint();
+		if (this.m_solved) {
+			for (int i = 0; i < m_myLevelToSolve.length; i++) {
+				for (int j = 0; j < this.m_myLevelToSolve[0].length; j++) {
+					for (int z = 0; z < Orientation.values().length; z++) {
+						this.guessOrientation(i, j, vars[i][j]);
+					}
 				}
 			}
+			return true;
+
+		} else {
+			return false;
 		}
-		return this.m_myLevelToSolve;
 	}
 
 	private void guessOrientation(int i, int j, BoolVar[] open) {

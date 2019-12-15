@@ -1,5 +1,10 @@
 package fr.dauphine.javaavance.phineloops;
 
+import Solver.Csp;
+import model.FileCreator;
+import model.FileReader;
+import model.Level;
+import model.Piece;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -24,8 +29,20 @@ public class Main {
     private static boolean solve(String inputFile, String outputFile){
 	// load grid from inputFile, solve it and store result to outputFile...
 	// ...
+        // Import level instance
+        Piece[][] inputGrid = FileReader.getGrid(inputFile, " ");
+        Piece[][] outputGrid;
+        boolean solved;
 
-	return false; 
+        // Solve the level
+        Csp solver = new Csp(inputGrid);
+        solved = solver.solving();
+        outputGrid = solver.getMyLevelToSolve();
+
+        // Save the solved level
+        FileCreator.write(outputGrid, outputFile);
+
+	return solved;
     }
 
     private static boolean check(String inputFile){
