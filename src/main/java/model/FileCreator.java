@@ -8,9 +8,9 @@ public class FileCreator {
         try {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)));
 
-            bw.write(lvl.getGrid()[0].length + "\n");
-            bw.write(lvl.getGrid().length + "\n");
-            for (Piece [] column : lvl.getGrid()) {
+            bw.write(lvl.getGrid().length + "\n");      // Write height on fist line
+            bw.write(lvl.getGrid()[0].length + "\n");   // Write width on second line
+            for (Piece [] column : lvl.getGrid()) {         // Iterators are faster
                 for (Piece currentPiece : column) {
                     bw.write(currentPiece.id + " " + currentPiece.orientation);
                     bw.write("\n");
@@ -19,8 +19,6 @@ public class FileCreator {
 
             bw.close();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
