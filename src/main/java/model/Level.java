@@ -9,6 +9,11 @@ public class Level {
 		this.height = height;
 		this.width = width;
 	}
+	public void setGrid(Piece[][] newGrid) {
+		this.grid = newGrid ; 
+		this.width = newGrid[0].length ; 
+		this.height = newGrid.length ; 
+	}
 
 	public Piece[][] getGrid() {
 		return this.grid;

@@ -9,8 +9,6 @@ public class Adn {
 		this.m_grid = myAdn ;
 	}
 	
-	public void mutation() {
-		
-	}
+	
 	
 }
