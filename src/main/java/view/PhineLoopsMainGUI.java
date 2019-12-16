@@ -10,11 +10,15 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.*;
+import model.io.FileReader;
+import model.pieces.Empty;
+import model.pieces.Piece;
+import model.pieces.T;
 
 public class PhineLoopsMainGUI extends Application {
 
-    static final int WIDTH = 700;
-    static final int HEIGHT = 700;
+    static final int WIDTH = 900;
+    static final int HEIGHT = 900;
 
     static final int GRID_WIDTH = 700;
     static final int GRID_HEIGHT = 700;
@@ -75,7 +79,7 @@ public class PhineLoopsMainGUI extends Application {
 
     public static void main(String [] args) {
         Level level = initLevel();
-        Csp moncsp = new Csp(FileReader.getGrid("C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_256x256_dist.0_vflip.false_hflip.false_messedup.false_id.2.dat", " ")) ; 
+        Csp moncsp = new Csp(FileReader.getGrid("C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_256x256_dist.0_vflip.false_hflip.false_messedup.false_id.2.dat", " ")) ;
 //        level.setGrid(moncsp.solving()) ;
        
         display(level);

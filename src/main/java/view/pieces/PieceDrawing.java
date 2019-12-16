@@ -1,7 +1,7 @@
-package view;
+package view.pieces;
 
 import javafx.scene.image.ImageView;
-import model.Piece;
+import model.pieces.Piece;
 
 abstract public class PieceDrawing extends ImageView {
 	protected Piece m_piece;

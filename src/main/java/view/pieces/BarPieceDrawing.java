@@ -1,7 +1,7 @@
-package view;
+package view.pieces;
 
 import javafx.scene.image.Image;
-import model.Piece;
+import model.pieces.Piece;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

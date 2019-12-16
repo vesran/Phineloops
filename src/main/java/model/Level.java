@@ -1,5 +1,8 @@
 package model;
 
+import model.enumtype.Orientation;
+import model.pieces.Piece;
+
 public class Level {
 	protected Piece[][] grid;
 	protected int height, width;
@@ -9,6 +12,13 @@ public class Level {
 		this.height = height;
 		this.width = width;
 	}
+
+	public Level(Piece[][] grid) {
+		this.height = grid.length;
+		this.width = grid[0].length;
+		this.grid = grid;
+	}
+
 	public void setGrid(Piece[][] newGrid) {
 		this.grid = newGrid ; 
 		this.width = newGrid[0].length ; 
@@ -72,23 +82,23 @@ public class Level {
 					r=false;
 			}
 		return r;
-			}
+	}
 		
 
 	@Override
 	public String toString() {
 		StringBuilder strb = new StringBuilder();
 		for (int i = -2; i < this.height; i++) {
-			strb.append("||   ");
+			strb.append("||   ");		// Vertical left column
 
 			for (int j = 0; j < this.width; j++) {
 				if (i == -2) {
-					strb.append("# ");
+					strb.append("# ");	// Writing first line
 				} else if (i == -1) {
-					strb.append(" ");
+					strb.append(" ");	// Adding separator between the vertical left column and first column of pieces
 				} else {
 					strb.append(this.grid[i][j]);
-					strb.append(" ");
+					strb.append(" ");	// Separator between pieces
 				}
 
 			}

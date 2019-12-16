@@ -1,4 +1,7 @@
-package model;
+package model.io;
+
+import model.Level;
+import model.pieces.Piece;
 
 import java.io.*;
 
@@ -12,7 +15,7 @@ public class FileCreator {
             bw.write(grid[0].length + "\n");   // Write width on second line
             for (Piece [] column : grid) {         // Iterators are faster
                 for (Piece currentPiece : column) {
-                    bw.write(currentPiece.id + " " + currentPiece.orientation);
+                    bw.write(currentPiece.getId() + " " + currentPiece.getOrientation());
                     bw.write("\n");
                 }
             }

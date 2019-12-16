@@ -1,6 +1,8 @@
-package model;
+package model.pieces;
 
-import view.PieceDrawing;
+import model.enumtype.Orientation;
+import model.enumtype.Side;
+import view.pieces.PieceDrawing;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;

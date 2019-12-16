@@ -1,15 +1,14 @@
 package controller;
 
 import javafx.animation.RotateTransition;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import model.Piece;
-import model.Side;
-import view.PieceDrawing;
+import model.pieces.Piece;
+import model.enumtype.Side;
+import view.pieces.PieceDrawing;
 
 public class RotationController implements EventHandler<MouseEvent> {
 

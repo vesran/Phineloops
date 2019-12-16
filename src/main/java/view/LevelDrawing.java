@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import model.Level;
-import model.Piece;
+import model.pieces.Piece;
 import java.io.FileNotFoundException;
 
 public class LevelDrawing {

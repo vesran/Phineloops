@@ -1,4 +1,9 @@
-package model;
+package Solver.quasiexhaustive;
+
+import model.Level;
+import model.enumtype.Side;
+import model.pieces.L;
+import model.pieces.Piece;
 
 import java.util.List;
 import java.util.HashMap;

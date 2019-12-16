@@ -6,16 +6,12 @@ import org.chocosolver.solver.Model;
 import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.variables.BoolVar;
 
-import model.Bar;
-import model.Circle;
-import model.Empty;
-import model.L;
-import model.Level;
-import model.Orientation;
-import model.Piece;
-import model.Solving;
-import model.T;
-import model.X;
+import model.pieces.Circle;
+import model.pieces.L;
+import model.enumtype.Orientation;
+import model.pieces.Piece;
+import model.pieces.T;
+import model.pieces.X;
 
 public class Csp implements Solving {
 	private Model m_myModel;
@@ -34,22 +30,22 @@ public class Csp implements Solving {
 			for (int j = 0; j < this.m_myLevelToSolve[0].length; j++) {
 				Class myClass = m_myLevelToSolve[i][j].getClass();
 				switch (myClass.getName()) {
-				case "model.Bar":
+				case "model.pieces.Bar":
 					this.addConstraintPiece2(i, j);
 					break;
-				case "model.L":
+				case "model.pieces.L":
 					this.addConstraintPiece5(i, j);
 					break;
-				case "model.Empty":
+				case "model.pieces.Empty":
 					this.addConstraintPiece0(i, j);
 					break;
-				case "model.Circle":
+				case "model.pieces.Circle":
 					this.addConstraintPiece1(i, j);
 					break;
-				case "model.T":
+				case "model.pieces.T":
 					this.addConstraintPiece3(i, j);
 					break;
-				case "model.X":
+				case "model.pieces.X":
 					this.addConstraintPiece4(i, j);
 					break;
 				}
@@ -296,14 +292,14 @@ public class Csp implements Solving {
 	private void guessOrientation(int i, int j, BoolVar[] open) {
 		Class myClass = m_myLevelToSolve[i][j].getClass();
 		switch (myClass.getName()) {
-		case "model.Bar":
+		case "model.pieces.Bar":
 			if (open[0].getValue() == 1) {
 				m_myLevelToSolve[i][j].setOrientation(0);
 			} else {
 				m_myLevelToSolve[i][j].setOrientation(1);
 			}
 			break;
-		case "model.L":
+		case "model.pieces.L":
 			if (open[0].getValue() == 1 && open[1].getValue() == 1) {
 				m_myLevelToSolve[i][j].setOrientation(0);
 			} else if (open[1].getValue() == 1 && open[2].getValue() == 1) {
@@ -314,9 +310,9 @@ public class Csp implements Solving {
 				m_myLevelToSolve[i][j].setOrientation(3);
 			}
 			break;
-		case "model.Empty":
+		case "model.pieces.Empty":
 			break;
-		case "model.Circle":
+		case "model.pieces.Circle":
 			if (open[0].getValue() == 1) {
 				m_myLevelToSolve[i][j].setOrientation(0);
 			} else if (open[1].getValue() == 1) {
@@ -327,7 +323,7 @@ public class Csp implements Solving {
 				m_myLevelToSolve[i][j].setOrientation(3);
 			}
 			break;
-		case "model.T":
+		case "model.pieces.T":
 			if (open[0].getValue() == 1 && open[1].getValue() == 1 && open[3].getValue() == 1) {
 				m_myLevelToSolve[i][j].setOrientation(0);
 			} else if (open[0].getValue() == 1 && open[1].getValue() == 1 && open[2].getValue() == 1) {
@@ -338,7 +334,7 @@ public class Csp implements Solving {
 				m_myLevelToSolve[i][j].setOrientation(3);
 			}
 			break;
-		case "model.X":
+		case "model.pieces.X":
 			break;
 		}
 	}

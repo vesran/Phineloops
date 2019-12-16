@@ -1,16 +1,14 @@
 package fr.dauphine.javaavance.phineloops;
 
 import Solver.Csp;
-import model.FileCreator;
-import model.FileReader;
 import model.Level;
-import model.Piece;
+import model.io.FileCreator;
+import model.io.FileReader;
+import model.pieces.Piece;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Option.Builder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 public class Main {
@@ -48,8 +46,10 @@ public class Main {
     private static boolean check(String inputFile){
 	// load grid from inputFile and check if it is solved... 
 	// ...
+        Piece[][] grid = FileReader.getGrid(inputFile, " ");
+        Level lvl = new Level(grid);
 
-	return false; 
+	    return lvl.checkGrid();
     }
     
     public static void main(String[] args) {

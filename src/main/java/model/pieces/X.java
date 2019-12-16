@@ -1,7 +1,9 @@
-package model;
+package model.pieces;
 
-import view.PieceDrawing;
-import view.XPieceDrawing;
+import model.enumtype.Orientation;
+import model.enumtype.Side;
+import view.pieces.PieceDrawing;
+import view.pieces.XPieceDrawing;
 
 import java.io.FileNotFoundException;
 

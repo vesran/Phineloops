@@ -1,9 +1,10 @@
-package model;
+package model.pieces;
 
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 
-import view.PieceDrawing;
+import model.enumtype.Orientation;
+import model.enumtype.Side;
+import view.pieces.PieceDrawing;
 
 public class Empty extends Piece {
 	/**
