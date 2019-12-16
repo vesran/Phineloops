@@ -1,5 +1,7 @@
 package view;
 
+import java.io.File;
+
 import Solver.Csp;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -79,10 +81,24 @@ public class PhineLoopsMainGUI extends Application {
 
     public static void main(String [] args) {
         Level level = initLevel();
-        Csp moncsp = new Csp(FileReader.getGrid("C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_256x256_dist.0_vflip.false_hflip.false_messedup.false_id.2.dat", " ")) ;
-//        level.setGrid(moncsp.solving()) ;
+
+        File folder = new File("/Users/bilal/git/phineloops-kby/instances/public/");
+        File[] listOfFiles = folder.listFiles();
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+            	System.out.println(file.getName()) ; 
+            	long startTime = System.currentTimeMillis() ; 
+            	 Csp moncsp = new Csp(FileReader.getGrid(file.getAbsolutePath(), " ")) ; 
+                 boolean sol = moncsp.solving() ; 
+                 long endTime = System.currentTimeMillis() ; 
+                 System.out.println("Solved :" + sol + "--->" + (endTime-startTime) +"Milliseconds");
+                
+            }
+        }
+        
+      
        
-        display(level);
+        //display(level);
 
         System.out.println("This instruction will not be executed if the window is not closed");
     }

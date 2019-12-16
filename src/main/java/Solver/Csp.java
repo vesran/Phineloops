@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.constraints.Constraint;
+import org.chocosolver.solver.search.limits.TimeCounter;
 import org.chocosolver.solver.variables.BoolVar;
 
 import model.pieces.Circle;
@@ -52,6 +53,9 @@ public class Csp implements Solving {
 			}
 		}
 		this.initGeneralConstraint();
+		//TimeCounter a = new TimeCounter(this.m_myModel,20000); 
+		//this.m_myModel.getSolver().addStopCriterion(a);
+		this.m_myModel.getSolver().limitTime("60s");
 		this.m_solved = this.m_myModel.getSolver().solve();
 	}
 
@@ -87,7 +91,7 @@ public class Csp implements Solving {
 		Constraint[] myConstraint = new Constraint[5];
 		myConstraint[0] = this.m_myModel.arithm(orientation[3], "=", orientation[1]);
 		myConstraint[1] = this.m_myModel.arithm(orientation[0], "=", orientation[2]);
-		myConstraint[2] = this.m_myModel.sum(orientation, "=", 2);
+		//myConstraint[2] = this.m_myModel.sum(orientation, "=", 2);
 		this.m_myModel.post(Arrays.copyOfRange(myConstraint, 0, 2));
 		myConstraint[3] = this.m_myModel.arithm(orientation[3], "=", 0);
 		myConstraint[4] = this.m_myModel.arithm(orientation[0], "=", 1);
