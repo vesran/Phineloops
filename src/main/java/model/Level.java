@@ -75,13 +75,21 @@ public class Level {
 	}
 	
 	public boolean checkGrid() {
-		Boolean r=true;
 		for (int i = 0; i < this.height; i++)
 			for (int j = 0; j < grid.length; j++) {
 				if(!grid[i][j].connectedAll())
-					r=false;
+					return false;
 			}
-		return r;
+		return true;
+	}
+
+	public boolean checkGrid2() {
+		for (Piece[] col : this.grid) {
+			for(Piece p : col) {
+
+			}
+		}
+		return false;
 	}
 		
 

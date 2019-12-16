@@ -1,13 +1,15 @@
 package Solver.quasiexhaustive;
 
+import Solver.Solving;
 import model.Level;
 import model.enumtype.Side;
 import model.pieces.L;
 import model.pieces.Piece;
+import model.pieces.T;
 
 import java.util.*;
 
-public class QuasiExhaustiveSolver {
+public class QuasiExhaustiveSolver implements Solving {
 
     private Level m_level;
     private Deque<Piece> m_stack;
@@ -31,7 +33,7 @@ public class QuasiExhaustiveSolver {
         }
     }
 
-    public void solve() {
+    public boolean solving() {
         Piece out;
         while (!m_stack.isEmpty()) {
             // Rotate piece at the top of the stack and add this piece to the rotated set
@@ -49,7 +51,7 @@ public class QuasiExhaustiveSolver {
             // Check if the level is solved
             if (this.m_level.checkGrid()) {
                 System.out.println("SOLVED:true");
-                return;
+                return true;
 
             } else {
                 // If the piece has made an entire rotation, pop and remove it from the rotated set
@@ -61,6 +63,7 @@ public class QuasiExhaustiveSolver {
             }
         }
         System.out.println("SOLVED:false");
+        return false;
     }
 
     private void rotateTopPiece() {
@@ -102,7 +105,7 @@ public class QuasiExhaustiveSolver {
 
         System.out.println("Is level solved ? " + solver.m_level.checkGrid());
         long start = System.currentTimeMillis();
-        solver.solve();
+        solver.solving();
         long end = System.currentTimeMillis();
         System.out.println("Is level solved ? " + solver.m_level.checkGrid());
         System.out.println("Time : " + (end - start) / 1000);
