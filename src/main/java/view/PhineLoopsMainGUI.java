@@ -19,11 +19,8 @@ import model.pieces.T;
 
 public class PhineLoopsMainGUI extends Application {
 
-    static final int WIDTH = 900;
-    static final int HEIGHT = 900;
-
-    static final int GRID_WIDTH = 700;
-    static final int GRID_HEIGHT = 700;
+    static final int WIDTH = 700;
+    static final int HEIGHT = 700;
 
     private static Level level;
 
@@ -40,13 +37,11 @@ public class PhineLoopsMainGUI extends Application {
         GridPane grid = new GridPane();
         grid.setVgap(0);
         grid.setHgap(0);
-        grid.setPadding(new Insets(10));
         grid.setGridLinesVisible(true); // For debugging : to remove
         grid.setAlignment(Pos.CENTER);
         grid.prefWidthProperty().bind(scene.widthProperty());
         grid.prefHeightProperty().bind(scene.heightProperty());
 
-        System.out.println("In start : " + level);
         LevelDrawing view = new LevelDrawing(level);
 
         view.draw(grid, scene);
@@ -55,6 +50,7 @@ public class PhineLoopsMainGUI extends Application {
         root.getChildren().add(grid);
         stage.setTitle("Phine Loops Game");
         stage.setScene(scene);
+        stage.setMaximized(true);   // Full screen
         stage.show();
     }
 

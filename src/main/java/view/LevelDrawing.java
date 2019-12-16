@@ -3,6 +3,7 @@ package view;
 import controller.RotationController;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Control;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import model.Level;
@@ -15,7 +16,6 @@ public class LevelDrawing {
 
     public LevelDrawing(Level model) {
         this.m_model = model;
-        System.out.println("In LevelDrawing " + this.m_model);
     }
 
     private void setOrientation(ImageView iv, int orientation) {
@@ -33,8 +33,8 @@ public class LevelDrawing {
                 if (currentPiece.getId() != 0) {
                     iv = currentPiece.createDrawing();
                     this.setOrientation(iv, currentPiece.getOrientation());
-                    iv.fitWidthProperty().bind(scene.widthProperty().divide(col.length));
-                    iv.fitHeightProperty().bind(scene.heightProperty().divide(this.m_model.getGrid().length));
+                    iv.fitWidthProperty().bind(scene.widthProperty().divide(col.length + 1));
+                    iv.fitHeightProperty().bind(scene.heightProperty().divide(this.m_model.getGrid().length + 1));
                     iv.setCache(true);
                     iv.setSmooth(true);
                     iv.setPreserveRatio(true);
