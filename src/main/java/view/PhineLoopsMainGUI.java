@@ -80,21 +80,23 @@ public class PhineLoopsMainGUI extends Application {
 
         File folder = new File("/Users/bilal/git/phineloops-kby/instances/public/");
         File[] listOfFiles = folder.listFiles();
+        Csp moncsp = null ;
         for (File file : listOfFiles) {
             if (file.isFile()) {
             	System.out.println(file.getName()) ; 
             	long startTime = System.currentTimeMillis() ; 
-            	 Csp moncsp = new Csp(FileReader.getGrid(file.getAbsolutePath(), " ")) ; 
+            	  moncsp = new Csp(FileReader.getGrid(file.getAbsolutePath(), " ")) ; 
                  boolean sol = moncsp.solving() ; 
                  long endTime = System.currentTimeMillis() ; 
                  System.out.println("Solved :" + sol + "--->" + (endTime-startTime) +"Milliseconds");
                 
             }
         }
+        level.setGrid(moncsp.getMyLevelToSolve());
         
       
        
-        //display(level);
+        display(level);
 
         System.out.println("This instruction will not be executed if the window is not closed");
     }

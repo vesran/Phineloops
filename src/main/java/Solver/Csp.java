@@ -88,18 +88,16 @@ public class Csp implements Solving {
 			vars[i][j][z] = var;
 		}
 		Constraint[] myConstraint = new Constraint[5];
-		//myConstraint[0] = this.m_myModel.arithm(orientation[3], "=", orientation[1]);
+		// myConstraint[0] = this.m_myModel.arithm(orientation[3], "=", orientation[1]);
 		myConstraint[1] = this.m_myModel.arithm(orientation[0], "=", orientation[2]);
-		
-		
-		
+
 		myConstraint[2] = this.m_myModel.sum(orientation, "=", 2);
 		this.m_myModel.post(myConstraint[2]);
 		this.m_myModel.post(myConstraint[1]);
-		
-		//myConstraint[3] = this.m_myModel.arithm(orientation[3], "=", 0);
-		//myConstraint[4] = this.m_myModel.arithm(orientation[0], "=", 1);
-		///this.m_myModel.ifOnlyIf(myConstraint[3], myConstraint[4]);
+
+		// myConstraint[3] = this.m_myModel.arithm(orientation[3], "=", 0);
+		// myConstraint[4] = this.m_myModel.arithm(orientation[0], "=", 1);
+		/// this.m_myModel.ifOnlyIf(myConstraint[3], myConstraint[4]);
 	}
 
 	private void addConstraintPiece3(int i, int j) {
@@ -213,13 +211,19 @@ public class Csp implements Solving {
 					Constraint c = this.m_myModel.arithm(RightWall, "=", 0);
 					this.m_myModel.post(c);
 				}
-				/*
-				 * if (j - 1 >= 0) { BoolVar RightWall = vars[i][j - 1][1]; BoolVar LeftWall =
-				 * vars[i][j][3]; Constraint c = this.m_myModel.arithm(RightWall, "=",
-				 * LeftWall); this.m_myModel.post(c); } else { BoolVar LeftWall = vars[i][j][3];
-				 * Constraint c = this.m_myModel.arithm(LeftWall, "=", 0);
-				 * this.m_myModel.post(c); }
-				 */
+
+				if (j - 1 >= 0) {
+					/*
+					 * BoolVar RightWall = vars[i][j - 1][1]; BoolVar LeftWall = vars[i][j][3];
+					 * Constraint c = this.m_myModel.arithm(RightWall, "=", LeftWall);
+					 * this.m_myModel.post(c);
+					 */
+				} else {
+					BoolVar LeftWall = vars[i][j][3];
+					Constraint c = this.m_myModel.arithm(LeftWall, "=", 0);
+					this.m_myModel.post(c);
+				}
+
 				if (i + 1 < this.m_myLevelToSolve.length) {
 					BoolVar southWall = vars[i][j][2];
 					BoolVar northWall = vars[i + 1][j][0];
@@ -229,13 +233,19 @@ public class Csp implements Solving {
 					BoolVar southWall = vars[i][j][2];
 					Constraint c = this.m_myModel.arithm(southWall, "=", 0);
 					this.m_myModel.post(c);
-				} /*
-					 * if (i - 1 >= 0) { BoolVar northWall = vars[i][j][0]; BoolVar southWall =
-					 * vars[i - 1][j][2]; Constraint c = this.m_myModel.arithm(southWall, "=",
-					 * northWall); this.m_myModel.post(c); } else { BoolVar northWall =
-					 * vars[i][j][0]; Constraint c = this.m_myModel.arithm(northWall, "=", 0);
-					 * this.m_myModel.post(c); }
+				}
+				if (i - 1 >= 0) {
+					/*
+					 * BoolVar northWall = vars[i][j][0]; BoolVar southWall = vars[i - 1][j][2];
+					 * Constraint c = this.m_myModel.arithm(southWall, "=", northWall);
+					 * this.m_myModel.post(c);
 					 */
+				} else {
+					BoolVar northWall = vars[i][j][0];
+					Constraint c = this.m_myModel.arithm(northWall, "=", 0);
+					this.m_myModel.post(c);
+				}
+
 			}
 		}
 	}
