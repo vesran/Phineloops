@@ -9,7 +9,9 @@ import org.chocosolver.solver.variables.BoolVar;
 
 import model.pieces.Circle;
 import model.pieces.L;
+import model.Level;
 import model.enumtype.Orientation;
+import model.io.FileReader;
 import model.pieces.Piece;
 import model.pieces.T;
 import model.pieces.X;
@@ -53,21 +55,18 @@ public class Csp implements Solving {
 			}
 		}
 		this.initGeneralConstraint();
-		//TimeCounter a = new TimeCounter(this.m_myModel,20000); 
-		//this.m_myModel.getSolver().addStopCriterion(a);
+		// TimeCounter a = new TimeCounter(this.m_myModel,20000);
+		// this.m_myModel.getSolver().addStopCriterion(a);
 		this.m_myModel.getSolver().limitTime("60s");
 		this.m_solved = this.m_myModel.getSolver().solve();
 	}
 
 	private void addConstraintPiece0(int i, int j) {
-		BoolVar[] orientation = new BoolVar[Orientation.values().length];
 		for (int z = 0; z < Orientation.values().length; z++) {
 			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(z));
-			orientation[z] = var;
+			this.m_myModel.post(this.m_myModel.arithm(var, "=", 0));
 			vars[i][j][z] = var;
 		}
-		Constraint c = this.m_myModel.sum(orientation, "=", 0);
-		this.m_myModel.post(c);
 	}
 
 	private void addConstraintPiece1(int i, int j) {
@@ -89,13 +88,18 @@ public class Csp implements Solving {
 			vars[i][j][z] = var;
 		}
 		Constraint[] myConstraint = new Constraint[5];
-		myConstraint[0] = this.m_myModel.arithm(orientation[3], "=", orientation[1]);
+		//myConstraint[0] = this.m_myModel.arithm(orientation[3], "=", orientation[1]);
 		myConstraint[1] = this.m_myModel.arithm(orientation[0], "=", orientation[2]);
-		//myConstraint[2] = this.m_myModel.sum(orientation, "=", 2);
-		this.m_myModel.post(Arrays.copyOfRange(myConstraint, 0, 2));
-		myConstraint[3] = this.m_myModel.arithm(orientation[3], "=", 0);
-		myConstraint[4] = this.m_myModel.arithm(orientation[0], "=", 1);
-		this.m_myModel.ifOnlyIf(myConstraint[3], myConstraint[4]);
+		
+		
+		
+		myConstraint[2] = this.m_myModel.sum(orientation, "=", 2);
+		this.m_myModel.post(myConstraint[2]);
+		this.m_myModel.post(myConstraint[1]);
+		
+		//myConstraint[3] = this.m_myModel.arithm(orientation[3], "=", 0);
+		//myConstraint[4] = this.m_myModel.arithm(orientation[0], "=", 1);
+		///this.m_myModel.ifOnlyIf(myConstraint[3], myConstraint[4]);
 	}
 
 	private void addConstraintPiece3(int i, int j) {
@@ -106,31 +110,25 @@ public class Csp implements Solving {
 			vars[i][j][z] = var;
 		}
 		Constraint[] myConstraint = new Constraint[9];
-		myConstraint[0] = this.m_myModel.arithm(orientation[0], "=", 0);
-		BoolVar[] arrayToSum = new BoolVar[3];
-		arrayToSum[0] = orientation[1];
-		arrayToSum[1] = orientation[2];
-		arrayToSum[2] = orientation[3];
-		myConstraint[1] = this.m_myModel.sum(arrayToSum, "=", 3);
-		this.m_myModel.ifOnlyIf(myConstraint[0], myConstraint[1]);
-		myConstraint[2] = this.m_myModel.arithm(orientation[1], "=", 0);
-		arrayToSum[0] = orientation[0];
-		arrayToSum[1] = orientation[2];
-		arrayToSum[2] = orientation[3];
-		myConstraint[3] = this.m_myModel.sum(arrayToSum, "=", 3);
-		this.m_myModel.ifOnlyIf(myConstraint[2], myConstraint[3]);
-		myConstraint[4] = this.m_myModel.arithm(orientation[2], "=", 0);
-		arrayToSum[0] = orientation[0];
-		arrayToSum[1] = orientation[1];
-		arrayToSum[2] = orientation[3];
-		myConstraint[5] = this.m_myModel.sum(arrayToSum, "=", 3);
-		this.m_myModel.ifOnlyIf(myConstraint[4], myConstraint[5]);
-		myConstraint[6] = this.m_myModel.arithm(orientation[3], "=", 0);
-		arrayToSum[0] = orientation[0];
-		arrayToSum[1] = orientation[1];
-		arrayToSum[2] = orientation[2];
-		myConstraint[7] = this.m_myModel.sum(arrayToSum, "=", 3);
-		this.m_myModel.ifOnlyIf(myConstraint[6], myConstraint[7]);
+		/*
+		 * myConstraint[0] = this.m_myModel.arithm(orientation[0], "=", 0); BoolVar[]
+		 * arrayToSum = new BoolVar[3]; arrayToSum[0] = orientation[1]; arrayToSum[1] =
+		 * orientation[2]; arrayToSum[2] = orientation[3]; myConstraint[1] =
+		 * this.m_myModel.sum(arrayToSum, "=", 3);
+		 * this.m_myModel.ifOnlyIf(myConstraint[0], myConstraint[1]); myConstraint[2] =
+		 * this.m_myModel.arithm(orientation[1], "=", 0); arrayToSum[0] =
+		 * orientation[0]; arrayToSum[1] = orientation[2]; arrayToSum[2] =
+		 * orientation[3]; myConstraint[3] = this.m_myModel.sum(arrayToSum, "=", 3);
+		 * this.m_myModel.ifOnlyIf(myConstraint[2], myConstraint[3]); myConstraint[4] =
+		 * this.m_myModel.arithm(orientation[2], "=", 0); arrayToSum[0] =
+		 * orientation[0]; arrayToSum[1] = orientation[1]; arrayToSum[2] =
+		 * orientation[3]; myConstraint[5] = this.m_myModel.sum(arrayToSum, "=", 3);
+		 * this.m_myModel.ifOnlyIf(myConstraint[4], myConstraint[5]); myConstraint[6] =
+		 * this.m_myModel.arithm(orientation[3], "=", 0); arrayToSum[0] =
+		 * orientation[0]; arrayToSum[1] = orientation[1]; arrayToSum[2] =
+		 * orientation[2]; myConstraint[7] = this.m_myModel.sum(arrayToSum, "=", 3);
+		 * this.m_myModel.ifOnlyIf(myConstraint[6], myConstraint[7]);
+		 */
 		myConstraint[8] = this.m_myModel.sum(orientation, "=", 3);
 		this.m_myModel.post(myConstraint[8]);
 	}
@@ -139,12 +137,12 @@ public class Csp implements Solving {
 		BoolVar[] orientation = new BoolVar[Orientation.values().length];
 		for (int z = 0; z < Orientation.values().length; z++) {
 			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(z));
+			this.m_myModel.post(this.m_myModel.arithm(var, "=", 1));
 			orientation[z] = var;
 			vars[i][j][z] = var;
-			;
 		}
-		Constraint c = this.m_myModel.sum(orientation, "=", 4);
-		this.m_myModel.post(c);
+		// Constraint c = this.m_myModel.sum(orientation, "=", 4);
+		// this.m_myModel.post(c);
 	}
 
 	private void addConstraintPiece5(int i, int j) {
@@ -158,19 +156,19 @@ public class Csp implements Solving {
 		BoolVar[] arrayToSum = new BoolVar[2];
 		arrayToSum[0] = orientation[3];
 		arrayToSum[1] = orientation[2];
-		myConstraint[0] = this.m_myModel.sum(arrayToSum, "=", 0);
+		// myConstraint[0] = this.m_myModel.sum(arrayToSum, "=", 0);
 		arrayToSum[0] = orientation[0];
 		arrayToSum[1] = orientation[1];
-		myConstraint[1] = this.m_myModel.sum(arrayToSum, "=", 2);
-		this.m_myModel.ifOnlyIf(myConstraint[0], myConstraint[1]);
+		// myConstraint[1] = this.m_myModel.sum(arrayToSum, "=", 2);
+		// this.m_myModel.ifOnlyIf(myConstraint[0], myConstraint[1]);
 		// --//
 		arrayToSum[0] = orientation[3];
 		arrayToSum[1] = orientation[0];
-		myConstraint[2] = this.m_myModel.sum(arrayToSum, "=", 0);
+		// myConstraint[2] = this.m_myModel.sum(arrayToSum, "=", 0);
 		arrayToSum[0] = orientation[1];
 		arrayToSum[1] = orientation[2];
-		myConstraint[3] = this.m_myModel.sum(arrayToSum, "=", 2);
-		this.m_myModel.ifOnlyIf(myConstraint[2], myConstraint[3]);
+		// myConstraint[3] = this.m_myModel.sum(arrayToSum, "=", 2);
+		// this.m_myModel.ifOnlyIf(myConstraint[2], myConstraint[3]);
 		// --//
 		arrayToSum[0] = orientation[1];
 		arrayToSum[1] = orientation[3];
@@ -184,22 +182,22 @@ public class Csp implements Solving {
 		// --//
 		arrayToSum[0] = orientation[0];
 		arrayToSum[1] = orientation[1];
-		myConstraint[6] = this.m_myModel.sum(arrayToSum, "=", 0);
+		// myConstraint[6] = this.m_myModel.sum(arrayToSum, "=", 0);
 		arrayToSum[0] = orientation[3];
 		arrayToSum[1] = orientation[2];
-		myConstraint[7] = this.m_myModel.sum(arrayToSum, "=", 2);
-		this.m_myModel.ifOnlyIf(myConstraint[6], myConstraint[7]);
+		// myConstraint[7] = this.m_myModel.sum(arrayToSum, "=", 2);
+		// this.m_myModel.ifOnlyIf(myConstraint[6], myConstraint[7]);
 		// --//
 		arrayToSum[0] = orientation[1];
 		arrayToSum[1] = orientation[2];
-		myConstraint[8] = this.m_myModel.sum(arrayToSum, "=", 0);
+		// myConstraint[8] = this.m_myModel.sum(arrayToSum, "=", 0);
 		arrayToSum[0] = orientation[3];
 		arrayToSum[1] = orientation[0];
-		myConstraint[9] = this.m_myModel.sum(arrayToSum, "=", 2);
-		this.m_myModel.ifOnlyIf(myConstraint[8], myConstraint[9]);
+		// myConstraint[9] = this.m_myModel.sum(arrayToSum, "=", 2);
+		// this.m_myModel.ifOnlyIf(myConstraint[8], myConstraint[9]);
 		// --//
-		myConstraint[10] = this.m_myModel.sum(orientation, "=", 2);
-		this.m_myModel.post(myConstraint[10]);
+		// myConstraint[10] = this.m_myModel.sum(orientation, "=", 2);
+		// this.m_myModel.post(myConstraint[10]);
 	}
 
 	private void initGeneralConstraint() {
@@ -215,16 +213,13 @@ public class Csp implements Solving {
 					Constraint c = this.m_myModel.arithm(RightWall, "=", 0);
 					this.m_myModel.post(c);
 				}
-				if (j - 1 >= 0) {
-					BoolVar RightWall = vars[i][j - 1][1];
-					BoolVar LeftWall = vars[i][j][3];
-					Constraint c = this.m_myModel.arithm(RightWall, "=", LeftWall);
-					this.m_myModel.post(c);
-				} else {
-					BoolVar LeftWall = vars[i][j][3];
-					Constraint c = this.m_myModel.arithm(LeftWall, "=", 0);
-					this.m_myModel.post(c);
-				}
+				/*
+				 * if (j - 1 >= 0) { BoolVar RightWall = vars[i][j - 1][1]; BoolVar LeftWall =
+				 * vars[i][j][3]; Constraint c = this.m_myModel.arithm(RightWall, "=",
+				 * LeftWall); this.m_myModel.post(c); } else { BoolVar LeftWall = vars[i][j][3];
+				 * Constraint c = this.m_myModel.arithm(LeftWall, "=", 0);
+				 * this.m_myModel.post(c); }
+				 */
 				if (i + 1 < this.m_myLevelToSolve.length) {
 					BoolVar southWall = vars[i][j][2];
 					BoolVar northWall = vars[i + 1][j][0];
@@ -234,17 +229,13 @@ public class Csp implements Solving {
 					BoolVar southWall = vars[i][j][2];
 					Constraint c = this.m_myModel.arithm(southWall, "=", 0);
 					this.m_myModel.post(c);
-				}
-				if (i - 1 >= 0) {
-					BoolVar northWall = vars[i][j][0];
-					BoolVar southWall = vars[i - 1][j][2];
-					Constraint c = this.m_myModel.arithm(southWall, "=", northWall);
-					this.m_myModel.post(c);
-				} else {
-					BoolVar northWall = vars[i][j][0];
-					Constraint c = this.m_myModel.arithm(northWall, "=", 0);
-					this.m_myModel.post(c);
-				}
+				} /*
+					 * if (i - 1 >= 0) { BoolVar northWall = vars[i][j][0]; BoolVar southWall =
+					 * vars[i - 1][j][2]; Constraint c = this.m_myModel.arithm(southWall, "=",
+					 * northWall); this.m_myModel.post(c); } else { BoolVar northWall =
+					 * vars[i][j][0]; Constraint c = this.m_myModel.arithm(northWall, "=", 0);
+					 * this.m_myModel.post(c); }
+					 */
 			}
 		}
 	}
@@ -256,8 +247,6 @@ public class Csp implements Solving {
 				test[z][j] = new Circle(0, z, j);
 			}
 		}
-		
-		
 		Piece[][] test2 = new Piece[3][3];
 		test2[0][0] = new L(0, 0, 0);
 		test2[0][1] = new T(0, 0, 1);
@@ -268,8 +257,19 @@ public class Csp implements Solving {
 		test2[2][0] = new L(0, 2, 0);
 		test2[2][1] = new T(0, 2, 1);
 		test2[2][2] = new L(0, 2, 2);
-		Csp moncsp = new Csp(test2);
-		moncsp.initConstraint();
+		Piece[][] test3 = FileReader.getGrid("C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_256x256_dist.0_vflip.false_hflip.false_messedup.false_id.0.dat"," ");
+		Csp moncsp = new Csp(test3);
+		long debut = System.currentTimeMillis();
+		boolean aa = moncsp.solving();
+		Level a = new Level(test3);
+		System.out.println(a);
+		System.out.println(System.currentTimeMillis() - debut);
+		if (a.checkGrid()) {
+			System.out.println("OUI");
+		} else {
+			System.out.println("NON");
+		}
+		System.out.println(aa);
 	}
 
 	public Piece[][] getMyLevelToSolve() {
@@ -287,7 +287,6 @@ public class Csp implements Solving {
 				}
 			}
 			return true;
-
 		} else {
 			return false;
 		}
