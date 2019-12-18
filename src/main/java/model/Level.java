@@ -77,8 +77,11 @@ public class Level {
 	public boolean checkGrid() {
 		for (int i = 0; i < this.height; i++)
 			for (int j = 0; j < grid.length; j++) {
-				if(!grid[i][j].connectedAll())
+				if(!grid[i][j].connectedAll()) {
+//					System.out.println("ici i  "+i+" j "+j+ "type "+ grid[i][j].getId() );
 					return false;
+					
+					}
 			}
 		return true;
 	}

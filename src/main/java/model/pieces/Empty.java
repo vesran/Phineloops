@@ -48,7 +48,7 @@ public class Empty extends Piece {
 	@Override
 	public boolean connectedAll() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public String toString() {

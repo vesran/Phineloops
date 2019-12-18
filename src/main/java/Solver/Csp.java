@@ -269,11 +269,12 @@ public class Csp implements Solving {
 		test2[2][0] = new L(0, 2, 0);
 		test2[2][1] = new T(0, 2, 1);
 		test2[2][2] = new L(0, 2, 2);
-		Piece[][] test3 = FileReader.getGrid("/Users/bilal/git/phineloops-kby/instances/public/grid_256x256_dist.0_vflip.false_hflip.false_messedup.false_id.0.dat"," ");
+		Piece[][] test3 = FileReader.getGrid("/Users/Mamr/JavaProject/phineloops-kby/instances/public/grid_256x256_dist.0_vflip.false_hflip.false_messedup.false_id.0.dat"," ");
 		Csp moncsp = new Csp(test3);
 		long debut = System.currentTimeMillis();
 		boolean aa = moncsp.solving();
 		Level a = new Level(test3);
+		a.init_neighbors();
 		//System.out.println(a);
 		System.out.println(System.currentTimeMillis() - debut);
 		if (a.checkGrid()) {
