@@ -1,6 +1,7 @@
 package view;
 
 import controller.RotationController;
+import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Control;
@@ -33,8 +34,10 @@ public class LevelDrawing {
                 if (currentPiece.getId() != 0) {
                     iv = currentPiece.createDrawing();
                     this.setOrientation(iv, currentPiece.getOrientation());
+
                     iv.fitWidthProperty().bind(scene.widthProperty().divide(col.length + 1));
                     iv.fitHeightProperty().bind(scene.heightProperty().divide(this.m_model.getGrid().length + 1));
+
                     iv.setCache(true);
                     iv.setSmooth(true);
                     iv.setPreserveRatio(true);
