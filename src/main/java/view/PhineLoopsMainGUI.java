@@ -81,7 +81,7 @@ public class PhineLoopsMainGUI extends Application {
         File folder = new File("/Users/bilal/git/phineloops-kby/instances/public/");
         File[] listOfFiles = folder.listFiles();
         Csp moncsp = null ;
-        for (File file : listOfFiles) {
+       /* for (File file : listOfFiles) {
             if (file.isFile()) {
             	System.out.println(file.getName()) ; 
             	long startTime = System.currentTimeMillis() ; 
@@ -90,8 +90,10 @@ public class PhineLoopsMainGUI extends Application {
                  long endTime = System.currentTimeMillis() ; 
                  System.out.println("Solved :" + sol + "--->" + (endTime-startTime) +"Milliseconds");
                 
-            }
-        }
+            }*/
+        Piece[][]tab = FileReader.getGrid("/Users/bilal/git/phineloops-kby/instances/public/grid_32x32_dist.0_vflip.true_hflip.false_messedup.false_id.1.dat", " ");
+        moncsp = new Csp(tab) ; 
+        moncsp.solving() ; 
         level.setGrid(moncsp.getMyLevelToSolve());
         
       

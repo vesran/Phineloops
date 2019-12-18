@@ -35,12 +35,12 @@ public class Main {
         // Solve the level
         Csp solver = new Csp(inputGrid);
         solved = solver.solving();
-        outputGrid = solver.getMyLevelToSolve();
-
-        // Save the solved level
-        FileCreator.write(outputGrid, outputFile);
-
-	return solved;
+        if(solved) {
+        	 // Save the solved level
+        	outputGrid = solver.getMyLevelToSolve();
+        	 FileCreator.write(outputGrid, outputFile);
+        }
+        return solved;
     }
 
     private static boolean check(String inputFile){
