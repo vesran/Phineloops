@@ -62,18 +62,20 @@ public class Csp implements Solving {
 	}
 
 	private void addConstraintPiece0(int i, int j) {
+		
+		BoolVar[] orientation = this.m_myModel.boolVarArray(Orientation.values().length) ;
 		for (int z = 0; z < Orientation.values().length; z++) {
 			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(z));
-			this.m_myModel.post(this.m_myModel.arithm(var, "=", 0));
+			orientation[z] = var;
+			//this.m_myModel.post(this.m_myModel.arithm(var, "=", 0));
 			vars[i][j][z] = var;
 		}
-		//Constraint c = this.m_myModel.sum(orientation, "=", 4);
-		// this.m_myModel.post(c);
+		Constraint c = this.m_myModel.sum(orientation, "=", 0);
+		this.m_myModel.post(c);
 	}
 
 	private void addConstraintPiece1(int i, int j) {
-		BoolVar[] orientation = new BoolVar[Orientation.values().length];
-		for (int z = 0; z < Orientation.values().length; z++) {
+		BoolVar[] orientation = this.m_myModel.boolVarArray(Orientation.values().length) ;		for (int z = 0; z < Orientation.values().length; z++) {
 			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(z));
 			orientation[z] = var;
 			vars[i][j][z] = var;
@@ -90,12 +92,15 @@ public class Csp implements Solving {
 			vars[i][j][z] = var;
 		}
 		Constraint[] myConstraint = new Constraint[5];
-		// myConstraint[0] = this.m_myModel.arithm(orientation[3], "=", orientation[1]);
+		//myConstraint[0] = this.m_myModel.arithm(orientation[3], "=", orientation[1]);
 		myConstraint[1] = this.m_myModel.arithm(orientation[0], "=", orientation[2]);
 
 		myConstraint[2] = this.m_myModel.sum(orientation, "=", 2);
 		this.m_myModel.post(myConstraint[2]);
 		this.m_myModel.post(myConstraint[1]);
+		
+		//this.m_myModel.post(myConstraint[0]);
+		
 
 		// myConstraint[3] = this.m_myModel.arithm(orientation[3], "=", 0);
 		// myConstraint[4] = this.m_myModel.arithm(orientation[0], "=", 1);
@@ -137,12 +142,12 @@ public class Csp implements Solving {
 		BoolVar[] orientation = new BoolVar[Orientation.values().length];
 		for (int z = 0; z < Orientation.values().length; z++) {
 			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(z));
-			this.m_myModel.post(this.m_myModel.arithm(var, "=", 1));
+			//this.m_myModel.post(this.m_myModel.arithm(var, "=", 1));
 			orientation[z] = var;
 			vars[i][j][z] = var;
 		}
-		// Constraint c = this.m_myModel.sum(orientation, "=", 4);
-		// this.m_myModel.post(c);
+		 Constraint c = this.m_myModel.sum(orientation, "=", 4);
+		this.m_myModel.post(c);
 	}
 
 	private void addConstraintPiece5(int i, int j) {
@@ -238,7 +243,7 @@ public class Csp implements Solving {
 				}
 				if (i - 1 >= 0) {
 					
-					 BoolVar northWall = vars[i][j][0]; BoolVar southWall = vars[i - 1][j][2];
+				 BoolVar northWall = vars[i][j][0]; BoolVar southWall = vars[i - 1][j][2];
 					  Constraint c = this.m_myModel.arithm(southWall, "=", northWall);
 					  this.m_myModel.post(c);
 					 
@@ -269,7 +274,7 @@ public class Csp implements Solving {
 		test2[2][0] = new L(0, 2, 0);
 		test2[2][1] = new T(0, 2, 1);
 		test2[2][2] = new L(0, 2, 2);
-		Piece[][] test3 = FileReader.getGrid("/Users/Mamr/JavaProject/phineloops-kby/instances/public/grid_256x256_dist.0_vflip.false_hflip.false_messedup.false_id.0.dat"," ");
+		Piece[][] test3 = FileReader.getGrid("C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_256x256_dist.0_vflip.false_hflip.false_messedup.false_id.0.dat"," ");
 		Csp moncsp = new Csp(test3);
 		long debut = System.currentTimeMillis();
 		boolean aa = moncsp.solving();
@@ -277,12 +282,8 @@ public class Csp implements Solving {
 		a.init_neighbors();
 		//System.out.println(a);
 		System.out.println(System.currentTimeMillis() - debut);
-		if (a.checkGrid()) {
-			System.out.println("OUI");
-		} else {
-			System.out.println("NON");
-		}
-		System.out.println(aa);
+		//System.out.println(a.checkGrid());
+		
 	}
 
 	public Piece[][] getMyLevelToSolve() {
