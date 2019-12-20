@@ -28,352 +28,67 @@ public class Csp implements Solving {
 		vars = new BoolVar[this.m_myLevelToSolve.length][this.m_myLevelToSolve[0].length][Orientation.values().length];
 	}
 
-	private void initConstraint() {
+	private void initConstraint(Extend solvability) {
 		for (int i = 0; i < this.m_myLevelToSolve.length; i++) {
 			for (int j = 0; j < this.m_myLevelToSolve[0].length; j++) {
 				Class myClass = m_myLevelToSolve[i][j].getClass();
 				switch (myClass.getName()) {
 				case "model.pieces.Bar":
-					this.addConstraintPiece2(i, j);
+					this.addConstraintPiece2(i, j, solvability);
 					break;
 				case "model.pieces.L":
-					this.addConstraintPiece5(i, j);
+					this.addConstraintPiece5(i, j, solvability);
 					break;
 				case "model.pieces.Empty":
-					this.addConstraintPiece0(i, j);
+					this.addConstraintPiece0(i, j, solvability);
 					break;
 				case "model.pieces.Circle":
-					this.addConstraintPiece1(i, j);
+					this.addConstraintPiece1(i, j, solvability);
 					break;
 				case "model.pieces.T":
-					this.addConstraintPiece3(i, j);
+					this.addConstraintPiece3(i, j, solvability);
 					break;
 				case "model.pieces.X":
-					this.addConstraintPiece4(i, j);
+					this.addConstraintPiece4(i, j, solvability);
 					break;
 				}
 			}
 		}
-		// this.initGeneralConstraint();
-		// TimeCounter a = new TimeCounter(this.m_myModel,20000);
-		// this.m_myModel.getSolver().addStopCriterion(a);
-		this.m_myModel.getSolver().limitTime("60s");
+		this.m_myModel.getSolver().limitTime("5s");
 		this.m_solved = this.m_myModel.getSolver().solve();
 	}
 
-	private void addConstraintPiece0(int i, int j) {
-		BoolVar[] orientation = new BoolVar[Orientation.values().length];
-		// *------*//
-		if (i - 1 >= 0) {
-			orientation[0] = this.vars[i - 1][j][2];
-			this.vars[i][j][0] = orientation[0];
-			// this.vars[i][j][0] = this.vars[i - 1][j][2];
-		} else {
-			orientation[0] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][0] = orientation[0];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[0], "=", 0));
-			/*
-			 * BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) +
-			 * String.valueOf(0)); this.vars[i][j][0] = var; orientation[0] = var;
-			 */
-		}
-		// ******//
-		if (i + 1 < this.m_myLevelToSolve.length) {
-			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(2));
-			orientation[2] = var;
-			this.vars[i][j][2] = var;
-			this.vars[i + 1][j][0] = var;
-		} else {
-			orientation[2] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][2] = orientation[2];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[2], "=", 0));
-			/*
-			 * BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) +
-			 * String.valueOf(2)); orientation[2] = var; this.vars[i][j][2] = var;
-			 */
-		}
-		if (j - 1 >= 0) {
-			orientation[3] = this.vars[i][j - 1][1];
-			this.vars[i][j][3] = this.vars[i][j - 1][1];
-		} else {
-			orientation[3] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][3] = orientation[3];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[3], "=", 0));
-		}
-		if (j + 1 < this.m_myLevelToSolve[0].length) {
-			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(1));
-			orientation[1] = var;
-			this.vars[i][j][1] = var;
-			this.vars[i][j + 1][3] = var;
-		} else {
-			orientation[1] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][1] = orientation[1];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[1], "=", 0));
-		}
+	private void addConstraintPiece0(int i, int j, Extend extend) {
+		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 0);
 		this.m_myModel.post(c);
 	}
 
-	private void addConstraintPiece1(int i, int j) {
-		BoolVar[] orientation = new BoolVar[Orientation.values().length];
-		// *------*//
-		if (i - 1 >= 0) {
-			orientation[0] = this.vars[i - 1][j][2];
-			this.vars[i][j][0] = orientation[0];
-			// this.vars[i][j][0] = this.vars[i - 1][j][2];
-		} else {
-			orientation[0] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][0] = orientation[0];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[0], "=", 0));
-			/*
-			 * BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) +
-			 * String.valueOf(0)); this.vars[i][j][0] = var; orientation[0] = var;
-			 */
-		}
-		// ******//
-		if (i + 1 < this.m_myLevelToSolve.length) {
-			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(2));
-			orientation[2] = var;
-			this.vars[i][j][2] = var;
-			this.vars[i + 1][j][0] = var;
-		} else {
-			orientation[2] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][2] = orientation[2];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[2], "=", 0));
-			/*
-			 * BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) +
-			 * String.valueOf(2)); orientation[2] = var; this.vars[i][j][2] = var;
-			 */
-		}
-		if (j - 1 >= 0) {
-			orientation[3] = this.vars[i][j - 1][1];
-			this.vars[i][j][3] = this.vars[i][j - 1][1];
-		} else {
-			orientation[3] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][3] = orientation[3];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[3], "=", 0));
-		}
-		if (j + 1 < this.m_myLevelToSolve[0].length) {
-			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(1));
-			orientation[1] = var;
-			this.vars[i][j][1] = var;
-			this.vars[i][j + 1][3] = var;
-		} else {
-			orientation[1] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][1] = orientation[1];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[1], "=", 0));
-		}
+	private void addConstraintPiece1(int i, int j, Extend extend) {
+		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 1);
 		this.m_myModel.post(c);
 	}
 
-	private void addConstraintPiece2(int i, int j) {
-		BoolVar[] orientation = new BoolVar[Orientation.values().length];
-		// *------*//
-		if (i - 1 >= 0) {
-			orientation[0] = this.vars[i - 1][j][2];
-			this.vars[i][j][0] = orientation[0];
-			// this.vars[i][j][0] = this.vars[i - 1][j][2];
-		} else {
-			orientation[0] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][0] = orientation[0];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[0], "=", 0));
-			/*
-			 * BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) +
-			 * String.valueOf(0)); this.vars[i][j][0] = var; orientation[0] = var;
-			 */
-		}
-		// ******//
-		if (i + 1 < this.m_myLevelToSolve.length) {
-			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(2));
-			orientation[2] = var;
-			this.vars[i][j][2] = var;
-			this.vars[i + 1][j][0] = var;
-		} else {
-			orientation[2] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][2] = orientation[2];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[2], "=", 0));
-			/*
-			 * BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) +
-			 * String.valueOf(2)); orientation[2] = var; this.vars[i][j][2] = var;
-			 */
-		}
-		if (j - 1 >= 0) {
-			orientation[3] = this.vars[i][j - 1][1];
-			this.vars[i][j][3] = this.vars[i][j - 1][1];
-		} else {
-			orientation[3] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][3] = orientation[3];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[3], "=", 0));
-		}
-		if (j + 1 < this.m_myLevelToSolve[0].length) {
-			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(1));
-			orientation[1] = var;
-			this.vars[i][j][1] = var;
-			this.vars[i][j + 1][3] = var;
-		} else {
-			orientation[1] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][1] = orientation[1];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[1], "=", 0));
-		}
+	private void addConstraintPiece2(int i, int j, Extend extend) {
+		BoolVar[] orientation = this.getTab(i, j, extend);
 		this.m_myModel.post((this.m_myModel.sum(orientation, "=", 2)));
 		this.m_myModel.post(this.m_myModel.arithm(orientation[0], "=", orientation[2]));
 	}
 
-	private void addConstraintPiece3(int i, int j) {
-		BoolVar[] orientation = new BoolVar[Orientation.values().length];
-		// *------*//
-		if (i - 1 >= 0) {
-			orientation[0] = this.vars[i - 1][j][2];
-			this.vars[i][j][0] = orientation[0];
-			// this.vars[i][j][0] = this.vars[i - 1][j][2];
-		} else {
-			orientation[0] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][0] = orientation[0];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[0], "=", 0));
-			/*
-			 * BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) +
-			 * String.valueOf(0)); this.vars[i][j][0] = var; orientation[0] = var;
-			 */
-		}
-		// ******//
-		if (i + 1 < this.m_myLevelToSolve.length) {
-			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(2));
-			orientation[2] = var;
-			this.vars[i][j][2] = var;
-			this.vars[i + 1][j][0] = var;
-		} else {
-			orientation[2] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][2] = orientation[2];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[2], "=", 0));
-			/*
-			 * BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) +
-			 * String.valueOf(2)); orientation[2] = var; this.vars[i][j][2] = var;
-			 */
-		}
-		if (j - 1 >= 0) {
-			orientation[3] = this.vars[i][j - 1][1];
-			this.vars[i][j][3] = this.vars[i][j - 1][1];
-		} else {
-			orientation[3] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][3] = orientation[3];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[3], "=", 0));
-		}
-		if (j + 1 < this.m_myLevelToSolve[0].length) {
-			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(1));
-			orientation[1] = var;
-			this.vars[i][j][1] = var;
-			this.vars[i][j + 1][3] = var;
-		} else {
-			orientation[1] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][1] = orientation[1];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[1], "=", 0));
-		}
+	private void addConstraintPiece3(int i, int j, Extend extend) {
+		BoolVar[] orientation = this.getTab(i, j, extend);
 		this.m_myModel.post(this.m_myModel.sum(orientation, "=", 3));
 	}
 
-	private void addConstraintPiece4(int i, int j) {
-		BoolVar[] orientation = new BoolVar[Orientation.values().length];
-		// *------*//
-		if (i - 1 >= 0) {
-			orientation[0] = this.vars[i - 1][j][2];
-			this.vars[i][j][0] = orientation[0];
-			// this.vars[i][j][0] = this.vars[i - 1][j][2];
-		} else {
-			orientation[0] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][0] = orientation[0];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[0], "=", 0));
-			/*
-			 * BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) +
-			 * String.valueOf(0)); this.vars[i][j][0] = var; orientation[0] = var;
-			 */
-		}
-		// ******//
-		if (i + 1 < this.m_myLevelToSolve.length) {
-			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(2));
-			orientation[2] = var;
-			this.vars[i][j][2] = var;
-			this.vars[i + 1][j][0] = var;
-		} else {
-			orientation[2] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][2] = orientation[2];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[2], "=", 0));
-			/*
-			 * BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) +
-			 * String.valueOf(2)); orientation[2] = var; this.vars[i][j][2] = var;
-			 */
-		}
-		if (j - 1 >= 0) {
-			orientation[3] = this.vars[i][j - 1][1];
-			this.vars[i][j][3] = this.vars[i][j - 1][1];
-		} else {
-			orientation[3] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][3] = orientation[3];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[3], "=", 0));
-		}
-		if (j + 1 < this.m_myLevelToSolve[0].length) {
-			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(1));
-			orientation[1] = var;
-			this.vars[i][j][1] = var;
-			this.vars[i][j + 1][3] = var;
-		} else {
-			orientation[1] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][1] = orientation[1];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[1], "=", 0));
-		}
+	private void addConstraintPiece4(int i, int j, Extend extend) {
+		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 4);
 		this.m_myModel.post(c);
 	}
 
-	private void addConstraintPiece5(int i, int j) {
-		BoolVar[] orientation = new BoolVar[Orientation.values().length];
-		// *------*//
-		if (i - 1 >= 0) {
-			orientation[0] = this.vars[i - 1][j][2];
-			this.vars[i][j][0] = orientation[0];
-			// this.vars[i][j][0] = this.vars[i - 1][j][2];
-		} else {
-			orientation[0] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][0] = orientation[0];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[0], "=", 0));
-			/*
-			 * BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) +
-			 * String.valueOf(0)); this.vars[i][j][0] = var; orientation[0] = var;
-			 */
-		}
-		// ******//
-		if (i + 1 < this.m_myLevelToSolve.length) {
-			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(2));
-			orientation[2] = var;
-			this.vars[i][j][2] = var;
-			this.vars[i + 1][j][0] = var;
-		} else {
-			orientation[2] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][2] = orientation[2];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[2], "=", 0));
-			/*
-			 * BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) +
-			 * String.valueOf(2)); orientation[2] = var; this.vars[i][j][2] = var;
-			 */
-		}
-		if (j - 1 >= 0) {
-			orientation[3] = this.vars[i][j - 1][1];
-			this.vars[i][j][3] = this.vars[i][j - 1][1];
-		} else {
-			orientation[3] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][3] = orientation[3];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[3], "=", 0));
-		}
-		if (j + 1 < this.m_myLevelToSolve[0].length) {
-			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(1));
-			orientation[1] = var;
-			this.vars[i][j][1] = var;
-			this.vars[i][j + 1][3] = var;
-		} else {
-			orientation[1] = this.m_myModel.boolVar("", false);
-			this.vars[i][j][1] = orientation[1];
-			this.m_myModel.post(this.m_myModel.arithm(orientation[1], "=", 0));
-		}
+	private void addConstraintPiece5(int i, int j, Extend extend) {
+		BoolVar[] orientation = this.getTab(i, j, extend);
 		BoolVar[] arrayToSum = new BoolVar[2];
 		arrayToSum[0] = orientation[1];
 		arrayToSum[1] = orientation[3];
@@ -383,6 +98,76 @@ public class Csp implements Solving {
 		this.m_myModel.post(this.m_myModel.sum(arrayToSum, "=", 1));
 	}
 
+	private BoolVar[] getTab(int i, int j, Extend extend) {
+		BoolVar[] orientation = new BoolVar[Orientation.values().length];
+		// *------*//
+		if (i - 1 >= 0) {
+			orientation[0] = this.vars[i - 1][j][2];
+			this.vars[i][j][0] = orientation[0];
+		} else {
+			if (extend == Extend.noExtend) {
+				orientation[0] = this.m_myModel.boolVar("", false);
+			} else {
+				if (extend == Extend.north || extend == Extend.northEast || extend == Extend.northWest) {
+					orientation[0] = this.m_myModel.boolVar("", false);
+				} else {
+					orientation[0] = this.m_myModel.boolVar("");
+				}
+			}
+			this.vars[i][j][0] = orientation[0];
+		}
+		// ******//
+		if (i + 1 < this.m_myLevelToSolve.length) {
+			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(2));
+			orientation[2] = var;
+			this.vars[i][j][2] = var;
+			this.vars[i + 1][j][0] = var;
+		} else {
+			if (extend == Extend.noExtend) {
+				orientation[2] = this.m_myModel.boolVar("", false);
+			} else {
+				if (extend == Extend.south || extend == Extend.southEast || extend == Extend.southWest) {
+					orientation[2] = this.m_myModel.boolVar("", false);
+				} else {
+					orientation[2] = this.m_myModel.boolVar("");
+				}
+			}
+			this.vars[i][j][2] = orientation[2];
+		}
+		if (j - 1 >= 0) {
+			orientation[3] = this.vars[i][j - 1][1];
+			this.vars[i][j][3] = this.vars[i][j - 1][1];
+		} else {
+			if (extend == Extend.noExtend) {
+				orientation[3] = this.m_myModel.boolVar("", false);
+			} else {
+				if (extend == Extend.west || extend == Extend.northWest || extend == Extend.southWest) {
+					orientation[3] = this.m_myModel.boolVar("", false);
+				} else {
+					orientation[3] = this.m_myModel.boolVar("");
+				}
+			}
+			this.vars[i][j][3] = orientation[3];
+		}
+		if (j + 1 < this.m_myLevelToSolve[0].length) {
+			BoolVar var = this.m_myModel.boolVar(String.valueOf(i) + String.valueOf(j) + String.valueOf(1));
+			orientation[1] = var;
+			this.vars[i][j][1] = var;
+			this.vars[i][j + 1][3] = var;
+		} else {
+			if (extend == Extend.noExtend) {
+				orientation[1] = this.m_myModel.boolVar("", false);
+			} else {
+				if (extend == Extend.east || extend == Extend.northEast || extend == Extend.southEast) {
+					orientation[1] = this.m_myModel.boolVar("", false);
+				} else {
+					orientation[1] = this.m_myModel.boolVar("");
+				}
+			}
+			this.vars[i][j][1] = orientation[1];
+		}
+		return orientation;
+	}
 
 	public static void main(String args[]) {
 		Piece[][] test = new Piece[28][28];
@@ -392,33 +177,35 @@ public class Csp implements Solving {
 			}
 		}
 		Piece[][] test2 = new Piece[3][3];
-		test2[0][0] = new L(0, 0, 0);
-		test2[0][1] = new T(0, 0, 1);
-		test2[0][2] = new L(0, 0, 2);
-		test2[1][0] = new T(0, 1, 0);
+		test2[0][0] = new X(0, 0, 0);
+		test2[0][1] = new X(0, 0, 1);
+		test2[0][2] = new X(0, 0, 2);
+		test2[1][0] = new X(0, 1, 0);
 		test2[1][1] = new X(0, 1, 1);
-		test2[1][2] = new T(0, 1, 2);
-		test2[2][0] = new L(0, 2, 0);
-		test2[2][1] = new T(0, 2, 1);
-		test2[2][2] = new L(0, 2, 2);
-		Piece[][] test3 = FileReader.getGrid("C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_128x128_dist.6_vflip.true_hflip.false_messedup.false_id.0.dat"," ");
+		test2[1][2] = new X(0, 1, 2);
+		test2[2][0] = new X(0, 2, 0);
+		test2[2][1] = new X(0, 2, 1);
+		test2[2][2] = new X(0, 2, 2);
+		Piece[][] test3 = FileReader.getGrid(
+				"C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_16x16_dist.1_vflip.true_hflip.false_messedup.false_id.1.dat",
+				" ");
 		Csp moncsp = new Csp(test3);
 		long debut = System.currentTimeMillis();
-		boolean aa = moncsp.solving();
-		Level a = new Level(test3);
+		boolean aa = moncsp.solving(Extend.noExtend);
+		Level a = new Level(test2);
 		a.init_neighbors();
-		//System.out.println(a);
+		// System.out.println(a);
 		System.out.println(aa);
-		System.out.println(System.currentTimeMillis() - debut);
-		System.out.print(a.checkGrid());
+		// System.out.println(System.currentTimeMillis() - debut);
+		// System.out.print(a.checkGrid());
 	}
 
 	public Piece[][] getMyLevelToSolve() {
 		return this.m_myLevelToSolve;
 	}
 
-	public boolean solving() {
-		this.initConstraint();
+	public boolean solving(Extend extend) {
+		this.initConstraint(extend);
 		if (this.m_solved) {
 			for (int i = 0; i < m_myLevelToSolve.length; i++) {
 				for (int j = 0; j < this.m_myLevelToSolve[0].length; j++) {
@@ -431,6 +218,84 @@ public class Csp implements Solving {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean divideReign() {
+		short nbIter = 0;
+		Csp moncsp = null;
+		int divide = 0;
+		switch (this.m_myLevelToSolve.length) {
+		case 8:
+			divide = 2;
+			break;
+		case 16:
+			divide = 4;
+			break;
+		case 32:
+			divide = 8;
+			break;
+		case 64:
+			divide = 16;
+			break;
+		case 128:
+			divide = 32;
+			break;
+		case 256:
+			divide = 64;
+			break;
+		case 512:
+			divide = 128;
+			break;
+		case 1024:
+			divide = 256;
+			break;
+		}
+		for (int i = 0; i < m_myLevelToSolve.length; i += m_myLevelToSolve.length / divide) {
+			for (int j = 0; j < m_myLevelToSolve.length; j += m_myLevelToSolve.length / divide) {
+				Piece[][] tabsem = new Piece[m_myLevelToSolve.length / 4][m_myLevelToSolve.length / divide];
+				for (int r = 0; r < tabsem.length; r++) {
+					for (int z = 0; z < tabsem[0].length; z++) {
+						tabsem[r][z] = m_myLevelToSolve[r + nbIter * m_myLevelToSolve.length / divide][z
+								+ nbIter * m_myLevelToSolve.length / divide];
+					}
+				}
+				boolean value = true;
+				if (j == 0 && i == 0) {
+					moncsp = new Csp(tabsem);
+					value = moncsp.solving(Extend.northWest);
+				} else if (i == 0 && !(j == 0)) {
+					if (j + m_myLevelToSolve.length / divide == m_myLevelToSolve.length) {
+						moncsp = new Csp(tabsem);
+						value = moncsp.solving(Extend.northEast);
+					} else {
+						moncsp = new Csp(tabsem);
+						value = moncsp.solving(Extend.north);
+					}
+				} else if (j == 0 && !(i == 0)) {
+					if (i + m_myLevelToSolve.length / divide == m_myLevelToSolve.length) {
+						moncsp = new Csp(tabsem);
+						value = moncsp.solving(Extend.southWest);
+					} else {
+						moncsp = new Csp(tabsem);
+						value = moncsp.solving(Extend.west);
+					}
+				} else if (j + m_myLevelToSolve.length / divide == m_myLevelToSolve.length
+						&& i + m_myLevelToSolve.length / divide == m_myLevelToSolve.length) {
+					moncsp = new Csp(tabsem);
+					value = moncsp.solving(Extend.southEast);
+				} else if (j + m_myLevelToSolve.length / divide == m_myLevelToSolve.length && (i != 0)) {
+					moncsp = new Csp(tabsem);
+					value = moncsp.solving(Extend.east);
+				} else {
+					moncsp = new Csp(tabsem);
+					value = moncsp.solving(Extend.allExtend);
+				}
+				if (!value) {
+					return false;
+				}
+			}
+		}
+		return true ; 
 	}
 
 	private void guessOrientation(int i, int j, BoolVar[] open) {

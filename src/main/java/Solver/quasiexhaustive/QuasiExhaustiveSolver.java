@@ -9,7 +9,7 @@ import model.pieces.T;
 
 import java.util.*;
 
-public class QuasiExhaustiveSolver implements Solving {
+public class QuasiExhaustiveSolver  {
 
     private Level m_level;
     private Deque<Piece> m_stack;
