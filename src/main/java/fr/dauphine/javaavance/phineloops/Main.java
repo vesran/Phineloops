@@ -1,6 +1,7 @@
 package fr.dauphine.javaavance.phineloops;
 
 import Solver.Csp;
+import Solver.Extend;
 import model.Level;
 import model.io.FileCreator;
 import model.io.FileReader;
@@ -33,7 +34,7 @@ public class Main {
 		boolean solved;
 		// Solve the level
 		Csp solver = new Csp(inputGrid);
-		solved = solver.solving();
+		solved = solver.solving(Extend.noExtend);
 		// Save the solved level
 		outputGrid = solver.getMyLevelToSolve();
 		FileCreator.write(outputGrid, outputFile);
