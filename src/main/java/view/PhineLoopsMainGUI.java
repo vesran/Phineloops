@@ -104,5 +104,5 @@ public class PhineLoopsMainGUI extends Application {
 		
 
 		System.out.println("This instruction will not be executed if the window is not closed");*/
-		}
 	}
+}

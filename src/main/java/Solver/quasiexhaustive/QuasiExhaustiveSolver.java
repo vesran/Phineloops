@@ -14,12 +14,13 @@ public class QuasiExhaustiveSolver  {
 
     private Level m_level;
     private Deque<Piece> m_stack;
-    private Deque<Piece> m_antiStack;
+    private PriorityQueue<Piece> m_antistack;
     private Map<Piece, Iterator<Integer>> m_nextOrientations;
 
     public QuasiExhaustiveSolver() {
         this.m_stack = new ArrayDeque<>();
-        this.m_antiStack = new ArrayDeque<>();
+//        this.m_antiStack = new ArrayDeque<>();
+        this.m_antistack = new PriorityQueue<>(this.piecesComparator());
         this.m_nextOrientations = new HashMap<>();
     }
 
@@ -32,44 +33,65 @@ public class QuasiExhaustiveSolver  {
         this(new Level(grid));
     }
 
-    @Deprecated
-    public void read() {
-        // Read start from top left corner --> this is the function to modify to have another ordering
-        // (and possibly the anti-stack -> priority FIFO)
+    /**
+     * Defines a way to compare pieces in the anti-stack. It defines the order in which pieces should be considered.
+     * The greater a piece is, the more its orientation tends to be changed first.
+     * @return a Comparator of Piece that implement a way to compare pieces as described above.
+     */
+    protected Comparator<Piece> piecesComparator() {
+        return new Comparator<Piece>() {
+            @Override
+            public int compare(Piece p1, Piece p2) {
+                if (p1.getLine_number() != p2.getLine_number()) {
+                    return p1.getLine_number() - p2.getLine_number();
+                } else {
+                    return p1.getColumn_number() - p2.getColumn_number();
+                }
+            }
+        };
     }
 
     public boolean solving() {
         Piece out;
         int i = 0;
+//        Set<String> instances = new HashSet<>();
 
         // Init stack and set each piece to their best orientation
         for (Piece[] row : this.m_level.getGrid()) {
             for (Piece currentPiece : row) {
+                // Exclude empty and X piece
                 if (currentPiece.getId() != 0 && currentPiece.getId() != 4) {
-                    if (!this.m_stack.isEmpty())   this.setToBestOrientation();     // Final top of stack not rotated
-                    this.m_stack.push(currentPiece);
+                    this.m_antistack.add(currentPiece);
                 }
             }
+        }
+
+        // Transfer pieces from anti-stack to stack
+        while (this.m_antistack.peek() != null) {
+            if (!this.m_stack.isEmpty()) this.setToBestOrientation(this.m_stack.peek());    // Final top of stack not rotated
+            this.m_stack.push(this.m_antistack.poll());
         }
 
         while (!m_stack.isEmpty()) {
             System.out.println("Start iteration");
             // Rotate piece at the top of the stack and add this piece to the rotated set
-            this.setToBestOrientation();
+            this.setToBestOrientation(this.m_stack.peek());
 
             // Add other pieces to the stack
-            while (!this.m_antiStack.isEmpty()) {
-                this.m_stack.push(this.m_antiStack.pop());
+            while (this.m_antistack.peek() != null) {
+                this.m_stack.push(this.m_antistack.poll());
+                this.setToBestOrientation(this.m_stack.peek());
             }
 
             // If the piece has made an entire rotation, pop and remove it from the rotated set
             while (!this.m_stack.isEmpty() && this.entireRotation(this.m_stack.peek())) {
                 out = this.m_stack.pop();
+                this.m_antistack.add(out);
                 this.m_nextOrientations.remove(out);
             }
 
-            System.out.println("Test " + ++i);
-            System.out.println(this.m_level);
+            System.out.println("Test " + ++i + "\n" + this.m_level);
+//            instances.add(this.m_level.toString());
 
             // Check if the level is solved, no modification of the stacks/pieces should follow to keep things easier
             if (this.m_level.checkGrid()) {
@@ -80,29 +102,26 @@ public class QuasiExhaustiveSolver  {
                 // If the piece has made an entire rotation, pop and remove it from the rotated set
                 while (!this.m_stack.isEmpty() && this.entireRotation(this.m_stack.peek())) {
                     out = this.m_stack.pop();
-                    this.m_antiStack.push(out);
+                    this.m_antistack.add(out);
                 }
             }
 
-//            if (i == 15) {
-//                (new Scanner(System.in)).nextInt();
-//                break;
-//            }
         }
+
+//        System.out.println(instances.size());
 
         System.out.println("SOLVED:false");
         return false;
     }
 
     // Set top piece to its best orientation according to score function
-    private void setToBestOrientation() {
-        Piece top = this.m_stack.peek();
-        if (!this.m_nextOrientations.containsKey(top)) {
-            this.m_nextOrientations.put(top, this.genOrientations(top));
+    private void setToBestOrientation(Piece piece) {
+        if (!this.m_nextOrientations.containsKey(piece)) {
+            this.m_nextOrientations.put(piece, this.genOrientations(piece));
         }
-        if (this.m_nextOrientations.get(top).hasNext()) {
-            top.setOrientation(this.m_nextOrientations.get(top).next());
-            System.out.println("Current top piece set at orientation " + top.getOrientation());
+        if (this.m_nextOrientations.get(piece).hasNext()) {
+            piece.setOrientation(this.m_nextOrientations.get(piece).next());
+//            System.out.println("Current top piece set at orientation " + piece.getOrientation());
         }
         else {
             throw new RuntimeException("Empty rotation");
@@ -115,8 +134,8 @@ public class QuasiExhaustiveSolver  {
         Map<Integer, Double> scores = new HashMap<>();  // Use Map to be sorted with Stream (easier implementation)
 
         // Give a score to each orientation
-        for (int i = 0; i < nbOrientations; i++) {
-            scores.put(i, this.score(piece));
+        for (int orientationId = 0; orientationId < nbOrientations; orientationId++) {
+            scores.put(orientationId, this.score(piece, orientationId));
         }
 
         // Return an iterator over the index of the sorted array, orientation with null/negative score are skipped
@@ -124,15 +143,21 @@ public class QuasiExhaustiveSolver  {
         List<Integer> list = scores.entrySet().stream()
                         .filter(x -> x.getValue() > 0)
                         .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                        .map(x -> x.getKey())
+                        .map(Map.Entry::getKey)
                         .collect(Collectors.toList());
 
         return list.iterator();
     }
 
-    // Score for each orientation of a piece. The higher the better. Orientations will be sorted according to
-    // the score value in descending order.
-    protected double score(Piece piece) {
+    /**
+     * Gives a score for a given orientation of the specified piece. The higher the better.
+     * Orientations will be sorted according to the score value in descending order.
+     * The more a score for an orientation is higher, the more this orientation will be tested first.
+     * @param piece
+     * @param orientationId
+     * @return score as double
+     */
+    protected double score(Piece piece, Integer orientationId) {
         return 0.25;
     }
 
