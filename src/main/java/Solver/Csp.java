@@ -3,9 +3,13 @@ package Solver;
 import java.util.Arrays;
 
 import org.chocosolver.solver.Model;
+import org.chocosolver.solver.ParallelPortfolio;
 import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.search.limits.TimeCounter;
+import org.chocosolver.solver.search.strategy.selectors.variables.ImpactBased;
+import org.chocosolver.solver.search.strategy.strategy.GreedyBranching;
 import org.chocosolver.solver.variables.BoolVar;
+import org.chocosolver.util.ESat;
 
 import model.pieces.Circle;
 import model.pieces.L;
@@ -55,36 +59,58 @@ public class Csp implements Solving {
 				}
 			}
 		}
-		this.m_myModel.getSolver().limitTime("5s");
-		this.m_solved = this.m_myModel.getSolver().solve();
+		
 	}
 
 	private void addConstraintPiece0(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 0);
+		if( c.isSatisfied() == ESat.FALSE) {
+			System.out.println("FAUX ! 1") ; 
+		}
 		this.m_myModel.post(c);
 	}
 
 	private void addConstraintPiece1(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 1);
+		if(c.isSatisfied() == ESat.FALSE) {
+			System.out.println("FAUX ! 2") ; 
+		}
 		this.m_myModel.post(c);
 	}
 
 	private void addConstraintPiece2(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
-		this.m_myModel.post((this.m_myModel.sum(orientation, "=", 2)));
-		this.m_myModel.post(this.m_myModel.arithm(orientation[0], "=", orientation[2]));
+		Constraint c1 = this.m_myModel.sum(orientation, "=", 2) ; 
+		Constraint c2 = this.m_myModel.arithm(orientation[0], "=", orientation[2]); 
+		if( c2.isSatisfied() == ESat.FALSE && c1.isSatisfied() == ESat.FALSE) {
+			System.out.println("FAUX ! 3") ; 
+		}
+		this.m_myModel.post(c1);
+		this.m_myModel.post(c2);
+		
+		
+		
 	}
 
 	private void addConstraintPiece3(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
-		this.m_myModel.post(this.m_myModel.sum(orientation, "=", 3));
+		Constraint c = this.m_myModel.sum(orientation, "=", 3) ; 
+		if( c.isSatisfied() == ESat.FALSE) {
+			System.out.println("FAUX ! 4") ; 
+		}
+		
+		this.m_myModel.post(c);
 	}
 
 	private void addConstraintPiece4(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 4);
+		if( c.isSatisfied() == ESat.FALSE) {
+			System.out.println("FAUX ! 5") ; 
+		}
+		
 		this.m_myModel.post(c);
 	}
 
@@ -97,6 +123,8 @@ public class Csp implements Solving {
 		arrayToSum[0] = orientation[0];
 		arrayToSum[1] = orientation[2];
 		this.m_myModel.post(this.m_myModel.sum(arrayToSum, "=", 1));
+		
+		
 	}
 
 	private BoolVar[] getTab(int i, int j, Extend extend) {
@@ -171,10 +199,10 @@ public class Csp implements Solving {
 	}
 
 	public static void main(String args[]) {
-		Piece[][] test = new Piece[28][28];
-		for (int z = 0; z < 28; z++) {
-			for (int j = 0; j < 28; j++) {
-				test[z][j] = new Circle(0, z, j);
+		Piece[][] test = new Piece[1024][1024];
+		for (int z = 0; z < 1024; z++) {
+			for (int j = 0; j < 1024; j++) {
+				test[z][j] = new X(0, z, j);
 			}
 		}
 		Piece[][] test2 = new Piece[3][3];
@@ -188,11 +216,12 @@ public class Csp implements Solving {
 		test2[2][1] = new X(0, 2, 1);
 		test2[2][2] = new X(0, 2, 2);
 		Piece[][] test3 = FileReader.getGrid(
-				"C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_16x16_dist.1_vflip.true_hflip.false_messedup.false_id.1.dat",
+				"C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_128x128_dist.1_vflip.true_hflip.true_messedup.false_id.1.dat",
 				" ");
 		Csp moncsp = new Csp(test3);
 		long debut = System.currentTimeMillis();
 		boolean aa = moncsp.solving(Extend.noExtend);
+		long fin = System.currentTimeMillis();
 		Level a = new Level(test2);
 		a.init_neighbors();
 		// System.out.println(a);
@@ -207,6 +236,12 @@ public class Csp implements Solving {
 
 	public boolean solving(Extend extend) {
 		this.initConstraint(extend);
+		//this.m_myModel.getSolver().limitTime("1s");
+		//arallelPortfolio portfolio = new ParallelPortfolio(false);
+		
+		
+		this.m_solved = this.m_myModel.getSolver().solve();
+		
 		if (this.m_solved) {
 			for (int i = 0; i < m_myLevelToSolve.length; i++) {
 				for (int j = 0; j < this.m_myLevelToSolve[0].length; j++) {
