@@ -1,16 +1,13 @@
 package Solver.quasiexhaustive;
 
-import Solver.Solving;
 import model.Level;
-import model.enumtype.Side;
 import model.pieces.L;
 import model.pieces.Piece;
-import model.pieces.T;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class QuasiExhaustiveSolver  {
+public class QuasiExhaustiveSolver {
 
     private Level m_level;
     private Deque<Piece> m_stack;
@@ -19,7 +16,6 @@ public class QuasiExhaustiveSolver  {
 
     public QuasiExhaustiveSolver() {
         this.m_stack = new ArrayDeque<>();
-//        this.m_antiStack = new ArrayDeque<>();
         this.m_antistack = new PriorityQueue<>(this.piecesComparator());
         this.m_nextOrientations = new HashMap<>();
     }

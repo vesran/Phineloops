@@ -25,11 +25,15 @@ public class Bar extends Piece {
 
 	@Override
 	public void translation(Side side) {
+		int oldOrientation = this.orientation;
 		// TODO Auto-generated method stub
 		if (this.orientation == 1)
 			this.orientation = 0;
 		else
 			this.orientation = 1;
+
+		if (side == Side.LEFT)	this.pcs.firePropertyChange("leftTranslation", oldOrientation, this.orientation);
+		else	this.pcs.firePropertyChange("rightTranslation", oldOrientation, this.orientation);
 	}
 
 	

@@ -4,6 +4,8 @@ import model.enumtype.Orientation;
 import model.enumtype.Side;
 import view.pieces.PieceDrawing;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 
@@ -13,6 +15,7 @@ public abstract class Piece {
 	protected int orientation;
 	protected int line_number;
 	protected int column_number;
+	protected PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 	public Piece getOneNeighbor(Orientation orientation) { // rajouter une exception ? pour le cas ou le voisin n'existe
 															// pas ? ou bien on suppose que le jeu est parfaitement créé
@@ -20,6 +23,10 @@ public abstract class Piece {
 			return this.neighbor.get(orientation);
 		else
 			return null;
+	}
+
+	public void addObserver(PropertyChangeListener listener) {
+		pcs.addPropertyChangeListener(listener);
 	}
 
 	public HashMap<Orientation, Piece> getNeighbor() {
@@ -43,7 +50,9 @@ public abstract class Piece {
 	}
 
 	public void setOrientation(int orientation) {
+		int oldValue = this.orientation;
 		this.orientation = orientation;
+		pcs.firePropertyChange("setting orientation", oldValue, this.orientation);
 	}
 
 	public int getLine_number() {
@@ -102,6 +111,11 @@ public abstract class Piece {
 	 */
 	public abstract void translation(Side side);
 
+	/**
+	 * Instantiates a visual representation of a Piece for view part in MVC. Visual can be based on files.
+	 * @return visual representation of a Piece
+	 * @throws FileNotFoundException
+	 */
 	public abstract PieceDrawing createDrawing() throws FileNotFoundException;
 
 	/**
