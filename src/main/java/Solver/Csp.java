@@ -1,6 +1,10 @@
 package Solver;
 
+import static org.chocosolver.solver.search.strategy.Search.*;
+
+import java.awt.List;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.ParallelPortfolio;
@@ -59,14 +63,13 @@ public class Csp implements Solving {
 				}
 			}
 		}
-		
 	}
 
 	private void addConstraintPiece0(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 0);
-		if( c.isSatisfied() == ESat.FALSE) {
-			System.out.println("FAUX ! 1") ; 
+		if (c.isSatisfied() == ESat.FALSE) {
+			System.out.println("FAUX ! 1");
 		}
 		this.m_myModel.post(c);
 	}
@@ -74,43 +77,38 @@ public class Csp implements Solving {
 	private void addConstraintPiece1(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 1);
-		if(c.isSatisfied() == ESat.FALSE) {
-			System.out.println("FAUX ! 2") ; 
+		if (c.isSatisfied() == ESat.FALSE) {
+			System.out.println("FAUX ! 2");
 		}
 		this.m_myModel.post(c);
 	}
 
 	private void addConstraintPiece2(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
-		Constraint c1 = this.m_myModel.sum(orientation, "=", 2) ; 
-		Constraint c2 = this.m_myModel.arithm(orientation[0], "=", orientation[2]); 
-		if( c2.isSatisfied() == ESat.FALSE && c1.isSatisfied() == ESat.FALSE) {
-			System.out.println("FAUX ! 3") ; 
+		Constraint c1 = this.m_myModel.sum(orientation, "=", 2);
+		Constraint c2 = this.m_myModel.arithm(orientation[0], "=", orientation[2]);
+		if (c2.isSatisfied() == ESat.FALSE && c1.isSatisfied() == ESat.FALSE) {
+			System.out.println("FAUX ! 3");
 		}
 		this.m_myModel.post(c1);
 		this.m_myModel.post(c2);
-		
-		
-		
 	}
 
 	private void addConstraintPiece3(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
-		Constraint c = this.m_myModel.sum(orientation, "=", 3) ; 
-		if( c.isSatisfied() == ESat.FALSE) {
-			System.out.println("FAUX ! 4") ; 
+		Constraint c = this.m_myModel.sum(orientation, "=", 3);
+		if (c.isSatisfied() == ESat.FALSE) {
+			System.out.println("FAUX ! 4");
 		}
-		
 		this.m_myModel.post(c);
 	}
 
 	private void addConstraintPiece4(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 4);
-		if( c.isSatisfied() == ESat.FALSE) {
-			System.out.println("FAUX ! 5") ; 
+		if (c.isSatisfied() == ESat.FALSE) {
+			System.out.println("FAUX ! 5");
 		}
-		
 		this.m_myModel.post(c);
 	}
 
@@ -123,8 +121,6 @@ public class Csp implements Solving {
 		arrayToSum[0] = orientation[0];
 		arrayToSum[1] = orientation[2];
 		this.m_myModel.post(this.m_myModel.sum(arrayToSum, "=", 1));
-		
-		
 	}
 
 	private BoolVar[] getTab(int i, int j, Extend extend) {
@@ -195,6 +191,8 @@ public class Csp implements Solving {
 			}
 			this.vars[i][j][1] = orientation[1];
 		}
+		this.m_myModel.getSolver().setSearch(inputOrderUBSearch(orientation));
+
 		return orientation;
 	}
 
@@ -236,12 +234,10 @@ public class Csp implements Solving {
 
 	public boolean solving(Extend extend) {
 		this.initConstraint(extend);
-		//this.m_myModel.getSolver().limitTime("1s");
-		//arallelPortfolio portfolio = new ParallelPortfolio(false);
 		
-		
+		// this.m_myModel.getSolver().limitTime("1s");
+		// arallelPortfolio portfolio = new ParallelPortfolio(false);
 		this.m_solved = this.m_myModel.getSolver().solve();
-		
 		if (this.m_solved) {
 			for (int i = 0; i < m_myLevelToSolve.length; i++) {
 				for (int j = 0; j < this.m_myLevelToSolve[0].length; j++) {
@@ -327,14 +323,13 @@ public class Csp implements Solving {
 					value = moncsp.solving(Extend.allExtend);
 				}
 				if (!value) {
-					Level a =new Level(tabsem) ; 
-					//PhineLoopsMainGUI.display(a);
-					
+					Level a = new Level(tabsem);
+					// PhineLoopsMainGUI.display(a);
 					return false;
 				}
 			}
 		}
-		return true ; 
+		return true;
 	}
 
 	private void guessOrientation(int i, int j, BoolVar[] open) {

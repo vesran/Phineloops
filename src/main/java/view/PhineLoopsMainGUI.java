@@ -79,23 +79,24 @@ public class PhineLoopsMainGUI extends Application {
 		int nb = 0 ;
 		level.setGrid(FileReader.getGrid(
 				"C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_32x32_dist.1_vflip.true_hflip.true_messedup.false_id.1.dat"," "));
-		display(level);
-		/*for (File file : listOfFiles) {
+		int num =  0 ; 
+		for (File file : listOfFiles) {
 			if (file.isFile()) {
+				System.out.println(file);
 				moncsp = new Csp(FileReader.getGrid(file.getAbsolutePath(), " "));
-				if(moncsp.divideReign()) {
-					long startTime = System.currentTimeMillis();
-					boolean sol = moncsp.solving(Extend.noExtend);
-					long endTime = System.currentTimeMillis();
-					duree += (endTime - startTime ); 
-					nb++ ; 
-					
-				}
+				long debut = System.currentTimeMillis();
+				boolean aa = moncsp.solving(Extend.noExtend);
+				long fin = System.currentTimeMillis();
+				System.out.println(fin-debut + "  " + num ) ; 
+				num++ ; 
+				
+				
+				
 				
 				
 				
 			}
-		}*/
+		}
 		
 		//System.out.println(duree +"  " + nb); 
 		/*Piece[][] tab = FileReader.getGrid(
