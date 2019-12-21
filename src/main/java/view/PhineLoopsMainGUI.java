@@ -76,7 +76,10 @@ public class PhineLoopsMainGUI extends Application {
 		Csp moncsp = null;
 		long duree = 0 ; 
 		int nb = 0 ;
-		for (File file : listOfFiles) {
+		level.setGrid(FileReader.getGrid(
+				"C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_32x32_dist.1_vflip.true_hflip.true_messedup.false_id.1.dat"," "));
+		display(level);
+		/*for (File file : listOfFiles) {
 			if (file.isFile()) {
 				moncsp = new Csp(FileReader.getGrid(file.getAbsolutePath(), " "));
 				if(moncsp.divideReign()) {
@@ -91,16 +94,16 @@ public class PhineLoopsMainGUI extends Application {
 				
 				
 			}
-		}
+		}*/
 		
-		System.out.println(duree +"  " + nb); 
+		//System.out.println(duree +"  " + nb); 
 		/*Piece[][] tab = FileReader.getGrid(
 				"C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_8x8_dist.0_vflip.false_hflip.true_messedup.false_id.1.dat",
 				" ");// grid_32x32_dist.1_vflip.true_hflip.true_messedup.false_id.1.dat
 		// moncsp = new Csp(tab) ;
 		// moncsp.solving() ;
 		
-			// display(level);
+		
 		
 
 		System.out.println("This instruction will not be executed if the window is not closed");*/

@@ -15,6 +15,7 @@ import model.io.FileReader;
 import model.pieces.Piece;
 import model.pieces.T;
 import model.pieces.X;
+import view.PhineLoopsMainGUI;
 
 public class Csp implements Solving {
 	private Model m_myModel;
@@ -226,33 +227,33 @@ public class Csp implements Solving {
 		int divide = 0;
 		switch (this.m_myLevelToSolve.length) {
 		case 8:
-			divide = 2;
+			divide = 1;
 			break;
 		case 16:
-			divide = 4;
+			divide = 2;
 			break;
 		case 32:
-			divide = 8;
+			divide = 4;
 			break;
 		case 64:
-			divide = 16;
+			divide = 8;
 			break;
 		case 128:
-			divide = 32;
+			divide = 16;
 			break;
 		case 256:
-			divide = 64;
+			divide = 32;
 			break;
 		case 512:
-			divide = 128;
+			divide = 64;
 			break;
 		case 1024:
-			divide = 256;
+			divide = 128;
 			break;
 		}
 		for (int i = 0; i < m_myLevelToSolve.length; i += m_myLevelToSolve.length / divide) {
 			for (int j = 0; j < m_myLevelToSolve.length; j += m_myLevelToSolve.length / divide) {
-				Piece[][] tabsem = new Piece[m_myLevelToSolve.length / 4][m_myLevelToSolve.length / divide];
+				Piece[][] tabsem = new Piece[m_myLevelToSolve.length / divide][m_myLevelToSolve.length / divide];
 				for (int r = 0; r < tabsem.length; r++) {
 					for (int z = 0; z < tabsem[0].length; z++) {
 						tabsem[r][z] = m_myLevelToSolve[r + nbIter * m_myLevelToSolve.length / divide][z
@@ -291,6 +292,9 @@ public class Csp implements Solving {
 					value = moncsp.solving(Extend.allExtend);
 				}
 				if (!value) {
+					Level a =new Level(tabsem) ; 
+					//PhineLoopsMainGUI.display(a);
+					
 					return false;
 				}
 			}
