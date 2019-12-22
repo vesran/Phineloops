@@ -62,6 +62,6 @@ public class First_Generator implements Generator {
 
 	public static void main(String[] args) {
 		First_Generator f = new First_Generator();
-		f.generate(4, 4, 2);
+//		f.generate(4, 4, 2);
 	}
 }
