@@ -82,12 +82,21 @@ public class PhineLoopsMainGUI extends Application {
 		int num =  0 ; 
 		for (File file : listOfFiles) {
 			if (file.isFile()) {
-				System.out.println(file);
+				
 				moncsp = new Csp(FileReader.getGrid(file.getAbsolutePath(), " "));
 				long debut = System.currentTimeMillis();
 				boolean aa = moncsp.solving(Extend.noExtend);
 				long fin = System.currentTimeMillis();
-				System.out.println(fin-debut + "  " + num ) ; 
+				
+				level.setGrid(moncsp.getMyLevelToSolve());
+				level.init_neighbors();
+				
+				if(aa == level.checkGrid()) {
+					System.out.println(file);
+					System.out.println(fin-debut + "  " + num ) ; 
+					
+					
+				}
 				num++ ; 
 				
 				

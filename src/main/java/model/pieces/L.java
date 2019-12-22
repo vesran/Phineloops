@@ -92,7 +92,6 @@ public class L extends Piece {
 	@Override
 	public boolean isConnectedTo(Orientation orientation) {
 		if (this.neighbor.containsKey(orientation)) {
-			System.out.println();
 			if (orientation == Orientation.NORTH && (this.orientation == 0 || this.orientation == 3)) 
 				return true;
 			if (orientation == Orientation.EAST && (this.orientation == 1 || this.orientation == 0))

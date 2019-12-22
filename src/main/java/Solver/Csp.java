@@ -10,9 +10,14 @@ import org.chocosolver.solver.Model;
 import org.chocosolver.solver.ParallelPortfolio;
 import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.search.limits.TimeCounter;
+import org.chocosolver.solver.search.strategy.selectors.values.IntDomainMax;
+import org.chocosolver.solver.search.strategy.selectors.values.IntValueSelector;
 import org.chocosolver.solver.search.strategy.selectors.variables.ImpactBased;
+import org.chocosolver.solver.search.strategy.selectors.variables.InputOrder;
+import org.chocosolver.solver.search.strategy.selectors.variables.Occurrence;
 import org.chocosolver.solver.search.strategy.strategy.GreedyBranching;
 import org.chocosolver.solver.variables.BoolVar;
+import org.chocosolver.solver.variables.IntVar;
 import org.chocosolver.util.ESat;
 
 import model.pieces.Circle;
@@ -176,7 +181,7 @@ public class Csp implements Solving {
 			}
 			this.vars[i][j][1] = orientation[1];
 		}
-		this.m_myModel.getSolver().setSearch(inputOrderUBSearch(orientation));
+		//this.m_myModel.getSolver().setSearch(inputOrderUBSearch(orientation));
 
 		return orientation;
 	}
@@ -222,6 +227,22 @@ public class Csp implements Solving {
 		
 		// this.m_myModel.getSolver().limitTime("1s");
 		// arallelPortfolio portfolio = new ParallelPortfolio(false);
+		
+		BoolVar[] orientation = new BoolVar[this.vars.length*this.vars[0].length*this.vars[0][0].length];
+		int index = 0 ; 
+		for (int i = 0; i < this.vars.length; i++) {
+			for (int j = 0; j < this.vars[0].length; j++) {
+				for (int z = 0; z < this.vars[0][0].length; z++) {
+					orientation[index] = this.vars[i][j][z] ; 
+					index++ ; 
+				}
+			}
+		}
+		InputOrder a = new InputOrder(this.m_myModel) ; 
+		IntValueSelector aa = new IntDomainMax() ; 
+		this.m_myModel.getSolver().setSearch(greedySearch(minDomUBSearch(orientation)));
+		
+		
 		this.m_solved = this.m_myModel.getSolver().solve();
 		if (this.m_solved) {
 			for (int i = 0; i < m_myLevelToSolve.length; i++) {
