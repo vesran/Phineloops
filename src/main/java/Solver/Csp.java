@@ -68,18 +68,12 @@ public class Csp implements Solving {
 	private void addConstraintPiece0(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 0);
-		if (c.isSatisfied() == ESat.FALSE) {
-			System.out.println("FAUX ! 1");
-		}
 		this.m_myModel.post(c);
 	}
 
 	private void addConstraintPiece1(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 1);
-		if (c.isSatisfied() == ESat.FALSE) {
-			System.out.println("FAUX ! 2");
-		}
 		this.m_myModel.post(c);
 	}
 
@@ -87,9 +81,6 @@ public class Csp implements Solving {
 		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c1 = this.m_myModel.sum(orientation, "=", 2);
 		Constraint c2 = this.m_myModel.arithm(orientation[0], "=", orientation[2]);
-		if (c2.isSatisfied() == ESat.FALSE && c1.isSatisfied() == ESat.FALSE) {
-			System.out.println("FAUX ! 3");
-		}
 		this.m_myModel.post(c1);
 		this.m_myModel.post(c2);
 	}
@@ -97,18 +88,12 @@ public class Csp implements Solving {
 	private void addConstraintPiece3(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 3);
-		if (c.isSatisfied() == ESat.FALSE) {
-			System.out.println("FAUX ! 4");
-		}
 		this.m_myModel.post(c);
 	}
 
 	private void addConstraintPiece4(int i, int j, Extend extend) {
 		BoolVar[] orientation = this.getTab(i, j, extend);
 		Constraint c = this.m_myModel.sum(orientation, "=", 4);
-		if (c.isSatisfied() == ESat.FALSE) {
-			System.out.println("FAUX ! 5");
-		}
 		this.m_myModel.post(c);
 	}
 
