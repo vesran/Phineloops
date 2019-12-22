@@ -20,9 +20,9 @@ public class Level {
 	}
 
 	public void setGrid(Piece[][] newGrid) {
-		this.grid = newGrid ; 
-		this.width = newGrid[0].length ; 
-		this.height = newGrid.length ; 
+		this.grid = newGrid;
+		this.width = newGrid[0].length;
+		this.height = newGrid.length;
 	}
 
 	public Piece[][] getGrid() {
@@ -73,43 +73,39 @@ public class Level {
 			}
 		}
 	}
-	
+
 	public boolean checkGrid() {
 		for (int i = 0; i < this.height; i++)
 			for (int j = 0; j < grid.length; j++) {
-				if(!grid[i][j].connectedAll()) {
-//					System.out.println("ici i  "+i+" j "+j+ "type "+ grid[i][j].getId() );
+				if (!grid[i][j].connectedAll()) {
 					return false;
-					
-					}
+				}
 			}
 		return true;
 	}
 
-	public boolean checkGrid2() {
-		for (Piece[] col : this.grid) {
-			for(Piece p : col) {
-
+	public boolean insolvent() {
+		for (int i = 0; i < this.height; i++)
+			for (int j = 0; j < grid.length; j++) {
+				
 			}
-		}
-		return false;
+		return true;
 	}
-		
 
 	@Override
 	public String toString() {
 		StringBuilder strb = new StringBuilder();
 		for (int i = -2; i < this.height; i++) {
-			strb.append("||   ");		// Vertical left column
+			strb.append("||   "); // Vertical left column
 
 			for (int j = 0; j < this.width; j++) {
 				if (i == -2) {
-					strb.append("# ");	// Writing first line
+					strb.append("# "); // Writing first line
 				} else if (i == -1) {
-					strb.append(" ");	// Adding separator between the vertical left column and first column of pieces
+					strb.append(" "); // Adding separator between the vertical left column and first column of pieces
 				} else {
 					strb.append(this.grid[i][j]);
-					strb.append(" ");	// Separator between pieces
+					strb.append(" "); // Separator between pieces
 				}
 
 			}

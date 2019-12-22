@@ -59,10 +59,16 @@ public class X extends Piece {
 	@Override
 	public boolean connectedAll() {
 		// TODO Auto-generated method stub
-		return this.numberOfConnection() == 4;
+		return this.numberOfConnection() == this.numbeOfPossibleConnection();
 	}
 
 	public String toString() {
 		return "\u253C";
+	}
+
+	@Override
+	public int numbeOfPossibleConnection() {
+		// TODO Auto-generated method stub
+		return 4;
 	}
 }

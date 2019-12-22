@@ -108,7 +108,8 @@ public abstract class Piece {
 	 * @return the number of Pieces that are linked to the current Piece
 	 */
 	public abstract int numberOfConnection();
-
+	
+	public abstract int numbeOfPossibleConnection();
 	/**
 	 * @param orientation The direction of the piece which will be checked if the
 	 *                    current piece is connected to it

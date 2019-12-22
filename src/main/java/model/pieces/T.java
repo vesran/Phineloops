@@ -111,7 +111,7 @@ public class T extends Piece {
 	@Override
 	public boolean connectedAll() {
 		// TODO Auto-generated method stub
-		return this.numberOfConnection() == 3;
+		return this.numberOfConnection() == this.numbeOfPossibleConnection();
 	}
 
 	@Override
@@ -134,6 +134,12 @@ public class T extends Piece {
 			throw new IllegalStateException("Orientation of T piece " + this.orientation + "should not exist");
 		}
 		return str;
+	}
+
+	@Override
+	public int numbeOfPossibleConnection() {
+		// TODO Auto-generated method stub
+		return 3;
 	}
 
 }

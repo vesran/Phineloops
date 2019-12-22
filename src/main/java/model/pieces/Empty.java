@@ -56,4 +56,10 @@ public class Empty extends Piece {
 					// print instead if needed
 
 	}
+
+	@Override
+	public int numbeOfPossibleConnection() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

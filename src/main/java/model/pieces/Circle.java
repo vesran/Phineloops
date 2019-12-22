@@ -77,7 +77,7 @@ public class Circle extends Piece {
 	@Override
 	public boolean connectedAll() {
 		// TODO Auto-generated method stub
-		return this.numberOfConnection() == 1;
+		return this.numberOfConnection() == this.numbeOfPossibleConnection();
 	}
 
 	public String toString() {
@@ -99,6 +99,12 @@ public class Circle extends Piece {
 			throw new IllegalStateException("Orientation of Circle piece " + this.orientation + "should not exist");
 		}
 		return str;
+	}
+
+	@Override
+	public int numbeOfPossibleConnection() {
+		// TODO Auto-generated method stub
+		return 1;
 	}
 
 }
