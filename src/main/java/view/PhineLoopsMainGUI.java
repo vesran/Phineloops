@@ -93,7 +93,7 @@ public class PhineLoopsMainGUI extends Application {
 				
 				if(aa == level.checkGrid()) {
 					System.out.println(file);
-					System.out.println(fin-debut + "  " + num ) ; 
+					System.out.println(fin-debut + "  " + num + "  "+ aa ) ; 
 					
 					
 				}
