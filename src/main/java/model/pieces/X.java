@@ -25,7 +25,11 @@ public class X extends Piece {
 	@Override
 	public void translation(Side side) {
 		// TODO Auto-generated method stub
-
+		if (side == Side.RIGHT) {
+			this.pcs.firePropertyChange("rightTranslation", this.orientation, this.orientation);
+		} else {
+			this.pcs.firePropertyChange("leftTranslation", this.orientation, this.orientation);
+		}
 	}
 
 	@Override

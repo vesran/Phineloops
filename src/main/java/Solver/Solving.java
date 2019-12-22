@@ -1,5 +1,5 @@
 package Solver;
 
 public interface Solving {
-	public boolean solving() ;
+	public boolean solving(Extend extend) ;
 }
