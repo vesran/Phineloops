@@ -105,5 +105,10 @@ public class Bar extends Piece {
 		// TODO Auto-generated method stub
 		return 2;
 	}
-
+	public Object clone() {
+		int orientation = this.orientation ; 
+		int line = this.line_number ; 
+		int column = this.column_number ; 
+		return new Bar(orientation,line,column) ; 
+	}
 }

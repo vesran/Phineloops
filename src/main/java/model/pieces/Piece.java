@@ -136,4 +136,9 @@ public abstract class Piece {
 	 *         piece whose orientation is indicated in parameter
 	 */
 	public abstract boolean isConnectedTo(Orientation orientation);
+	
+	
+
+
+
 }
