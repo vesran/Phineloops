@@ -6,6 +6,8 @@ import view.pieces.BarPieceDrawing;
 import view.pieces.PieceDrawing;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 
 public class Bar extends Piece {
 
@@ -105,5 +107,15 @@ public class Bar extends Piece {
 		// TODO Auto-generated method stub
 		return 2;
 	}
-	
+
+	@Override
+	public List<Orientation> orientatedTo() {
+		if (this.orientation == 0) {
+			return Arrays.asList(Orientation.NORTH, Orientation.SOUTH);
+		} else if (this.orientation == 1) {
+			return Arrays.asList(Orientation.EAST, Orientation.WEST);
+		}
+		return null;
+	}
+
 }

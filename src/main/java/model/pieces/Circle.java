@@ -6,6 +6,8 @@ import view.pieces.CirclePieceDrawing;
 import view.pieces.PieceDrawing;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 
 public class Circle extends Piece {
 	/**
@@ -113,5 +115,20 @@ public class Circle extends Piece {
 		return 1;
 	}
 	
+
+	@Override
+	public List<Orientation> orientatedTo() {
+		if (this.orientation == 0) {
+			return Arrays.asList(Orientation.NORTH);
+		} else if (this.orientation == 1) {
+			return Arrays.asList(Orientation.EAST);
+		} else if (this.orientation == 2) {
+			return Arrays.asList(Orientation.SOUTH);
+		} else if (this.orientation == 3){
+			return Arrays.asList(Orientation.WEST);
+		} else {
+			return null;
+		}
+	}
 
 }

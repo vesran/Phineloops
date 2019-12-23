@@ -8,6 +8,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.List;
 
 public abstract class Piece {
 	protected HashMap<Orientation, Piece> neighbor;
@@ -140,7 +141,7 @@ public abstract class Piece {
 	 *         piece whose orientation is indicated in parameter
 	 */
 	public abstract boolean isConnectedTo(Orientation orientation);
-	
+
 	public Object clone() {
 		
 		if(this instanceof T) {
@@ -166,6 +167,9 @@ public abstract class Piece {
 		
 	}
 
-
-
+	/**
+	 * Determines if a piece has a branch that is pointing toward the specified orientation.
+	 * @return True if the piece is pointing to the given direction, false otherwise.
+	 */
+	public abstract List<Orientation> orientatedTo();
 }

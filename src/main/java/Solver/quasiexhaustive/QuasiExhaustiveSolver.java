@@ -1,10 +1,7 @@
 package Solver.quasiexhaustive;
 
-import javafx.animation.Animation;
 import model.Level;
-import model.pieces.L;
 import model.pieces.Piece;
-import view.pieces.PieceDrawing;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,39 +50,25 @@ public class QuasiExhaustiveSolver {
         Piece out;
         int i = 0;
 
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // Init stack and set each piece to their best orientation
         for (Piece[] row : this.m_level.getGrid()) {
             for (Piece currentPiece : row) {
                 // Exclude empty and X piece
                 if (currentPiece.getId() != 0 && currentPiece.getId() != 4) {
-                    this.m_antistack.add(currentPiece);
+                    this.m_antistack.add(currentPiece); // First sorting of pieces
                 }
             }
-        }
-
-        // Transfer pieces from anti-stack to stack
-        while (this.m_antistack.peek() != null) {
-            if (!this.m_stack.isEmpty()) this.setToBestOrientation(this.m_stack.peek());    // Final top of stack not rotated
-            this.m_stack.push(this.m_antistack.poll());
         }
 
         // Starting to test orientations for all pieces
-        while (!m_stack.isEmpty()) {
-            while (PieceDrawing.rotate.statusProperty().getValue() == Animation.Status.RUNNING) {
-                try {
-                    synchronized(PieceDrawing.monitor) {
-                        while(!PieceDrawing.done) {
-                            PieceDrawing.monitor.wait();
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
+        while (!m_stack.isEmpty() || i == 0) {
             System.out.println("Start iteration");
-            // Rotate piece at the top of the stack and add this piece to the rotated set
-            this.setToBestOrientation(this.m_stack.peek());
 
             // Add other pieces to the stack
             while (this.m_antistack.peek() != null) {
@@ -101,26 +84,32 @@ public class QuasiExhaustiveSolver {
             }
 
             System.out.println("Test " + ++i + "\n" + this.m_level);
+//            System.out.println("First : " + this.m_stack.peek().getLine_number() + this.m_stack.peek().getColumn_number());
+//            this.m_stack.stream().forEach(x -> System.out.print("(" + x.getLine_number() + ", " + x.getColumn_number() + ") "));
 
-            // Check if the level is solved, no modification of the stacks/pieces should follow to keep things easier
+            // Check if the level is solved, no modification of the stacks should follow to keep things easier
             if (this.m_level.checkGrid()) {
-                System.out.println("SOLVED:true");
                 return true;
             }
+            // Rotate piece at the top of the stack and add this piece to the rotated set
+            this.setToBestOrientation(this.m_stack.peek());
         }
 
-        System.out.println("SOLVED:false");
         return false;
     }
 
     // Set top piece to its best orientation according to score function
     private void setToBestOrientation(Piece piece) {
+        if (piece == null) return;  // For the last iteration where there is no piece left to modify
         if (!this.m_nextOrientations.containsKey(piece)) {
             this.m_nextOrientations.put(piece, this.genOrientations(piece));
         }
         if (this.m_nextOrientations.get(piece).hasNext()) {
             piece.setOrientation(this.m_nextOrientations.get(piece).next());
         } else {
+            System.out.println(piece.getLine_number() + " " + piece.getColumn_number());
+            System.out.println(this.m_level);
+            System.out.println(this.m_nextOrientations.get(piece).next());
             throw new RuntimeException("Empty rotation");
         }
     }
@@ -142,7 +131,8 @@ public class QuasiExhaustiveSolver {
                         .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                         .map(Map.Entry::getKey)
                         .collect(Collectors.toList());
-
+//        System.out.println(scores);
+//        System.out.println(list + " " +  piece.getLine_number() + " " + piece.getColumn_number());
         return list.iterator();
     }
 
@@ -161,34 +151,6 @@ public class QuasiExhaustiveSolver {
     private boolean entireRotation(Piece currentPiece) {
         if (this.m_nextOrientations.get(currentPiece) == null)  return false;
         return !this.m_nextOrientations.get(currentPiece).hasNext();
-    }
-
-    public static Level initLevel() { // To remove
-        int width = 2;
-        int height = 2;
-        Level lvl = new Level(height, width);
-        Piece[][] grid = lvl.getGrid();
-        // code d'essai
-        grid[0][0] = new L(0, 0, 0);
-        grid[0][1] = new L(0, 0, 1);
-        grid[1][0] = new L(0, 1, 0);
-        grid[1][1] = new L(0, 1, 1);
-
-        return lvl;
-    }
-
-    public static void main(String [] args) {
-        Level lvl = initLevel();
-        lvl.init_neighbors();
-
-        QuasiExhaustiveSolver solver = new QuasiExhaustiveSolver(lvl);
-
-        System.out.println("Is level solved ? " + solver.m_level.checkGrid());
-        long start = System.currentTimeMillis();
-        solver.solving();
-        long end = System.currentTimeMillis();
-        System.out.println("Is level solved ? " + solver.m_level.checkGrid());
-        System.out.println("Time : " + (end - start) / 1000);
     }
 
 }

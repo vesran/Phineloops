@@ -6,6 +6,8 @@ import view.pieces.PieceDrawing;
 import view.pieces.XPieceDrawing;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 
 public class X extends Piece {
 	/**
@@ -75,6 +77,11 @@ public class X extends Piece {
 	public int numbeOfPossibleConnection() {
 		// TODO Auto-generated method stub
 		return 4;
+	}
+
+	@Override
+	public List<Orientation> orientatedTo() {
+		return Arrays.asList(Orientation.values());
 	}
 
 }

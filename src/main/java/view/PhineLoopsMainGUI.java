@@ -66,7 +66,7 @@ public class PhineLoopsMainGUI extends Application {
 		root.getChildren().add(grid);
 		stage.setTitle("Phine Loops Game");
 		stage.setScene(scene);
-		stage.setMaximized(true); // Full screen
+//		stage.setMaximized(true); // Full screen
 		stage.show();
 	}
 

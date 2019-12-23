@@ -1,6 +1,8 @@
 package model.pieces;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 
 import model.enumtype.Orientation;
 import model.enumtype.Side;
@@ -62,6 +64,9 @@ public class Empty extends Piece {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
-	
+
+	@Override
+	public List<Orientation> orientatedTo() {
+		return Arrays.asList();
+	}
 }

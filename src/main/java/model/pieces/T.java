@@ -6,6 +6,8 @@ import view.pieces.PieceDrawing;
 import view.pieces.TPieceDrawing;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 
 public class T extends Piece {
 	/**
@@ -149,5 +151,19 @@ public class T extends Piece {
 	}
 	
 	
+
+	@Override
+	public List<Orientation> orientatedTo() {
+		if (this.orientation == 0) {
+			return Arrays.asList(Orientation.NORTH, Orientation.EAST, Orientation.WEST);
+		} else if (this.orientation == 1) {
+			return Arrays.asList(Orientation.NORTH, Orientation.EAST, Orientation.SOUTH);
+		} else if (this.orientation == 2) {
+			return Arrays.asList(Orientation.SOUTH, Orientation.EAST, Orientation.WEST);
+		} else if (this.orientation == 3) {
+			return Arrays.asList(Orientation.NORTH, Orientation.SOUTH, Orientation.WEST);
+		}
+		return null;
+	}
 
 }

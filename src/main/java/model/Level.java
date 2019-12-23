@@ -132,7 +132,7 @@ public class Level {
 				System.out.println(k + " -- " + l + " orientation=" + lvl.getGrid()[k][l] + " neighbors" + lvl.getGrid()[k][l].getNeighbor());
 			}
 		}
-		
+
 		System.out.println(lvl);
 		System.out.println(lvl.checkGrid());
 	}
