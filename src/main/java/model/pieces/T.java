@@ -148,11 +148,6 @@ public class T extends Piece {
 		return 3;
 	}
 	
-	public Object clone() {
-		int orientation = this.orientation ; 
-		int line = this.line_number ; 
-		int column = this.column_number ; 
-		return new T(orientation,line,column) ; 
-	}
+	
 
 }

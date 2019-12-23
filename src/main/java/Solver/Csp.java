@@ -40,6 +40,7 @@ public class Csp implements Solving {
 
 	public Csp(Piece[][] myLevelToSolve) {
 		this.m_myLevelToSolve = myLevelToSolve;
+		new Level(m_myLevelToSolve).init_neighbors(); 
 		this.m_myModel = new Model("My Problem");
 		vars = new BoolVar[this.m_myLevelToSolve.length][this.m_myLevelToSolve[0].length][Orientation.values().length];
 	}
@@ -124,30 +125,30 @@ public class Csp implements Solving {
 			this.vars[i][j][0] = orientation[0];
 		} else {
 			if (extend == Extend.noExtend) {
-				orientation[0] = this.m_myModel.boolVar(myClass.getName(), false);
+				orientation[0] = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()), false);
 			} else {
 				if (extend == Extend.north || extend == Extend.northEast || extend == Extend.northWest) {
-					orientation[0] = this.m_myModel.boolVar(myClass.getName(), false);
+					orientation[0] = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()), false);
 				} else {
-					orientation[0] = this.m_myModel.boolVar(myClass.getName());
+					orientation[0] = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()));
 				}
 			}
 			this.vars[i][j][0] = orientation[0];
 		}
 		// ******//
 		if (i + 1 < this.m_myLevelToSolve.length) {
-			BoolVar var = this.m_myModel.boolVar(myClass.getName());
+			BoolVar var = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()));
 			orientation[2] = var;
 			this.vars[i][j][2] = var;
 			this.vars[i + 1][j][0] = var;
 		} else {
 			if (extend == Extend.noExtend) {
-				orientation[2] = this.m_myModel.boolVar(myClass.getName(), false);
+				orientation[2] = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()), false);
 			} else {
 				if (extend == Extend.south || extend == Extend.southEast || extend == Extend.southWest) {
-					orientation[2] = this.m_myModel.boolVar(myClass.getName(), false);
+					orientation[2] = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()), false);
 				} else {
-					orientation[2] = this.m_myModel.boolVar(myClass.getName());
+					orientation[2] = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()));
 				}
 			}
 			this.vars[i][j][2] = orientation[2];
@@ -157,29 +158,29 @@ public class Csp implements Solving {
 			this.vars[i][j][3] = this.vars[i][j - 1][1];
 		} else {
 			if (extend == Extend.noExtend) {
-				orientation[3] = this.m_myModel.boolVar(myClass.getName(), false);
+				orientation[3] = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()), false);
 			} else {
 				if (extend == Extend.west || extend == Extend.northWest || extend == Extend.southWest) {
-					orientation[3] = this.m_myModel.boolVar(myClass.getName(), false);
+					orientation[3] = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()), false);
 				} else {
-					orientation[3] = this.m_myModel.boolVar(myClass.getName());
+					orientation[3] = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()));
 				}
 			}
 			this.vars[i][j][3] = orientation[3];
 		}
 		if (j + 1 < this.m_myLevelToSolve[0].length) {
-			BoolVar var = this.m_myModel.boolVar(myClass.getName());
+			BoolVar var = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()));
 			orientation[1] = var;
 			this.vars[i][j][1] = var;
 			this.vars[i][j + 1][3] = var;
 		} else {
 			if (extend == Extend.noExtend) {
-				orientation[1] = this.m_myModel.boolVar(myClass.getName(), false);
+				orientation[1] = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()), false);
 			} else {
 				if (extend == Extend.east || extend == Extend.northEast || extend == Extend.southEast) {
-					orientation[1] = this.m_myModel.boolVar(myClass.getName(), false);
+					orientation[1] = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()), false);
 				} else {
-					orientation[1] = this.m_myModel.boolVar(myClass.getName());
+					orientation[1] = this.m_myModel.boolVar(String.valueOf(m_myLevelToSolve[i][j].getNeighbor().size()));
 				}
 			}
 			this.vars[i][j][1] = orientation[1];
@@ -243,8 +244,8 @@ public class Csp implements Solving {
 		}
 		this.m_myModel.getSolver().limitTime("65s");
 		
-		this.m_myModel.getSolver().setSearch((minDomUBSearch(orientation)));
-		//this.m_myModel.getSolver().setSearch(intVarSearch(new VariableSelectorPersonal() , new IntDomainMax() , orientation));
+		this.m_myModel.getSolver().setSearch(bestBound(minDomUBSearch(orientation)));
+		//this.m_myModel.getSolver().setSearch(greedySearch(intVarSearch(new VariableSelectorPersonal() , new IntDomainMax() , orientation)));
 		
 		
 		this.m_solved = this.m_myModel.getSolver().solve();

@@ -100,8 +100,12 @@ public abstract class Piece {
 		return neighbor;
 	}
 
-	public void addNeighbor(Piece piece, Orientation orientation) {
-		this.neighbor.put(orientation, piece);
+	public void addNeighbor(Piece piece, Orientation orientation) { //Gestion Exception
+		if(! (piece instanceof Empty)) {
+			this.neighbor.put(orientation, piece);
+			
+		}
+		
 	}
 
 	/**
@@ -137,7 +141,30 @@ public abstract class Piece {
 	 */
 	public abstract boolean isConnectedTo(Orientation orientation);
 	
-	
+	public Object clone() {
+		
+		if(this instanceof T) {
+			return new T(this.orientation,this.line_number,this.column_number) ;
+		}
+		if(this instanceof L) {
+			return new L(this.orientation,this.line_number,this.column_number) ;
+		}
+		if(this instanceof Bar) {
+			return new Bar(this.orientation,this.line_number,this.column_number) ;
+		}
+		if(this instanceof Circle) {
+			return new Circle(this.orientation,this.line_number,this.column_number) ;
+		}
+		if(this instanceof Empty) {
+			return new Empty(this.orientation,this.line_number,this.column_number) ;
+		}
+		if(this instanceof X) {
+			return new X(this.orientation,this.line_number,this.column_number) ;
+		}
+		return null ; 
+		
+		
+	}
 
 
 

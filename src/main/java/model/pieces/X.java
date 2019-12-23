@@ -76,10 +76,5 @@ public class X extends Piece {
 		// TODO Auto-generated method stub
 		return 4;
 	}
-	public Object clone() {
-		int orientation = this.orientation ; 
-		int line = this.line_number ; 
-		int column = this.column_number ; 
-		return new X(orientation,line,column) ; 
-	}
+
 }

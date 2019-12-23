@@ -63,10 +63,5 @@ public class Empty extends Piece {
 		return 0;
 	}
 	
-	public Object clone() {
-		int orientation = this.orientation ; 
-		int line = this.line_number ; 
-		int column = this.column_number ; 
-		return new Empty(orientation,line,column) ; 
-	}
+	
 }

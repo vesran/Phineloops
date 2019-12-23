@@ -11,16 +11,16 @@ public class VariableSelectorPersonal implements VariableSelector<IntVar> {
 
 	@Override
 	public IntVar getVariable(IntVar[] variables) {
+		int max = -1;
+		IntVar selected = null;
 		for (IntVar a : variables) {
-			if (a.getValue() == 0) {
-				if (!a.isInstantiated())
-					return a;
-			}else {
-				if(new Random().nextBoolean()) {
-					if(!a.isInstantiated())return a ; 
+			if (!a.isInstantiated()) {
+				if (max < Integer.valueOf(a.getName())) {
+					max = Integer.valueOf(a.getName());
+					selected = a;
 				}
 			}
 		}
-		return null;
+		return selected;
 	}
 }
