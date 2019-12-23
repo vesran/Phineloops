@@ -18,7 +18,7 @@ public class Empty extends Piece {
 	public Empty(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 0;
-
+		this.numberOfOrientations = 0;
 	}
 
 	@Override

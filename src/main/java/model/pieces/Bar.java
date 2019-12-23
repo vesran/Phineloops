@@ -20,6 +20,7 @@ public class Bar extends Piece {
 	public Bar(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 2;
+		this.numberOfOrientations = 2;
 		// TODO Auto-generated constructor stub
 	}
 

@@ -19,6 +19,7 @@ public class Circle extends Piece {
 	public Circle(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 1;
+		this.numberOfOrientations = 4;
 		// TODO Auto-generated constructor stub
 	}
 

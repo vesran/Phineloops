@@ -1,4 +1,3 @@
-
 package view;
 
 import java.io.File;
@@ -6,6 +5,7 @@ import java.io.File;
 import Solver.Csp;
 import Solver.Extend;
 import Solver.Satisfiability;
+import Solver.quasiexhaustive.QuasiExhaustiveSolver;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,6 +28,25 @@ public class PhineLoopsMainGUI extends Application {
 	public static void display(Level lvl) {
 		level = lvl;
 		Application.launch();
+	}
+
+	public static void displaySolving(Level lvl, QuasiExhaustiveSolver solver) {
+		Thread displayLevel = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				display(lvl);
+			}
+		});
+
+		Thread solveLevel = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				solver.solving();
+			}
+		});
+
+		displayLevel.start();
+		solveLevel.start();
 	}
 
 	@Override

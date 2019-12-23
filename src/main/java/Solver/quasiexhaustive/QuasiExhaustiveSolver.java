@@ -1,15 +1,17 @@
 package Solver.quasiexhaustive;
 
+import javafx.animation.Animation;
 import model.Level;
 import model.pieces.L;
 import model.pieces.Piece;
+import view.pieces.PieceDrawing;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class QuasiExhaustiveSolver {
 
-    private Level m_level;
+    protected Level m_level;
     private Deque<Piece> m_stack;
     private PriorityQueue<Piece> m_antistack;
     private Map<Piece, Iterator<Integer>> m_nextOrientations;
@@ -50,7 +52,6 @@ public class QuasiExhaustiveSolver {
     public boolean solving() {
         Piece out;
         int i = 0;
-//        Set<String> instances = new HashSet<>();
 
         // Init stack and set each piece to their best orientation
         for (Piece[] row : this.m_level.getGrid()) {
@@ -68,7 +69,20 @@ public class QuasiExhaustiveSolver {
             this.m_stack.push(this.m_antistack.poll());
         }
 
+        // Starting to test orientations for all pieces
         while (!m_stack.isEmpty()) {
+            while (PieceDrawing.rotate.statusProperty().getValue() == Animation.Status.RUNNING) {
+                try {
+                    synchronized(PieceDrawing.monitor) {
+                        while(!PieceDrawing.done) {
+                            PieceDrawing.monitor.wait();
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
             System.out.println("Start iteration");
             // Rotate piece at the top of the stack and add this piece to the rotated set
             this.setToBestOrientation(this.m_stack.peek());
@@ -87,24 +101,13 @@ public class QuasiExhaustiveSolver {
             }
 
             System.out.println("Test " + ++i + "\n" + this.m_level);
-//            instances.add(this.m_level.toString());
 
             // Check if the level is solved, no modification of the stacks/pieces should follow to keep things easier
             if (this.m_level.checkGrid()) {
                 System.out.println("SOLVED:true");
                 return true;
-
-            } else {
-                // If the piece has made an entire rotation, pop and remove it from the rotated set
-                while (!this.m_stack.isEmpty() && this.entireRotation(this.m_stack.peek())) {
-                    out = this.m_stack.pop();
-                    this.m_antistack.add(out);
-                }
             }
-
         }
-
-//        System.out.println(instances.size());
 
         System.out.println("SOLVED:false");
         return false;
@@ -117,16 +120,14 @@ public class QuasiExhaustiveSolver {
         }
         if (this.m_nextOrientations.get(piece).hasNext()) {
             piece.setOrientation(this.m_nextOrientations.get(piece).next());
-//            System.out.println("Current top piece set at orientation " + piece.getOrientation());
-        }
-        else {
+        } else {
             throw new RuntimeException("Empty rotation");
         }
     }
 
     private Iterator<Integer> genOrientations(Piece piece) {
         // Generate an ordered sequence of orientations in analysing the current piece orientations and its neighborhood
-        int nbOrientations = this.numberOfOrientations(piece);
+        int nbOrientations = piece.getNumberOfOrientations();
         Map<Integer, Double> scores = new HashMap<>();  // Use Map to be sorted with Stream (easier implementation)
 
         // Give a score to each orientation
@@ -149,47 +150,12 @@ public class QuasiExhaustiveSolver {
      * Gives a score for a given orientation of the specified piece. The higher the better.
      * Orientations will be sorted according to the score value in descending order.
      * The more a score for an orientation is higher, the more this orientation will be tested first.
-     * @param piece
-     * @param orientationId
+     * @param piece piece where the score is based on
+     * @param orientationId piece orientation to compute
      * @return score as double
      */
     protected double score(Piece piece, Integer orientationId) {
-        return 0.25;
-    }
-
-    private int numberOfOrientations(Piece p) {
-        // TODO : move to Piece classes (use polymorphism)
-        int nbOrientations = 0;
-
-        switch(p.getId()) {
-            case 0:
-                nbOrientations = 0;
-                break;
-            case 1:
-                nbOrientations = 4;
-                break;
-
-            case 2:
-                nbOrientations = 2;
-                break;
-
-            case 3:
-                nbOrientations = 4;
-                break;
-
-            case 4:
-                nbOrientations = 1;
-                break;
-
-            case 5:
-                nbOrientations = 4;
-                break;
-
-            default:
-                throw new IllegalStateException("Unexpected value: " + p.getId());
-        }
-
-        return nbOrientations;
+        return 1;
     }
 
     private boolean entireRotation(Piece currentPiece) {

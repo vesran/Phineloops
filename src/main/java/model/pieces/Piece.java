@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 public abstract class Piece {
 	protected HashMap<Orientation, Piece> neighbor;
+	protected int numberOfOrientations;
 	protected int id;
 	protected int orientation;
 	protected int line_number;
@@ -27,6 +28,10 @@ public abstract class Piece {
 
 	public void addObserver(PropertyChangeListener listener) {
 		pcs.addPropertyChangeListener(listener);
+	}
+
+	public int getNumberOfOrientations() {
+		return this.numberOfOrientations;
 	}
 
 	public HashMap<Orientation, Piece> getNeighbor() {
@@ -52,7 +57,7 @@ public abstract class Piece {
 	public void setOrientation(int orientation) {
 		int oldValue = this.orientation;
 		this.orientation = orientation;
-		pcs.firePropertyChange("setting orientation", oldValue, this.orientation);
+		pcs.firePropertyChange("orientationSet", oldValue, this.orientation);
 	}
 
 	public int getLine_number() {
