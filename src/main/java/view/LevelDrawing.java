@@ -51,13 +51,6 @@ public class LevelDrawing {
             }
         }
 
-        // Adding a controller to each node so that we don't need to retrieve which one was clicked
-        for (Node item : grid.getChildren()) {
-            if (item != grid) {
-                item.setOnMouseClicked(new RotationController(item));
-            }
-        }
-
     }
 
 }

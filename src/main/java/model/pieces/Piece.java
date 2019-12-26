@@ -61,6 +61,11 @@ public abstract class Piece {
 		pcs.firePropertyChange("orientationSet", oldValue, this.orientation);
 	}
 
+	public void silentSetOrientation(int orientation) {
+		int oldValue = this.orientation;
+		this.orientation = orientation;
+	}
+
 	public int getLine_number() {
 		return line_number;
 	}

@@ -6,10 +6,12 @@ import Solver.Csp;
 import Solver.Extend;
 import Solver.Satisfiability;
 import Solver.quasiexhaustive.QuasiExhaustiveSolver;
+import controller.RotationController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -19,28 +21,48 @@ import model.io.FileReader;
 import model.pieces.Empty;
 import model.pieces.Piece;
 import model.pieces.T;
+import view.pieces.PieceDrawing;
 
 public class PhineLoopsMainGUI extends Application {
 	static final int WIDTH = 700;
 	static final int HEIGHT = 700;
+	public static boolean solverApplied = false;	// Tells if the goal is to visualize a solver or only displaying
+	private static boolean solverMustWait = false; 	// Makes the solver wait until the window shows up
+	private static final Object startUpMonitor = new Object();	// Synchronizes the solver and window starting up
 	private static Level level;
 
 	public static void display(Level lvl) {
 		level = lvl;
+		solverMustWait = false;
 		Application.launch();
 	}
 
 	public static void displaySolving(Level lvl, QuasiExhaustiveSolver solver) {
+		solverApplied = true;
 		Thread displayLevel = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				display(lvl);
+				solverApplied = false;
+				// Release rotationMonitor so that the solver does not get stuck and wait forever
+				synchronized (PieceDrawing.rotationMonitor) {
+					PieceDrawing.rotationMonitor.notify();
+				}
 			}
 		});
 
 		Thread solveLevel = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				synchronized (startUpMonitor) {
+					try {
+						solverMustWait = true;
+						startUpMonitor.wait();
+						solverMustWait = false;
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 				solver.solving();
 			}
 		});
@@ -62,12 +84,34 @@ public class PhineLoopsMainGUI extends Application {
 		grid.prefHeightProperty().bind(scene.heightProperty());
 		LevelDrawing view = new LevelDrawing(level);
 		view.draw(grid, scene);
+
+		if (!solverApplied) {
+			// Adding a controller to each node so that we don't need to retrieve which one was clicked
+			for (Node item : grid.getChildren()) {
+				if (item != grid) {
+					item.setOnMouseClicked(new RotationController(item));
+				}
+			}
+		}
+
 		grid.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 		root.getChildren().add(grid);
 		stage.setTitle("Phine Loops Game");
 		stage.setScene(scene);
 //		stage.setMaximized(true); // Full screen
+		stage.setOnCloseRequest(e -> {
+			synchronized (PieceDrawing.rotationMonitor) {
+				PieceDrawing.rotationMonitor.notify();
+			}
+		});
 		stage.show();
+
+		// Loop until the solver thread start to wait and then notify it
+		while (solverMustWait) {
+			synchronized (startUpMonitor) {
+				startUpMonitor.notifyAll();
+			}
+		}
 	}
 
 	// Tmp method : for debugging only

@@ -50,11 +50,13 @@ public class QuasiExhaustiveSolver {
         Piece out;
         int i = 0;
 
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+        Set<String> instances = new HashSet<>();
 
         // Init stack and set each piece to their best orientation
         for (Piece[] row : this.m_level.getGrid()) {
@@ -67,13 +69,13 @@ public class QuasiExhaustiveSolver {
         }
 
         // Starting to test orientations for all pieces
-        while (!m_stack.isEmpty() || i == 0) {
+        do {
             System.out.println("Start iteration");
 
             // Add other pieces to the stack
             while (this.m_antistack.peek() != null) {
                 this.m_stack.push(this.m_antistack.poll());
-                this.setToBestOrientation(this.m_stack.peek());
+                this.setToBestOrientation(this.m_stack.peek()); // Check if the added piece is correctly set, if not change
             }
 
             // If the piece has made an entire rotation, pop and remove it from the rotated set
@@ -84,16 +86,19 @@ public class QuasiExhaustiveSolver {
             }
 
             System.out.println("Test " + ++i + "\n" + this.m_level);
-//            System.out.println("First : " + this.m_stack.peek().getLine_number() + this.m_stack.peek().getColumn_number());
-//            this.m_stack.stream().forEach(x -> System.out.print("(" + x.getLine_number() + ", " + x.getColumn_number() + ") "));
 
             // Check if the level is solved, no modification of the stacks should follow to keep things easier
             if (this.m_level.checkGrid()) {
                 return true;
             }
             // Rotate piece at the top of the stack and add this piece to the rotated set
+            if (instances.contains(this.m_level.toString())) {
+                System.out.println("PB !");
+                (new Scanner(System.in)).next();
+            }
+            instances.add(this.m_level.toString());
             this.setToBestOrientation(this.m_stack.peek());
-        }
+        } while (!m_stack.isEmpty());
 
         return false;
     }

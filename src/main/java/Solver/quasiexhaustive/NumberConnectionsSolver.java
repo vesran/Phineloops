@@ -31,7 +31,7 @@ public class NumberConnectionsSolver extends QuasiExhaustiveSolver {
     // To test in priority orientations that gives the most good connections according to its current neighborhood
     protected double score(Piece p, Integer orientationId) {
         int saveOrientationId = p.getOrientation();
-        p.setOrientation(orientationId);
+        p.silentSetOrientation(orientationId);
 
         double score;
 
@@ -40,7 +40,7 @@ public class NumberConnectionsSolver extends QuasiExhaustiveSolver {
         } else {
             score = 0;
         }
-        p.setOrientation(saveOrientationId);
+        p.silentSetOrientation(saveOrientationId);
         return score;
     }
 }

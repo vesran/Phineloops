@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import model.pieces.Piece;
+import view.PhineLoopsMainGUI;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -13,8 +14,7 @@ import java.util.Scanner;
 
 abstract public class PieceDrawing extends ImageView implements PropertyChangeListener {
 
-	public static final Object monitor = new Object();
-//	public static boolean done = true;
+	public static final Object rotationMonitor = new Object();
 	protected Piece m_piece;
 
 	public PieceDrawing(Piece piece) {
@@ -25,7 +25,7 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 		return this.m_piece;
 	}
 
-	public void rotate(int angle, int duration) {
+	public RotateTransition rotate(int angle, int duration) {
 		RotateTransition rotate = new RotateTransition();
 		this.setRotate(this.getRotate() % 360);	// To avoid troubles with integer's limit
 		rotate.setNode(this);
@@ -34,24 +34,12 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 		rotate.setCycleCount(1);
 		rotate.setDuration(Duration.millis(duration));
 		rotate.setOnFinished(e -> {
-			synchronized (monitor) {
-				System.out.println("Animation finished");
-				monitor.notify();
+			synchronized (rotationMonitor) {
+				rotationMonitor.notify();
 			}
 		});
 		rotate.play();
-
-		synchronized(monitor) {
-			while (rotate.statusProperty().getValue() == Animation.Status.RUNNING) {
-				try {
-					System.out.println("Waiting");
-					monitor.wait();
-
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		return rotate;
 	}
 
 	@Override
@@ -66,25 +54,34 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 			int newValue = (int) event.getNewValue();
 			int oldValue = (int) event.getOldValue();
 			int duration = 100;
+			RotateTransition rotate;
 
 			if ((oldValue + 1) % this.m_piece.getNumberOfOrientations() == newValue) {
-				this.rotate(90, duration * 1);
+				rotate = this.rotate(90, duration * 1);
 
 			} else if ((newValue + 1) % this.m_piece.getNumberOfOrientations() == oldValue) {
-				this.rotate(-90, duration * 1);
+				rotate = this.rotate(-90, duration * 1);
 
 			} else if ((oldValue + 2) % this.m_piece.getNumberOfOrientations() == newValue) {
-				System.out.println("Double rotation");
-				this.rotate(180, duration * 1);
+				rotate = this.rotate(180, duration * 1);
 
 			} else {
+				rotate = new RotateTransition();
 				System.out.println("==========================================new value : " + newValue); // --> 3
 				System.out.println("==========================================old value : " + oldValue); // --> 0
 			}
 
-//			if (!this.m_piece.getNeighbor().keySet().containsAll(this.m_piece.orientatedTo())) {
-//				(new Scanner(System.in)).next();
-//			}
+			synchronized(rotationMonitor) {
+				while (rotate.statusProperty().getValue() == Animation.Status.RUNNING && PhineLoopsMainGUI.solverApplied) {
+					try {
+						rotationMonitor.wait();
+
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
 		}
 	}
 }
