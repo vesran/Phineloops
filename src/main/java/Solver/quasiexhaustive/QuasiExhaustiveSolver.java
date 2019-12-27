@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * All possibilities are not tested but only the relevant ones. Piece orientations that create conflict with other
  * pieces are not tested and its subtree is not explore.
  * The ordering of exploration (piece by piece) is determined by a comparator over pieces. It is made so that
- * an override is possible. See Comparator<Piece> piecesComparator().
+ * an override is possible. See Comparator<Piece> piecesComparator(). By default, it explores line by line.
  * The sequence of orientation to test is also customizable and overrable.
  * See double score(Piece piece, Integer orientationId)
  */
@@ -129,8 +129,7 @@ public class QuasiExhaustiveSolver {
      * Pops the current top of the stack to the anti-stack and clear its remaining orientations
      */
     private void goBack() {
-        Piece out;
-        out = this.m_stack.pop();
+        Piece out = this.m_stack.pop();
         this.m_nextOrientations.remove(out);
         this.m_antistack.add(out);
     }

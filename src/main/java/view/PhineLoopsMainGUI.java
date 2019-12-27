@@ -32,12 +32,22 @@ public class PhineLoopsMainGUI extends Application {
 	private static final Object startUpMonitor = new Object();	// Synchronizes the solver and window starting up
 	private static Level level;
 
+	/**
+	 * Displays GUI where user interactions are considered.
+	 * @param lvl Game level to display on screen.
+	 */
 	public static void display(Level lvl) {
 		level = lvl;
 		solverMustWait = false;
 		Application.launch();
 	}
 
+	/**
+	 * Displays the solver working and testing different possibilities. User interactions are not taken into
+	 * consideration
+	 * @param lvl Level to solve
+	 * @param solver Solver to use, must be load with the lvl.
+	 */
 	public static void displaySolving(Level lvl, QuasiExhaustiveSolver solver) {
 		solverApplied = true;
 		Thread displayLevel = new Thread(new Runnable() {
@@ -64,8 +74,7 @@ public class PhineLoopsMainGUI extends Application {
 						e.printStackTrace();
 					}
 				}
-				boolean solved = solver.solving();
-				System.out.println("Solved : " + solved);
+				solver.solving();
 			}
 		});
 
