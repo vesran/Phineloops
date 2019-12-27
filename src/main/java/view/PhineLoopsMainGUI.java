@@ -63,7 +63,8 @@ public class PhineLoopsMainGUI extends Application {
 						e.printStackTrace();
 					}
 				}
-				solver.solving();
+				boolean solved = solver.solving();
+				System.out.println("Solved : " + solved);
 			}
 		});
 

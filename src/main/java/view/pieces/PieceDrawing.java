@@ -62,13 +62,9 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 			} else if ((newValue + 1) % this.m_piece.getNumberOfOrientations() == oldValue) {
 				rotate = this.rotate(-90, duration * 1);
 
-			} else if ((oldValue + 2) % this.m_piece.getNumberOfOrientations() == newValue) {
+			} else {
 				rotate = this.rotate(180, duration * 1);
 
-			} else {
-				rotate = new RotateTransition();
-				System.out.println("==========================================new value : " + newValue); // --> 3
-				System.out.println("==========================================old value : " + oldValue); // --> 0
 			}
 
 			synchronized(rotationMonitor) {

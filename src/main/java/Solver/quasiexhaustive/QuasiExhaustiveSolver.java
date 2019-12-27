@@ -1,7 +1,8 @@
 package Solver.quasiexhaustive;
 
 import model.Level;
-import model.pieces.Piece;
+import model.enumtype.Orientation;
+import model.pieces.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -50,12 +51,6 @@ public class QuasiExhaustiveSolver {
         Piece out;
         int i = 0;
 
-//        try {
-//            Thread.sleep(3000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
         Set<String> instances = new HashSet<>();
 
         // Init stack and set each piece to their best orientation
@@ -70,37 +65,61 @@ public class QuasiExhaustiveSolver {
 
         // Starting to test orientations for all pieces
         do {
-            System.out.println("Start iteration");
+//            System.out.println("Start iteration");
+//            System.out.println("In stack : ");
+//            this.m_stack.stream().forEach(x -> System.out.print(x + " " + x.getLine_number() + " " + x.getColumn_number() + " "));
+//            System.out.println();
 
-            // Add other pieces to the stack
-            while (this.m_antistack.peek() != null) {
-                this.m_stack.push(this.m_antistack.poll());
-                this.setToBestOrientation(this.m_stack.peek()); // Check if the added piece is correctly set, if not change
+            if (!this.m_antistack.isEmpty()) {
+                out = this.m_antistack.poll();
+                this.m_stack.push(out);
+
+            } else {
+                System.out.println("Test " + ++i + "\n" + this.m_level);
+
+                // Check if the level is solved, no modification of the stacks should follow to keep things easier
+                if (this.m_level.checkGrid()) {
+                    return true;
+                }
+
+                if (instances.contains(this.m_level.toString())) {  // To remove
+                    System.out.println("PB !");
+                    (new Scanner(System.in)).next();
+                }
+                instances.add(this.m_level.toString()); // To remove
             }
 
-            // If the piece has made an entire rotation, pop and remove it from the rotated set
             while (!this.m_stack.isEmpty() && this.entireRotation(this.m_stack.peek())) {
                 out = this.m_stack.pop();
                 this.m_antistack.add(out);
                 this.m_nextOrientations.remove(out);
             }
 
-            System.out.println("Test " + ++i + "\n" + this.m_level);
+            out = this.m_stack.peek();
+            this.setToBestOrientation(out);
 
-            // Check if the level is solved, no modification of the stacks should follow to keep things easier
-            if (this.m_level.checkGrid()) {
-                return true;
+//            System.out.println("Checking conflict... " + out + " " + out.getLine_number() + " " + out.getColumn_number());
+            while (this.inConflict(out)) {
+//                System.out.println("Conflit!");
+                // Go back in the stack
+                while (this.entireRotation(out)) {
+                    out = this.goBack(); // out is supposed to be the top of the stack
+//                    if (out != null) System.out.println("Going back to top : " + out + " " + out.getLine_number() + " " + out.getColumn_number());
+                }
+                this.setToBestOrientation(out);
             }
-            // Rotate piece at the top of the stack and add this piece to the rotated set
-            if (instances.contains(this.m_level.toString())) {
-                System.out.println("PB !");
-                (new Scanner(System.in)).next();
-            }
-            instances.add(this.m_level.toString());
-            this.setToBestOrientation(this.m_stack.peek());
+
         } while (!m_stack.isEmpty());
 
         return false;
+    }
+
+    private Piece goBack() {
+        Piece out;
+        out = this.m_stack.pop();
+        this.m_nextOrientations.remove(out);
+        this.m_antistack.add(out);
+        return this.m_stack.peek();
     }
 
     // Set top piece to its best orientation according to score function
@@ -114,9 +133,36 @@ public class QuasiExhaustiveSolver {
         } else {
             System.out.println(piece.getLine_number() + " " + piece.getColumn_number());
             System.out.println(this.m_level);
-            System.out.println(this.m_nextOrientations.get(piece).next());
-            throw new RuntimeException("Empty rotation");
+            throw new RuntimeException("Piece has no more orientation left but hasn't been removed from nextOrientations");
         }
+    }
+
+    private boolean inConflict(Piece piece) {
+        if (piece == null) return false;
+        Set<Piece> neighborsInStack = this.getNeighborsInStack(piece);
+
+        if (!piece.getNeighbor().keySet().containsAll(piece.orientatedTo())) {
+            return true;
+        }
+
+        for (Map.Entry<Orientation, Piece> neighborInfo : piece.getNeighbor().entrySet()) {
+            if (neighborsInStack.contains(neighborInfo.getValue())) {
+                if (neighborInfo.getValue().orientatedTo().contains(neighborInfo.getKey().opposite()) &&
+                        !piece.isConnectedTo(neighborInfo.getKey())) {
+                    return true;
+                } else if (!neighborInfo.getValue().orientatedTo().contains(neighborInfo.getKey().opposite()) &&
+                        piece.orientatedTo().contains(neighborInfo.getKey())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private Set<Piece> getNeighborsInStack(Piece piece) {
+        Set<Piece> neighborsInStack = new HashSet<>(this.m_stack);
+        neighborsInStack.retainAll(piece.getNeighbor().values());
+        return neighborsInStack;
     }
 
     private Iterator<Integer> genOrientations(Piece piece) {
@@ -150,12 +196,34 @@ public class QuasiExhaustiveSolver {
      * @return score as double
      */
     protected double score(Piece piece, Integer orientationId) {
-        return 1;
+        return -orientationId + 10;
     }
 
     private boolean entireRotation(Piece currentPiece) {
         if (this.m_nextOrientations.get(currentPiece) == null)  return false;
         return !this.m_nextOrientations.get(currentPiece).hasNext();
+    }
+
+    public static void main(String [] args) {
+        Piece[][] grid = new Piece[3][3];
+        grid[1][1] = new L(2, 1, 1);
+        grid[1][0] = new L(0, 1, 0);
+        grid[0][1] = new L(0, 0, 1);
+        grid[2][1] = new Empty(100, 2, 1);
+        grid[1][2] = new L(0, 1, 2);
+
+        grid[0][0] = new Empty(100, 0, 0);
+        grid[0][2] = new Empty(100, 0, 2);
+        grid[2][2] = new Empty(100, 2, 2);
+        grid[2][0] = new Empty(100, 2, 0);
+
+        Level lvl = new Level(grid);
+        lvl.init_neighbors();
+        System.out.println(lvl);
+        QuasiExhaustiveSolver solver = new QuasiExhaustiveSolver(lvl);
+
+        solver.m_stack.addAll(grid[1][1].getNeighbor().values());
+        System.out.println(solver.inConflict(grid[1][1]));
     }
 
 }
