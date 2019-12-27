@@ -24,8 +24,9 @@ import model.pieces.T;
 import view.pieces.PieceDrawing;
 
 public class PhineLoopsMainGUI extends Application {
-	static final int WIDTH = 700;
-	static final int HEIGHT = 700;
+
+	static final int DEFAULT_WIDTH = 700;
+	static final int DEFAULT_HEIGHT = 700;
 	public static boolean solverApplied = false;	// Tells if the goal is to visualize a solver or only displaying
 	private static boolean solverMustWait = false; 	// Makes the solver wait until the window shows up
 	private static final Object startUpMonitor = new Object();	// Synchronizes the solver and window starting up
@@ -75,7 +76,7 @@ public class PhineLoopsMainGUI extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		Group root = new Group();
-		Scene scene = new Scene(root, WIDTH, HEIGHT);
+		Scene scene = new Scene(root, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		GridPane grid = new GridPane();
 		grid.setVgap(0);
 		grid.setHgap(0);
@@ -101,6 +102,7 @@ public class PhineLoopsMainGUI extends Application {
 		stage.setScene(scene);
 //		stage.setMaximized(true); // Full screen
 		stage.setOnCloseRequest(e -> {
+			// Makes the solver continue to work without the stage
 			synchronized (PieceDrawing.rotationMonitor) {
 				PieceDrawing.rotationMonitor.notify();
 			}

@@ -10,7 +10,6 @@ import view.PhineLoopsMainGUI;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Scanner;
 
 abstract public class PieceDrawing extends ImageView implements PropertyChangeListener {
 
@@ -25,6 +24,12 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 		return this.m_piece;
 	}
 
+	/**
+	 * Makes the representation of the piece rotate. It is synchronized to the model.
+	 * @param angle
+	 * @param duration
+	 * @return
+	 */
 	public RotateTransition rotate(int angle, int duration) {
 		RotateTransition rotate = new RotateTransition();
 		this.setRotate(this.getRotate() % 360);	// To avoid troubles with integer's limit
@@ -42,6 +47,10 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 		return rotate;
 	}
 
+	/**
+	 * Actions to trigger when a property is invoked.
+	 * @param event
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getPropertyName().equals("leftTranslation")) {
@@ -51,22 +60,23 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 			this.rotate(-90, 100);
 
 		} else if (event.getPropertyName().equals("orientationSet")) {
+			// Mainly for solver animation
 			int newValue = (int) event.getNewValue();
 			int oldValue = (int) event.getOldValue();
 			int duration = 100;
 			RotateTransition rotate;
 
 			if ((oldValue + 1) % this.m_piece.getNumberOfOrientations() == newValue) {
-				rotate = this.rotate(90, duration * 1);
+				rotate = this.rotate(90, duration);
 
 			} else if ((newValue + 1) % this.m_piece.getNumberOfOrientations() == oldValue) {
-				rotate = this.rotate(-90, duration * 1);
+				rotate = this.rotate(-90, duration);
 
 			} else {
-				rotate = this.rotate(180, duration * 1);
-
+				rotate = this.rotate(180, duration);
 			}
 
+			// Makes the algorithm waits until the animation is done.
 			synchronized(rotationMonitor) {
 				while (rotate.statusProperty().getValue() == Animation.Status.RUNNING && PhineLoopsMainGUI.solverApplied) {
 					try {
@@ -77,7 +87,6 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 					}
 				}
 			}
-
 		}
 	}
 }

@@ -6,6 +6,10 @@ import model.pieces.Piece;
 import java.util.Comparator;
 import java.util.Random;
 
+/**
+ * The ordering and the sequence of orientations of pieces are completely random. It is used to compare other
+ * exploration methods.
+ */
 public class RandomizedSolver extends QuasiExhaustiveSolver {
 
     public RandomizedSolver(Level lvl) {
