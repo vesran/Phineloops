@@ -26,9 +26,9 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 
 	/**
 	 * Makes the representation of the piece rotate. It is synchronized to the model.
-	 * @param angle
-	 * @param duration
-	 * @return
+	 * @param angle angle to rotate
+	 * @param duration duration of the animation
+	 * @return RotateTransition Object to keep information about the animation thread.
 	 */
 	public RotateTransition rotate(int angle, int duration) {
 		RotateTransition rotate = new RotateTransition();

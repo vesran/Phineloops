@@ -1,11 +1,11 @@
 package Solver.quasiexhaustive;
 
+import Solver.quasiexhaustive.comparaison.Lexicographic;
 import model.Level;
 import model.enumtype.Orientation;
 import model.pieces.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This class implements an algorithm for solving the InfinityLoop's grid. It is based on a tree search with an
@@ -16,48 +16,31 @@ import java.util.stream.Collectors;
  * All possibilities are not tested but only the relevant ones. Piece orientations that create conflict with other
  * pieces are not tested and its subtree is not explore.
  * The ordering of exploration (piece by piece) is determined by a comparator over pieces. It is made so that
- * an override is possible. See Comparator<Piece> piecesComparator(). By default, it explores line by line.
- * The sequence of orientation to test is also customizable and overrable.
- * See double score(Piece piece, Integer orientationId)
+ * an override is possible. By default, it explores in lexicographic order.
  */
 public class QuasiExhaustiveSolver {
 
     protected Level m_level;
     private Deque<Piece> m_stack;
-    private PriorityQueue<Piece> m_antistack;
+    private Deque<Piece> m_antistack;
     private Map<Piece, Iterator<Integer>> m_nextOrientations;
+    private final Comparator<Piece> piecesComparator; // The greater a piece is, the more its orientation tends to be changed first.
 
-    public QuasiExhaustiveSolver() {
+    public QuasiExhaustiveSolver(Comparator<Piece> piecesComparator) {
         this.m_stack = new ArrayDeque<>();
-        this.m_antistack = new PriorityQueue<>(this.piecesComparator());
+        this.m_antistack = new ArrayDeque<>();
         this.m_nextOrientations = new HashMap<>();
+        this.piecesComparator = piecesComparator;
     }
 
-    public QuasiExhaustiveSolver(Level lvl) {
-        this();
+    public QuasiExhaustiveSolver(Level lvl, Comparator<Piece> piecesComparator) {
+        this(piecesComparator);
         this.m_level = lvl;
     }
 
-    public QuasiExhaustiveSolver(Piece[][] grid) {
-        this(new Level(grid));
-    }
-
-    /**
-     * Defines a way to compare pieces in the anti-stack. It defines the order in which pieces should be considered.
-     * The greater a piece is, the more its orientation tends to be changed first.
-     * @return a Comparator of Piece that implement a way to compare pieces as described above.
-     */
-    protected Comparator<Piece> piecesComparator() {
-        return new Comparator<Piece>() {
-            @Override
-            public int compare(Piece p1, Piece p2) {
-                if (p1.getLine_number() != p2.getLine_number()) {
-                    return p1.getLine_number() - p2.getLine_number();
-                } else {
-                    return p1.getColumn_number() - p2.getColumn_number();
-                }
-            }
-        };
+    public QuasiExhaustiveSolver(Level lvl) {
+        this(lvl, new Lexicographic());
+        this.m_level = lvl;
     }
 
     /**
@@ -69,22 +52,27 @@ public class QuasiExhaustiveSolver {
         int i = 0;
 
         Set<String> instances = new HashSet<>();
+        List<Piece> orderingPieces = new ArrayList<>();
 
         // Init stack and set each piece to their best orientation
         for (Piece[] row : this.m_level.getGrid()) {
             for (Piece currentPiece : row) {
                 // Exclude empty and X piece because their orientation doesn't matter
                 if (currentPiece.getId() != 0 && currentPiece.getId() != 4) {
-                    this.m_antistack.add(currentPiece); // First sorting of pieces
+                    orderingPieces.add(currentPiece); // First sorting of pieces
                 }
             }
         }
+
+        // Transfer everything to anti-stack and preserve the ordering
+        Collections.sort(orderingPieces, this.piecesComparator);
+        this.m_antistack.addAll(orderingPieces);
 
         // Starting to test orientations for all pieces
         do {
             // Each piece of the stack does not prompt conflicts, we can import a piece from the anti-stack to the stack
             if (!this.m_antistack.isEmpty()) {
-                this.m_stack.push(this.m_antistack.poll());
+                this.m_stack.push(this.m_antistack.pop());
 
             } else {
                 System.out.println("Test " + ++i + "\n" + this.m_level);
@@ -131,7 +119,7 @@ public class QuasiExhaustiveSolver {
     private void goBack() {
         Piece out = this.m_stack.pop();
         this.m_nextOrientations.remove(out);
-        this.m_antistack.add(out);
+        this.m_antistack.push(out);
     }
 
     /**
@@ -196,35 +184,11 @@ public class QuasiExhaustiveSolver {
      * @return An iterator over the sequence of orientations.
      */
     private Iterator<Integer> genOrientations(Piece piece) {
-        // Generate an ordered sequence of orientations in analysing the current piece orientations and its neighborhood
-        int nbOrientations = piece.getNumberOfOrientations();
-        Map<Integer, Double> scores = new HashMap<>();  // Use Map to be sorted with Stream (easier implementation)
-
-        // Give a score to each orientation
-        for (int orientationId = 0; orientationId < nbOrientations; orientationId++) {
-            scores.put(orientationId, this.score(piece, orientationId));
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < piece.getNumberOfOrientations(); i++) {
+            list.add(i);
         }
-
-        // Return an iterator over the index of the sorted array, orientation with null/negative score are skipped
-        // to save time
-        List<Integer> list = scores.entrySet().stream()
-                        .filter(x -> x.getValue() > 0)
-                        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                        .map(Map.Entry::getKey)
-                        .collect(Collectors.toList());
         return list.iterator();
-    }
-
-    /**
-     * Gives a score for a given orientation of the specified piece. The higher the better.
-     * Orientations will be sorted according to the score value in descending order.
-     * The more a score for an orientation is higher, the more this orientation will be tested first.
-     * @param piece piece where the score is based on
-     * @param orientationId piece orientation to compute
-     * @return score as double
-     */
-    protected double score(Piece piece, Integer orientationId) {
-        return -orientationId + 10;
     }
 
     /**
