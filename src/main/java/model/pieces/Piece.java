@@ -133,9 +133,8 @@ public abstract class Piece {
 	/**
 	 * Instantiates a visual representation of a Piece for view part in MVC. Visual can be based on files.
 	 * @return visual representation of a Piece
-	 * @throws FileNotFoundException
 	 */
-	public abstract PieceDrawing createDrawing() throws FileNotFoundException;
+	public abstract PieceDrawing createDrawing();
 
 	/**
 	 * @return the number of Pieces that are linked to the current Piece

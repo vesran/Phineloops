@@ -3,6 +3,7 @@ package view.pieces;
 import javafx.scene.image.Image;
 import model.pieces.Piece;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -14,10 +15,13 @@ import java.io.FileNotFoundException;
 public class BarPieceDrawing extends PieceDrawing {
 	/**
 	 * @param piece the Bar to draw
-	 * @throws FileNotFoundException in case where the image file is not found
 	 */
-	public BarPieceDrawing(Piece piece) throws FileNotFoundException {
+	public BarPieceDrawing(Piece piece) {
 		super(piece);
-		super.setImage(new Image(new FileInputStream("resources/pieces/Bar_piece.png")));
+		try {
+			super.setImage(new Image(new FileInputStream("resources/pieces/Bar_piece.png")));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 }

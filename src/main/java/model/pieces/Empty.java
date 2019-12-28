@@ -30,7 +30,7 @@ public class Empty extends Piece {
 	}
 
 	@Override
-	public PieceDrawing createDrawing() throws FileNotFoundException {
+	public PieceDrawing createDrawing() {
 		// TODO Auto-generated method stub
 		return null;
 	}

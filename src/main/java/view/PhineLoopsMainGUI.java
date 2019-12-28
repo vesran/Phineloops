@@ -86,27 +86,9 @@ public class PhineLoopsMainGUI extends Application {
 	public void start(Stage stage) throws Exception {
 		Group root = new Group();
 		Scene scene = new Scene(root, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-		GridPane grid = new GridPane();
-		grid.setVgap(0);
-		grid.setHgap(0);
-		grid.setGridLinesVisible(true); // For debugging : to remove
-		grid.setAlignment(Pos.CENTER);
-		grid.prefWidthProperty().bind(scene.widthProperty());
-		grid.prefHeightProperty().bind(scene.heightProperty());
-		LevelDrawing view = new LevelDrawing(level);
-		view.draw(grid, scene);
+		LevelDrawing view = new LevelDrawing(level, scene, solverApplied);
 
-		if (!solverApplied) {
-			// Adding a controller to each node so that we don't need to retrieve which one was clicked
-			for (Node item : grid.getChildren()) {
-				if (item != grid) {
-					item.setOnMouseClicked(new RotationController(item));
-				}
-			}
-		}
-
-		grid.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-		root.getChildren().add(grid);
+		root.getChildren().add(view.getGridPane());
 		stage.setTitle("Phine Loops Game");
 		stage.setScene(scene);
 //		stage.setMaximized(true); // Full screen

@@ -1,23 +1,57 @@
 package view;
 
+import controller.RotationController;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import model.Level;
 import model.pieces.Piece;
 import view.pieces.PieceDrawing;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.FileNotFoundException;
 
 /**
  * Produces a visual representation of the game level.
  */
-public class LevelDrawing {
+public class LevelDrawing implements PropertyChangeListener {
 
     private Level m_model;
+    private GridPane grid;
 
-    public LevelDrawing(Level model) {
+    public LevelDrawing(Level model, Scene scene, boolean solverApplied) {
         this.m_model = model;
+        this.grid = new GridPane();
+        this.grid.setVgap(0);
+        this.grid.setHgap(0);
+        this.grid.setGridLinesVisible(true); // For debugging : to remove
+        this.grid.setAlignment(Pos.CENTER);
+        this.grid.prefWidthProperty().bind(scene.widthProperty());
+        this.grid.prefHeightProperty().bind(scene.heightProperty());
+        this.draw(this.grid, scene);
+
+        if (!solverApplied) {
+            // Adding a controller to each node so that we don't need to retrieve which one was clicked
+            for (Node item : this.grid.getChildren()) {
+                if (item != this.grid) {
+                    item.setOnMouseClicked(new RotationController(item));
+                }
+            }
+        }
+
+        this.grid.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+
+    public GridPane getGridPane() {
+        return this.grid;
     }
 
     /**
@@ -37,7 +71,7 @@ public class LevelDrawing {
      * @param scene Scene that contains all elements.
      * @throws FileNotFoundException
      */
-    public void draw(GridPane grid, Scene scene) throws FileNotFoundException {
+    public void draw(GridPane grid, Scene scene) {
         PieceDrawing iv = null;
 
         for (Piece[] col : this.m_model.getGrid()) {
@@ -61,7 +95,10 @@ public class LevelDrawing {
                 }
             }
         }
-
     }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        //
+    }
 }

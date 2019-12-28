@@ -48,7 +48,7 @@ public class L extends Piece {
 	}
 
 	@Override
-	public PieceDrawing createDrawing() throws FileNotFoundException {
+	public PieceDrawing createDrawing() {
 		return new LPieceDrawing(this);
 	}
 

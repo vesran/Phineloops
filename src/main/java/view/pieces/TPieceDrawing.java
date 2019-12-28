@@ -13,10 +13,13 @@ import java.io.FileNotFoundException;
 public class TPieceDrawing extends PieceDrawing {
 	/**
 	 * @param piece the T to draw
-	 * @throws FileNotFoundException in case where the image file is not found
 	 */
-	public TPieceDrawing(Piece piece) throws FileNotFoundException {
+	public TPieceDrawing(Piece piece) {
         super(piece);
-        super.setImage(new Image(new FileInputStream("resources/pieces/T_piece.png")));
-    }
+		try {
+			super.setImage(new Image(new FileInputStream("resources/pieces/T_piece.png")));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 }

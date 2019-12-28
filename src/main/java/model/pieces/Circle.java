@@ -46,7 +46,7 @@ public class Circle extends Piece {
 	}
 
 	@Override
-	public PieceDrawing createDrawing() throws FileNotFoundException {
+	public PieceDrawing createDrawing() {
 		return new CirclePieceDrawing(this);
 	}
 
