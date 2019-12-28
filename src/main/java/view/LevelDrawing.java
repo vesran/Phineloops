@@ -40,11 +40,11 @@ public class LevelDrawing implements PropertyChangeListener {
 
         if (!solverApplied) {
             // Adding a controller to each node so that we don't need to retrieve which one was clicked
-            for (Node item : this.grid.getChildren()) {
-                if (item != this.grid) {
-                    item.setOnMouseClicked(new RotationController(item));
-                }
-            }
+//            for (Node item : this.grid.getChildren()) {
+//                if (item != this.grid) {
+//                    item.setOnMouseClicked(new RotationController(item));
+//                }
+//            }
         }
 
         this.grid.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
