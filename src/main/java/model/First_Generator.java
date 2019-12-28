@@ -3,11 +3,24 @@ package model;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.mockito.internal.matchers.InstanceOf;
+
+import model.pieces.Bar;
+import model.pieces.Circle;
+import model.pieces.Empty;
+import model.pieces.L;
+import model.pieces.Piece;
+import model.pieces.T;
+import model.pieces.X;
+import view.PhineLoopsMainGUI;
+
 public class First_Generator implements Generator {
 	public int ccnumber;
+	Level l;
 
 	public First_Generator(int width, int height, int ccnumber) {
-		this.generate(width, height, ccnumber);
+		l = this.generate(width, height, ccnumber);
+
 		this.ccnumber = ccnumber;
 	}
 
@@ -15,7 +28,7 @@ public class First_Generator implements Generator {
 		ArrayList<Integer> r = new ArrayList<Integer>();
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++) {
-				if (!r.contains(m[i][j].pere))
+				if (!r.contains(m[i][j].pere) && m[i][j].pere > 0)
 					r.add(m[i][j].pere);
 			}
 		return r.size();
@@ -24,6 +37,7 @@ public class First_Generator implements Generator {
 
 	@Override
 	public Level generate(int width, int height, int ccnumber) {
+		Level l = new Level(height, width);
 		int x, y, z, w, h;
 		int p = 1;
 		int e = 0;
@@ -44,7 +58,7 @@ public class First_Generator implements Generator {
 						if (m[i][j].x % 2 != 0) {
 							m[i][j].pere = m[i - 1][j].pere;
 							m[i][j].murs.replace(0, true);
-							m[i-1][j].murs.replace(2, true);
+							m[i - 1][j].murs.replace(2, true);
 						}
 			} else {
 				for (int i = 0; i < width; i++)
@@ -52,7 +66,7 @@ public class First_Generator implements Generator {
 						if (m[i][j].y % 2 != 0) {
 							m[i][j].pere = m[i][j - 1].pere;
 							m[j][j].murs.replace(3, true);
-							m[j][j-1].murs.replace(1, true);
+							m[j][j - 1].murs.replace(1, true);
 						}
 			}
 		else {
@@ -66,124 +80,165 @@ public class First_Generator implements Generator {
 				if (m[0][i].y % 2 == 0) {
 					m[0][i].pere = m[0][i - 1].pere;
 					m[0][i].murs.replace(3, true);
-					m[0][i-1].murs.replace(1, true);
+					m[0][i - 1].murs.replace(1, true);
 				}
 			for (int i = 1; i < width; i++)
 				for (int j = 0; j < height; j++)
 					if (m[i][j].x % 2 == 0) {
 						m[i][j].pere = m[i - 1][j].pere;
 						m[i][j].murs.replace(0, true);
-						m[i-1][j].murs.replace(2, true);
+						m[i - 1][j].murs.replace(2, true);
 					}
 		}
-
-//		if (width * height % 2 == 0)
-//			if (width % 2 == 0) {
-//				while (p < width-1)
-//					for (int j = 0; j < height; j++) {
-//						m[p-1][j].pere = m[p][j].pere;
-//						p+= 2;
-//						System.out.println(m[p][j].pere+" "+ m[p][j]);
-//					}
-//			} else {
-//				for (int i = 0; i < width; i++)
-//					while(p < height) {
-//						m[i][p].pere = m[i][p - 1].pere;
-//						p+=2;
-//					}
-//			}
-
+		this.createEmpty(m, height, width);
 		while (this.checkCc(m, width, height) > ccnumber) {
 			x = random.nextInt(width);
 			y = random.nextInt(height);
 			z = random.nextInt(4);
-			System.out.println("la valeur de c est " + c + " et on arrive pas a sortir de cette boucle car ");
+
 			if (z == 0 && x > 0) {
 				if (!(m[x][y].find() == m[x - 1][y].find())) {
-					System.out.println("fusion vers le haut de " + m[x][y] + " avec " + m[x - 1][y] + " car "
-							+ m[x][y].find() + " n'est pas egal a" + m[x - 1][y].find());
 					m[x - 1][y].union(m[x][y].pere, m, width, height);
 					m[x - 1][y].murs.replace(2, true);
 					m[x][y].murs.replace(0, true);
 					c--;
-					System.out.println("la valeur de ccccc " + c);
 				}
 			} else if (z == 1 && y + 1 < height) {
 				if (!(m[x][y].find() == m[x][y + 1].find())) {
-					System.out.println("fusion a droite de " + m[x][y] + " avec " + m[x][y + 1] + " car "
-							+ m[x][y].find() + " n'est pas egal a" + m[x][y + 1].find());
 					m[x][y + 1].union(m[x][y].pere, m, width, height);
 					c--;
 					m[x][y].murs.replace(1, true);
-					m[x][y+1].murs.replace(3, true);
-					System.out.println("la valeur de ccccc " + c);
+					m[x][y + 1].murs.replace(3, true);
 				}
 			} else if (z == 2 && x + 1 < width) {
 
 				if (!(m[x][y].find() == m[x + 1][y].find())) {
-					System.out.println("fusion vers le bas de " + m[x][y] + " avec " + m[x + 1][y] + " car "
-							+ m[x][y].find() + " n'est pas egal a" + m[x + 1][y].find());
 					m[x + 1][y].union(m[x][y].pere, m, width, height);
 					c--;
 					m[x][y].murs.replace(2, true);
-					m[x+1][y].murs.replace(0, true);
-					System.out.println("la valeur de ccccc " + c);
-
+					m[x + 1][y].murs.replace(0, true);
 				}
 
 			} else {
 				if (y > 0)
 					if (!(m[x][y].find() == m[x][y - 1].find())) {
-						System.out.println("fusion a gauche de " + m[x][y] + " avec " + m[x][y - 1] + " car "
-								+ m[x][y].find() + " n'est pas egal a" + m[x][y - 1].find());
 						m[x][y - 1].union(m[x][y].pere, m, width, height);
 						c--;
 						m[x][y].murs.replace(3, true);
-						m[x][y-1].murs.replace(1, true);
-						System.out.println("la valeur de ccccc " + c);
+						m[x][y - 1].murs.replace(1, true);
 					}
 			}
 
 		}
 		for (int i = 0; i < width; i++)
-			for (int j = 0; j < height; j++) {
-				System.out.println("i " + i + " j " + j + " pere " + m[i][j].pere);
-				System.out.println(c);
+			for (int j = 0; j < height; j++)
+				l.grid[i][j] = this.guessPiece(m[i][j]);
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++)
+				System.out.print(l.grid[i][j].getId() + "" + l.grid[i][j]);
+			System.out.println();
+		}
+		return l;
+	}
+
+//	public void createEmpty(Noeud m[][], int height, int width) {
+//		boolean verif=false;
+//		Random random = new Random();
+//		boolean b = false;
+//		int number = random.nextInt(height * width / 4);
+//		System.out.println("voici le nb " + number);
+//		int x = random.nextInt(width);
+//		int y = random.nextInt(height);
+//		for (int i = 0; i < number; i++) {
+//			System.out.println("hhhhhhhhhhhhh");
+//			while (!b) {
+//				if (m[x][y].sizeOfConnexcomposant(m, height, width) > 1
+//						&& (m[x][y].PossibleToCreateEmpty(m, height, width))) {
+//					System.out.println("je rentre là pour "+m[x][y]+" et je change ");
+//					verif =true;
+//					m[x][y].replaceValue(m);
+//					m[x][y].murs.replace(0, false);
+//					m[x][y].murs.replace(1, false);
+//					m[x][y].murs.replace(2, false);
+//					m[x][y].murs.replace(0, false);
+//					b = true;
+//					System.out.println("je rentre là pour "+m[x][y]);
+//				} else {
+//					System.out.println("malheuresment" + x + " " + y+ " verif "+ verif+" et on est sur l'iteration "+i+ " possibilité "+m[x][y].PossibleToCreateEmpty(m, height, width)+" taille "+ m[x][y].sizeOfConnexcomposant(m, height, width));
+//					x = random.nextInt(width);
+//					y = random.nextInt(height);
+//				}
+//			}
+//			b = false;
+//		}
+//	}
+
+	public void createEmpty(Noeud m[][], int height, int width) {
+		Random random = new Random();
+		boolean b = false;
+		int number = random.nextInt(height * width / 8);
+		int x = random.nextInt(width);
+		int y = random.nextInt(height);
+		for (int i = 0; i < number; i++) {
+			while (!b) {
+				if (m[x][y].pere > 0) {
+					for (int j = 0; j < width; j++) {
+						for (int j2 = 0; j2 < height; j2++) {
+							if (m[j][j2].pere == m[x][y].pere)
+								m[j][j2].pere *= -1;
+							m[j][j2].replaceValue(m);
+							m[j][j2].murs.replace(0, false);
+							m[j][j2].murs.replace(1, false);
+							m[j][j2].murs.replace(2, false);
+							m[j][j2].murs.replace(0, false);
+						}
+					}
+					m[x][y].replaceValue(m);
+					m[x][y].murs.replace(0, false);
+					m[x][y].murs.replace(1, false);
+					m[x][y].murs.replace(2, false);
+					m[x][y].murs.replace(0, false);
+					b = true;
+				} else {
+					x = random.nextInt(width);
+					y = random.nextInt(height);
+				}
 			}
-		System.out.println("fin");
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++)
-				System.out.print(m[i][j].pere + " ");
-			System.out.println();
+			b = false;
 		}
-		for (int i = 0; i < width; i++) {
+	}
+
+	public int sizeOfConnexcomposant(Noeud m[][], int height, int width, Noeud noeud) {
+		int size = 0;
+		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++)
-				System.out.print(""+m[i][j].printMap());
-			System.out.println();
+				if (m[i][j].pere == noeud.pere && noeud != m[i][j])
+					size++;
+		return size;
+	}
+
+	public Piece guessPiece(Noeud noeud) {
+
+		switch (noeud.numberOfNeighbors()) {
+		case 4:
+			return new X(0, noeud.x, noeud.y);
+		case 3:
+			return new T(0, noeud.x, noeud.y);
+		case 2:
+			if ((noeud.murs.get(0).booleanValue() == true && noeud.murs.get(2).booleanValue() == true)
+					|| (noeud.murs.get(1).booleanValue() == true && noeud.murs.get(3).booleanValue() == true))
+				return new Bar(0, noeud.x, noeud.y);
+			else
+				return new L(0, noeud.x, noeud.y);
+		case 1:
+			return new Circle(0, noeud.x, noeud.y);
+		default:
+			return new Empty(0, noeud.x, noeud.y);
 		}
-		return null;
 	}
 
 	public static void main(String[] args) {
-		First_Generator f = new First_Generator(4, 4, 4);
-		System.out.println("fi");
-		System.out.println();
+		First_Generator f = new First_Generator(6, 6, 4);
+		PhineLoopsMainGUI.display(f.l);
 	}
-	
-	
-	/*
-	 * @Override public Level generate(int width, int height, int ccnumber) { Random
-	 * random = new Random(); ArrayList<Noeud> listepere = new ArrayList<Noeud>();
-	 * ArrayList<Noeud> liste = new ArrayList<Noeud>(); Noeud m[][] = new
-	 * Noeud[width][height]; for (int i = 0; i < width; i++) for (int j = 0; j <
-	 * height; j++) m[i][j] = new Noeud(i, j); for (int i = 0; i < ccnumber; i++)
-	 * listepere.add(m[random.nextInt(width)][random.nextInt(height)]); for(Noeud
-	 * noeud : listepere)
-	 * 
-	 * while(!liste.isEmpty()) {
-	 * 
-	 * } return null;
-	 * 
-	 * }
-	 */
 }
