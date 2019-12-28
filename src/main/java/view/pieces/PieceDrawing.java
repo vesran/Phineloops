@@ -80,6 +80,7 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 			synchronized(rotationMonitor) {
 				while (rotate.statusProperty().getValue() == Animation.Status.RUNNING && PhineLoopsMainGUI.solverApplied) {
 					try {
+						System.out.println("Waiting animation to end");
 						rotationMonitor.wait();
 
 					} catch (InterruptedException e) {

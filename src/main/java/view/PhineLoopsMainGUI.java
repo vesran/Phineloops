@@ -31,6 +31,7 @@ public class PhineLoopsMainGUI extends Application {
 	private static boolean solverMustWait = false; 	// Makes the solver wait until the window shows up
 	private static final Object startUpMonitor = new Object();	// Synchronizes the solver and window starting up
 	private static Level level;
+	private static LevelDrawing view;
 
 	/**
 	 * Displays GUI where user interactions are considered.
@@ -68,13 +69,13 @@ public class PhineLoopsMainGUI extends Application {
 				synchronized (startUpMonitor) {
 					try {
 						solverMustWait = true;
+						System.out.println("waiting");
 						startUpMonitor.wait();
 						solverMustWait = false;
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
-				solver.solving();
 			}
 		});
 
@@ -86,7 +87,7 @@ public class PhineLoopsMainGUI extends Application {
 	public void start(Stage stage) throws Exception {
 		Group root = new Group();
 		Scene scene = new Scene(root, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-		LevelDrawing view = new LevelDrawing(level, scene, solverApplied);
+		view = new LevelDrawing(level, scene, solverApplied);
 
 		root.getChildren().add(view.getGridPane());
 		stage.setTitle("Phine Loops Game");
@@ -102,7 +103,9 @@ public class PhineLoopsMainGUI extends Application {
 
 		// Loop until the solver thread start to wait and then notify it
 		while (solverMustWait) {
+			System.out.println("in while");
 			synchronized (startUpMonitor) {
+				System.out.println("can notify");
 				startUpMonitor.notifyAll();
 			}
 		}

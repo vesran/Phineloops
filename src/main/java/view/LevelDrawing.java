@@ -6,10 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import model.Level;
 import model.pieces.Piece;
@@ -22,7 +19,7 @@ import java.io.FileNotFoundException;
 /**
  * Produces a visual representation of the game level.
  */
-public class LevelDrawing implements PropertyChangeListener {
+public class LevelDrawing {
 
     private Level m_model;
     private GridPane grid;
@@ -39,12 +36,7 @@ public class LevelDrawing implements PropertyChangeListener {
         this.draw(this.grid, scene);
 
         if (!solverApplied) {
-            // Adding a controller to each node so that we don't need to retrieve which one was clicked
-//            for (Node item : this.grid.getChildren()) {
-//                if (item != this.grid) {
-//                    item.setOnMouseClicked(new RotationController(item));
-//                }
-//            }
+            this.grid.setOnMouseClicked(new RotationController(this.m_model, this));
         }
 
         this.grid.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -74,21 +66,24 @@ public class LevelDrawing implements PropertyChangeListener {
     public void draw(GridPane grid, Scene scene) {
         PieceDrawing iv = null;
 
-        for (Piece[] col : this.m_model.getGrid()) {
-            for (Piece currentPiece : col) {
+        for (int i = 0; i < this.m_model.getGrid().length; i++) {
+            for (int j = 0; j < this.m_model.getGrid()[0].length; j++) {
+                Piece currentPiece = this.m_model.getGrid()[i][j];
                 // Adding image view for each non empty piece
                 if (currentPiece.getId() != 0) {
                     iv = currentPiece.createDrawing();
                     this.setOrientation(iv, currentPiece.getOrientation());
 
                     // Dynamic resizing of pieces
-                    iv.fitWidthProperty().bind(scene.widthProperty().divide(col.length + 1));
+                    iv.fitWidthProperty().bind(scene.widthProperty().divide(this.m_model.getGrid()[0].length + 1));
                     iv.fitHeightProperty().bind(scene.heightProperty().divide(this.m_model.getGrid().length + 1));
 
-                    iv.setCache(true);
                     iv.setSmooth(true);
                     iv.setPreserveRatio(true);
                     iv.setPickOnBounds(true);
+
+                    GridPane.setRowIndex(iv, i);
+                    GridPane.setColumnIndex(iv, j);
                     grid.add(iv, currentPiece.getColumn_number(), currentPiece.getLine_number());
 
                     currentPiece.addObserver(iv);
@@ -97,8 +92,12 @@ public class LevelDrawing implements PropertyChangeListener {
         }
     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        //
+    public void solvedSituation() {
+        System.out.println("SOLVED !!!");
+        this.grid.setGridLinesVisible(false);
+    }
+
+    public void unsolvedSituation() {
+        this.grid.setGridLinesVisible(true);
     }
 }
