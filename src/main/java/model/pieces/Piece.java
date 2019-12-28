@@ -61,8 +61,12 @@ public abstract class Piece {
 		pcs.firePropertyChange("orientationSet", oldValue, this.orientation);
 	}
 
+	/**
+	 * Set the orientation parameter without triggering a property change. Thus, the change of orientation wouldn't
+	 * be animated/showed.
+	 * @param orientation
+	 */
 	public void silentSetOrientation(int orientation) {
-		int oldValue = this.orientation;
 		this.orientation = orientation;
 	}
 

@@ -185,8 +185,9 @@ public class QuasiExhaustiveSolver {
      */
     private Iterator<Integer> genOrientations(Piece piece) {
         List<Integer> list = new ArrayList<>();
+        int originalOrientation = piece.getOrientation();
         for (int i = 0; i < piece.getNumberOfOrientations(); i++) {
-            list.add(i);
+            list.add((i + originalOrientation) % piece.getNumberOfOrientations());
         }
         return list.iterator();
     }
