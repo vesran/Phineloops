@@ -38,6 +38,7 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 		rotate.setAxis(Rotate.Z_AXIS);
 		rotate.setCycleCount(1);
 		rotate.setDuration(Duration.millis(duration));
+		// At the end, notify that the animation is over and the solver can continue to work
 		rotate.setOnFinished(e -> {
 			synchronized (rotationMonitor) {
 				rotationMonitor.notify();
@@ -78,9 +79,9 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 
 			// Makes the algorithm waits until the animation is done.
 			synchronized(rotationMonitor) {
+				// Need to check solverApplied value to keep the solver working while the window has been closed
 				while (rotate.statusProperty().getValue() == Animation.Status.RUNNING && PhineLoopsMainGUI.solverApplied) {
 					try {
-						System.out.println("Waiting animation to end");
 						rotationMonitor.wait();
 
 					} catch (InterruptedException e) {

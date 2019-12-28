@@ -12,8 +12,6 @@ import model.Level;
 import model.pieces.Piece;
 import view.pieces.PieceDrawing;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.FileNotFoundException;
 
 /**
@@ -64,7 +62,7 @@ public class LevelDrawing {
      * @throws FileNotFoundException
      */
     public void draw(GridPane grid, Scene scene) {
-        PieceDrawing iv = null;
+        PieceDrawing iv;
 
         for (int i = 0; i < this.m_model.getGrid().length; i++) {
             for (int j = 0; j < this.m_model.getGrid()[0].length; j++) {
@@ -81,6 +79,7 @@ public class LevelDrawing {
                     iv.setSmooth(true);
                     iv.setPreserveRatio(true);
                     iv.setPickOnBounds(true);
+                    iv.setOpacity(0.9);
 
                     GridPane.setRowIndex(iv, i);
                     GridPane.setColumnIndex(iv, j);
@@ -94,7 +93,12 @@ public class LevelDrawing {
 
     public void solvedSituation() {
         System.out.println("SOLVED !!!");
+        ImageView iv;
         this.grid.setGridLinesVisible(false);
+        for (Node n : this.grid.getChildren()) {
+            iv = (ImageView) n;
+            iv.setOpacity(0.5);
+        }
     }
 
     public void unsolvedSituation() {

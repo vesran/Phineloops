@@ -25,10 +25,10 @@ import view.pieces.PieceDrawing;
 
 public class PhineLoopsMainGUI extends Application {
 
-	static final int DEFAULT_WIDTH = 700;
-	static final int DEFAULT_HEIGHT = 700;
+	private static final int DEFAULT_WIDTH = 700;
+	private static final int DEFAULT_HEIGHT = 700;
 	public static boolean solverApplied = false;	// Tells if the goal is to visualize a solver or only displaying
-	private static boolean solverMustWait = false; 	// Makes the solver wait until the window shows up
+	private static boolean solverWaiting = false; 	// Makes the solver wait until the window shows up
 	private static final Object startUpMonitor = new Object();	// Synchronizes the solver and window starting up
 	private static Level level;
 	private static LevelDrawing view;
@@ -39,8 +39,15 @@ public class PhineLoopsMainGUI extends Application {
 	 */
 	public static void display(Level lvl) {
 		level = lvl;
-		solverMustWait = false;
-		Application.launch();
+		solverWaiting = false;
+
+		// Don't throw an exception, let the solver working
+		if (lvl.getGrid().length * lvl.getGrid()[0].length > 32*32) {
+			System.out.println("Grid too large to be loaded, must be 32x32 or lower. View has been cancelled.");
+
+		} else {
+			Application.launch();
+		}
 	}
 
 	/**
@@ -60,6 +67,10 @@ public class PhineLoopsMainGUI extends Application {
 				synchronized (PieceDrawing.rotationMonitor) {
 					PieceDrawing.rotationMonitor.notify();
 				}
+				// Loop until the solver thread start to wait and then notify it
+				synchronized (startUpMonitor) {
+					startUpMonitor.notifyAll();
+				}
 			}
 		});
 
@@ -68,14 +79,15 @@ public class PhineLoopsMainGUI extends Application {
 			public void run() {
 				synchronized (startUpMonitor) {
 					try {
-						solverMustWait = true;
-						System.out.println("waiting");
+						solverWaiting = true;
 						startUpMonitor.wait();
-						solverMustWait = false;
+						solverWaiting = false;
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
+				boolean solved = solver.solving();
+				System.out.println("Solved : " + solved);
 			}
 		});
 
@@ -102,10 +114,8 @@ public class PhineLoopsMainGUI extends Application {
 		stage.show();
 
 		// Loop until the solver thread start to wait and then notify it
-		while (solverMustWait) {
-			System.out.println("in while");
+		while (solverWaiting) {
 			synchronized (startUpMonitor) {
-				System.out.println("can notify");
 				startUpMonitor.notifyAll();
 			}
 		}

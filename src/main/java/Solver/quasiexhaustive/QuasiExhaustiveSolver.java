@@ -101,7 +101,7 @@ public class QuasiExhaustiveSolver {
             while (this.inConflict(this.m_stack.peek())) {
                 // Go back in the stack
                 while (this.entireRotation(this.m_stack.peek())) {
-                    this.goBack(); // out is supposed to be the top of the stack
+                    this.goBack();
                 }
                 // Set the new top of the stack to its new best position
                 this.setToBestOrientation(this.m_stack.peek());
