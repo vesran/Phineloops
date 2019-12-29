@@ -98,15 +98,15 @@ public class Adn implements Cloneable {
 				Class<? extends Piece> myClass = myAdn[i][y].getClass();
 				switch (myClass.getName()) {
 				case "model.pieces.Bar":
-					m_fitnessGoal += myAdn[i][y].numbeOfPossibleConnection();
+					m_fitnessGoal += myAdn[i][y].numberOfPossibleConnection();
 					break;
 				case "model.pieces.Empty":
 					break;
 				case "model.pieces.X":
-					m_fitnessGoal += myAdn[i][y].numbeOfPossibleConnection();
+					m_fitnessGoal += myAdn[i][y].numberOfPossibleConnection();
 					break;
 				default:
-					m_fitnessGoal += myAdn[i][y].numbeOfPossibleConnection();
+					m_fitnessGoal += myAdn[i][y].numberOfPossibleConnection();
 					break;
 				}
 			}
@@ -114,7 +114,7 @@ public class Adn implements Cloneable {
 		this.updateFitness();
 		for (int i = 0; i < myAdn.length; i++) {
 			for (int y = 0; y < myAdn[0].length; y++) {
-				if (myAdn[i][y].numbeOfPossibleConnection() == myAdn[i][y].numberOfConnection()) {
+				if (myAdn[i][y].numberOfPossibleConnection() == myAdn[i][y].numberOfConnection()) {
 					this.m_goodOrientation.add(myAdn[i][y]);
 				} else {
 					this.m_wrongOrientation.add(myAdn[i][y]);
@@ -134,7 +134,7 @@ public class Adn implements Cloneable {
 		m_myRandom = new Random();
 		for (int i = 0; i < myAdn.length; i++) {
 			for (int y = 0; y < myAdn[0].length; y++) {
-				if (myAdn[i][y].numbeOfPossibleConnection() == myAdn[i][y].numberOfConnection()) {
+				if (myAdn[i][y].numberOfPossibleConnection() == myAdn[i][y].numberOfConnection()) {
 					this.m_goodOrientation.add(myAdn[i][y]);
 				} else {
 					this.m_wrongOrientation.add(myAdn[i][y]);
