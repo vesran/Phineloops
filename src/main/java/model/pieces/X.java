@@ -21,12 +21,10 @@ public class X extends Piece {
 		super(orientation, line_number, column_number);
 		this.id = 4;
 		this.numberOfOrientations = 1;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void translation(Side side) {
-		// TODO Auto-generated method stub
 		if (side == Side.RIGHT) {
 			// Old and new value should  be different so that the animation is triggered
 			this.pcs.firePropertyChange("rightTranslation", 1, 0);
@@ -66,7 +64,6 @@ public class X extends Piece {
 
 	@Override
 	public boolean connectedAll() {
-		// TODO Auto-generated method stub
 		return this.numberOfConnection() == this.numberOfPossibleConnection();
 	}
 
@@ -76,7 +73,6 @@ public class X extends Piece {
 
 	@Override
 	public int numberOfPossibleConnection() {
-		// TODO Auto-generated method stub
 		return 4;
 	}
 

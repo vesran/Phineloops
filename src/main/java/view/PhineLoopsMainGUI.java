@@ -126,7 +126,6 @@ public class PhineLoopsMainGUI extends Application {
 		stage.show();
 
 		// Loop until the solver thread start to wait and then notify
-		System.out.println(solverWaiting);
 		while (solverWaiting) {
 			synchronized (startUpMonitor) {
 				startUpMonitor.notifyAll();
