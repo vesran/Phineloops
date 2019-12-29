@@ -28,10 +28,9 @@ public class Main {
 	private static void generate(int width, int height, String outputFile) throws IllegalArgumentException {
 		// generate grid and store it to outputFile...
 		// ...
-		
-		First_Generator level = new First_Generator(width, height, 2);
+		First_Generator level = new First_Generator(width, height, maxcc);
 		level.getL().init_neighbors();
-		FileCreator.write(level.getL(),outputFile);
+		FileCreator.write(level.getL(), outputFile);
 	}
 
 	private static boolean solve(String inputFile, String outputFile) {
@@ -60,7 +59,6 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		generate(4, 4, "nom");
 		Options options = new Options();
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = null;
@@ -75,7 +73,6 @@ public class Main {
 		options.addOption("GS", "guisolver", true,
 				"Run with the graphic interface showing an exhaustive solver working.");
 		options.addOption("h", "help", false, "Display this help");
-		
 		try {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {
@@ -93,6 +90,20 @@ public class Main {
 				if (!cmd.hasOption("o"))
 					throw new ParseException("Missing mandatory --output argument.");
 				outputFile = cmd.getOptionValue("o");
+				if (cmd.hasOption("x")) {
+					try {
+						Integer max = Integer.valueOf(cmd.getOptionValue("x"));
+						if (max.intValue() <= width * height / 2) {
+							maxcc = max;
+						} else {
+							throw new ParseException("Must be less than" + width * height / 2);
+						}
+					} catch (NumberFormatException e) {
+						throw new ParseException("Must be a integer");
+					}
+				}else {
+					maxcc=1 ; 
+				}
 				generate(width, height, outputFile);
 			} else if (cmd.hasOption("s")) {
 				System.out.println("Running phineloops solver.");
