@@ -37,7 +37,7 @@ public class Main {
 		Piece[][] outputGrid;
 		boolean solved;
 		// Solve the level
-		Csp solver = new Csp(inputGrid, maxcc.shortValue());
+		Csp solver = new Csp(inputGrid, maxThread.shortValue());
 		solved = solver.solving(Extend.noExtend);
 		// Save the solved level
 		outputGrid = solver.getMyLevelToSolve();
