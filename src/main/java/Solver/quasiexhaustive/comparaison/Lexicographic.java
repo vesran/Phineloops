@@ -5,6 +5,10 @@ import model.pieces.Piece;
 import java.util.Comparator;
 
 /**
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
+ *
  * For lexicographic ordering. Starts from top left to bottom right.
  */
 public class Lexicographic implements Comparator<Piece> {

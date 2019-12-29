@@ -5,7 +5,6 @@ import model.enumtype.Side;
 import view.pieces.PieceDrawing;
 import view.pieces.XPieceDrawing;
 
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,9 +28,11 @@ public class X extends Piece {
 	public void translation(Side side) {
 		// TODO Auto-generated method stub
 		if (side == Side.RIGHT) {
-			this.pcs.firePropertyChange("rightTranslation", this.orientation, this.orientation);
+			// Old and new value should  be different so that the animation is triggered
+			this.pcs.firePropertyChange("rightTranslation", 1, 0);
 		} else {
-			this.pcs.firePropertyChange("leftTranslation", this.orientation, this.orientation);
+			// Old and new value should  be different so that the animation is triggered
+			this.pcs.firePropertyChange("leftTranslation", 0, 1);
 		}
 	}
 

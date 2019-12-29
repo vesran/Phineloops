@@ -5,6 +5,10 @@ import model.pieces.Piece;
 import java.util.Comparator;
 
 /**
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
+ *
  * Compares the number of neighbors between pieces.
  */
 public class Neighbors implements Comparator<Piece> {

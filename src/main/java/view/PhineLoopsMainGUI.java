@@ -6,27 +6,30 @@ import Solver.Csp;
 import Solver.Extend;
 import Solver.Satisfiability;
 import Solver.quasiexhaustive.QuasiExhaustiveSolver;
-import controller.RotationController;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import model.*;
+import model.Level;
 import model.io.FileReader;
 import model.pieces.Empty;
 import model.pieces.Piece;
 import model.pieces.T;
 import view.pieces.PieceDrawing;
 
+/**
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
+ *
+ * This class is used to visualise the game. It is possible watch an exhaustive solver working on the grid instance,
+ * trying to solve the level.
+ */
 public class PhineLoopsMainGUI extends Application {
 
 	private static final int DEFAULT_WIDTH = 700;
 	private static final int DEFAULT_HEIGHT = 700;
+	private static boolean windowsOn = false;
 	public static boolean solverApplied = false;	// Tells if the goal is to visualize a solver or only displaying
 	private static boolean solverWaiting = false; 	// Makes the solver wait until the window shows up
 	private static final Object startUpMonitor = new Object();	// Synchronizes the solver and window starting up
@@ -39,13 +42,13 @@ public class PhineLoopsMainGUI extends Application {
 	 */
 	public static void display(Level lvl) {
 		level = lvl;
-		solverWaiting = false;
 
 		// Don't throw an exception, let the solver working
 		if (lvl.getGrid().length * lvl.getGrid()[0].length > 32*32) {
-			System.out.println("Grid too large to be loaded, must be 32x32 or lower. View has been cancelled.");
+			System.out.println("Grid too large to be loaded, must be 32x32 or lower. View has been cancelled but the solver is still running.");
 
 		} else {
+			windowsOn = true;
 			Application.launch();
 		}
 	}
@@ -57,19 +60,18 @@ public class PhineLoopsMainGUI extends Application {
 	 * @param solver Solver to use, must be load with the lvl.
 	 */
 	public static void displaySolving(Level lvl, QuasiExhaustiveSolver solver) {
-		solverApplied = true;
 		Thread displayLevel = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				display(lvl);
 				solverApplied = false;
-				// Release rotationMonitor so that the solver does not get stuck and wait forever
-				synchronized (PieceDrawing.rotationMonitor) {
-					PieceDrawing.rotationMonitor.notify();
-				}
 				// Loop until the solver thread start to wait and then notify it
 				synchronized (startUpMonitor) {
 					startUpMonitor.notifyAll();
+				}
+				// Notify that rotation is over so that the solver does not get stuck and wait forever
+				synchronized (PieceDrawing.rotationMonitor) {
+					PieceDrawing.rotationMonitor.notify();
 				}
 			}
 		});
@@ -79,7 +81,6 @@ public class PhineLoopsMainGUI extends Application {
 			public void run() {
 				synchronized (startUpMonitor) {
 					try {
-						solverWaiting = true;
 						startUpMonitor.wait();
 						solverWaiting = false;
 					} catch (InterruptedException e) {
@@ -87,16 +88,20 @@ public class PhineLoopsMainGUI extends Application {
 					}
 				}
 				boolean solved = solver.solving();
+				if (solved && windowsOn) {
+					view.solvedSituation();
+				}
 				System.out.println("Solved : " + solved);
 			}
 		});
-
+		solverApplied = true;
+		solverWaiting = true;
 		displayLevel.start();
 		solveLevel.start();
 	}
 
 	@Override
-	public void start(Stage stage) throws Exception {
+	public void start(Stage stage) {
 		Group root = new Group();
 		Scene scene = new Scene(root, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		view = new LevelDrawing(level, scene, solverApplied);
@@ -107,13 +112,15 @@ public class PhineLoopsMainGUI extends Application {
 //		stage.setMaximized(true); // Full screen
 		stage.setOnCloseRequest(e -> {
 			// Makes the solver continue to work without the stage
+			windowsOn = false;
 			synchronized (PieceDrawing.rotationMonitor) {
 				PieceDrawing.rotationMonitor.notify();
 			}
 		});
 		stage.show();
 
-		// Loop until the solver thread start to wait and then notify it
+		// Loop until the solver thread start to wait and then notify
+		System.out.println(solverWaiting);
 		while (solverWaiting) {
 			synchronized (startUpMonitor) {
 				startUpMonitor.notifyAll();

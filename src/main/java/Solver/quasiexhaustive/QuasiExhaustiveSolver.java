@@ -8,6 +8,10 @@ import model.pieces.*;
 import java.util.*;
 
 /**
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
+ *
  * This class implements an algorithm for solving the InfinityLoop's grid. It is based on a tree search with an
  * iterative exploration of the tree using stacks. It contained a main stack where each pieces has a fixed orientation
  * ready to be tested. When this stack needs updated, ie change an orientation of a piece that is in the middle of the
@@ -51,7 +55,6 @@ public class QuasiExhaustiveSolver {
     public boolean solving() {
         int i = 0;
 
-        Set<String> instances = new HashSet<>();
         List<Piece> orderingPieces = new ArrayList<>();
 
         // Init stack and set each piece to their best orientation
@@ -81,12 +84,6 @@ public class QuasiExhaustiveSolver {
                 if (this.m_level.checkGrid()) {
                     return true;
                 }
-
-                if (instances.contains(this.m_level.toString())) {  // To remove
-                    System.out.println("PB !");
-                    (new Scanner(System.in)).next();
-                }
-                instances.add(this.m_level.toString()); // To remove
             }
 
             // Top piece in stack has made an entire rotation so it needs to go to the anti-stack so that the second top

@@ -5,8 +5,11 @@ import model.pieces.Piece;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
 /**
- * @author KBY
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
  * 
  *         Representation of the T piece
  */

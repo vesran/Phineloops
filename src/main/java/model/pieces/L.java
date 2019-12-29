@@ -5,7 +5,6 @@ import model.enumtype.Side;
 import view.pieces.LPieceDrawing;
 import view.pieces.PieceDrawing;
 
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 

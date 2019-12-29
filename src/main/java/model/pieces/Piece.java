@@ -6,7 +6,6 @@ import view.pieces.PieceDrawing;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 

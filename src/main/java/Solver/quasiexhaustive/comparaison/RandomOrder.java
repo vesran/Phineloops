@@ -6,6 +6,10 @@ import java.util.Comparator;
 import java.util.Random;
 
 /**
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
+ *
  * The ordering and the sequence of orientations of pieces are completely random. It is used to compare other
  * exploration methods.
  */

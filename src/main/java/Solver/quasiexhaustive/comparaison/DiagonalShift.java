@@ -5,6 +5,10 @@ import model.pieces.Piece;
 import java.util.Comparator;
 
 /**
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
+ *
  * For sorting pieces into an anti-diagonal ordering. If same diagonal, see columns.
  * From top-left to bottom-right.
  */

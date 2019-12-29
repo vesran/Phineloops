@@ -11,10 +11,17 @@ import view.PhineLoopsMainGUI;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
+ *
+ * This class implements a visual representation for pieces.
+ */
 abstract public class PieceDrawing extends ImageView implements PropertyChangeListener {
 
 	public static final Object rotationMonitor = new Object();
-	protected Piece m_piece;
+	protected final Piece m_piece;
 
 	public PieceDrawing(Piece piece) {
 		this.m_piece = piece;
@@ -50,45 +57,48 @@ abstract public class PieceDrawing extends ImageView implements PropertyChangeLi
 
 	/**
 	 * Actions to trigger when a property is invoked.
-	 * @param event
+	 * @param event the triggered event
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getPropertyName().equals("leftTranslation")) {
-			this.rotate(90, 100);
+		switch (event.getPropertyName()) {
+			case "leftTranslation":
+				this.rotate(90, 100);
 
-		} else if (event.getPropertyName().equals("rightTranslation")) {
-			this.rotate(-90, 100);
+				break;
+			case "rightTranslation":
+				this.rotate(-90, 100);
 
-		} else if (event.getPropertyName().equals("orientationSet")) {
-			// Mainly for solver animation
-			int newValue = (int) event.getNewValue();
-			int oldValue = (int) event.getOldValue();
-			int duration = 100;
-			RotateTransition rotate;
+				break;
+			case "orientationSet":
+				// Mainly for solver animation
+				int newValue = (int) event.getNewValue();
+				int oldValue = (int) event.getOldValue();
+				int duration = 100;
+				RotateTransition rotate;
 
-			if ((oldValue + 1) % this.m_piece.getNumberOfOrientations() == newValue) {
-				rotate = this.rotate(90, duration);
+				if ((oldValue + 1) % this.m_piece.getNumberOfOrientations() == newValue) {
+					rotate = this.rotate(90, duration);
 
-			} else if ((newValue + 1) % this.m_piece.getNumberOfOrientations() == oldValue) {
-				rotate = this.rotate(-90, duration);
+				} else if ((newValue + 1) % this.m_piece.getNumberOfOrientations() == oldValue) {
+					rotate = this.rotate(-90, duration);
 
-			} else {
-				rotate = this.rotate(180, duration);
-			}
+				} else {
+					rotate = this.rotate(180, duration);
+				}
 
-			// Makes the algorithm waits until the animation is done.
-			synchronized(rotationMonitor) {
-				// Need to check solverApplied value to keep the solver working while the window has been closed
-				while (rotate.statusProperty().getValue() == Animation.Status.RUNNING && PhineLoopsMainGUI.solverApplied) {
-					try {
-						rotationMonitor.wait();
-
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+				// Makes the algorithm waits until the animation is done.
+				synchronized (rotationMonitor) {
+					// Need to check solverApplied value to keep the solver working while the window has been closed
+					while (rotate.statusProperty().getValue() == Animation.Status.RUNNING && PhineLoopsMainGUI.solverApplied) {
+						try {
+							rotationMonitor.wait();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
 				}
-			}
+				break;
 		}
 	}
 }

@@ -12,22 +12,25 @@ import model.Level;
 import model.pieces.Piece;
 import view.pieces.PieceDrawing;
 
-import java.io.FileNotFoundException;
-
 /**
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
+ *
  * Produces a visual representation of the game level.
  */
 public class LevelDrawing {
 
-    private Level m_model;
-    private GridPane grid;
+    private final Level m_model;
+    private final GridPane grid;
+    private double piecesOpacity = 0.6;
 
     public LevelDrawing(Level model, Scene scene, boolean solverApplied) {
         this.m_model = model;
         this.grid = new GridPane();
-        this.grid.setVgap(0);
-        this.grid.setHgap(0);
-        this.grid.setGridLinesVisible(true); // For debugging : to remove
+        this.grid.setVgap(-1);      // Makes the pieces closer so that they touch each others
+        this.grid.setHgap(-1);
+        this.grid.setGridLinesVisible(false); // For debugging : to remove
         this.grid.setAlignment(Pos.CENTER);
         this.grid.prefWidthProperty().bind(scene.widthProperty());
         this.grid.prefHeightProperty().bind(scene.heightProperty());
@@ -37,7 +40,7 @@ public class LevelDrawing {
             this.grid.setOnMouseClicked(new RotationController(this.m_model, this));
         }
 
-        this.grid.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        this.grid.setBackground(new Background(new BackgroundFill(new Color(0.0, 0.0, 0.08, 0.4), CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
     public GridPane getGridPane() {
@@ -59,7 +62,6 @@ public class LevelDrawing {
      * Init the visual representation of the level game.
      * @param grid GridPane that will be filled with drawing of pieces.
      * @param scene Scene that contains all elements.
-     * @throws FileNotFoundException
      */
     public void draw(GridPane grid, Scene scene) {
         PieceDrawing iv;
@@ -79,7 +81,7 @@ public class LevelDrawing {
                     iv.setSmooth(true);
                     iv.setPreserveRatio(true);
                     iv.setPickOnBounds(true);
-                    iv.setOpacity(0.9);
+                    iv.setOpacity(this.piecesOpacity);
 
                     GridPane.setRowIndex(iv, i);
                     GridPane.setColumnIndex(iv, j);
@@ -91,17 +93,25 @@ public class LevelDrawing {
         }
     }
 
+    /**
+     * Implements what should happen to the view if the level is solved.
+     */
     public void solvedSituation() {
-        System.out.println("SOLVED !!!");
         ImageView iv;
-        this.grid.setGridLinesVisible(false);
-        for (Node n : this.grid.getChildren()) {
-            iv = (ImageView) n;
-            iv.setOpacity(0.5);
+        for (Node child : this.grid.getChildren()) {
+            iv = (ImageView) child;
+            iv.setOpacity(1.0);
         }
     }
 
+    /**
+     * Implements what should happen to the view if the level is not solved.
+     */
     public void unsolvedSituation() {
-        this.grid.setGridLinesVisible(true);
+        ImageView iv;
+        for (Node child : this.grid.getChildren()) {
+            iv = (ImageView) child;
+            iv.setOpacity(this.piecesOpacity);
+        }
     }
 }
