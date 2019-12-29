@@ -1,4 +1,3 @@
-
 package view;
 
 import java.io.File;
@@ -6,49 +5,127 @@ import java.io.File;
 import Solver.Csp;
 import Solver.Extend;
 import Solver.Satisfiability;
+import Solver.quasiexhaustive.QuasiExhaustiveSolver;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import model.*;
+import model.Level;
 import model.io.FileReader;
 import model.pieces.Empty;
 import model.pieces.Piece;
 import model.pieces.T;
+import view.pieces.PieceDrawing;
 
+/**
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
+ *
+ * This class is used to visualise the game. It is possible watch an exhaustive solver working on the grid instance,
+ * trying to solve the level.
+ */
 public class PhineLoopsMainGUI extends Application {
-	static final int WIDTH = 700;
-	static final int HEIGHT = 700;
-	private static Level level;
 
+	private static final int DEFAULT_WIDTH = 700;
+	private static final int DEFAULT_HEIGHT = 700;
+	private static boolean windowsOn = false;
+	public static boolean solverApplied = false;	// Tells if the goal is to visualize a solver or only displaying
+	private static boolean solverWaiting = false; 	// Makes the solver wait until the window shows up
+	private static final Object startUpMonitor = new Object();	// Synchronizes the solver and window starting up
+	private static Level level;
+	private static LevelDrawing view;
+
+	/**
+	 * Displays GUI where user interactions are considered.
+	 * @param lvl Game level to display on screen.
+	 */
 	public static void display(Level lvl) {
 		level = lvl;
-		Application.launch();
+
+		// Don't throw an exception, let the solver working
+		if (lvl.getGrid().length * lvl.getGrid()[0].length > 32*32) {
+			System.out.println("Grid too large to be loaded, must be 32x32 or lower. View has been cancelled but the solver is still running.");
+
+		} else {
+			windowsOn = true;
+			Application.launch();
+		}
+	}
+
+	/**
+	 * Displays the solver working and testing different possibilities. User interactions are not taken into
+	 * consideration
+	 * @param lvl Level to solve
+	 * @param solver Solver to use, must be load with the lvl.
+	 */
+	public static void displaySolving(Level lvl, QuasiExhaustiveSolver solver) {
+		Thread displayLevel = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				display(lvl);
+				solverApplied = false;
+				// Loop until the solver thread start to wait and then notify it
+				synchronized (startUpMonitor) {
+					startUpMonitor.notifyAll();
+				}
+				// Notify that rotation is over so that the solver does not get stuck and wait forever
+				synchronized (PieceDrawing.rotationMonitor) {
+					PieceDrawing.rotationMonitor.notify();
+				}
+			}
+		});
+
+		Thread solveLevel = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				synchronized (startUpMonitor) {
+					try {
+						startUpMonitor.wait();
+						solverWaiting = false;
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				boolean solved = solver.solving();
+				if (solved && windowsOn) {
+					view.solvedSituation();
+				}
+				System.out.println("Solved : " + solved);
+			}
+		});
+		solverApplied = true;
+		solverWaiting = true;
+		displayLevel.start();
+		solveLevel.start();
 	}
 
 	@Override
-	public void start(Stage stage) throws Exception {
+	public void start(Stage stage) {
 		Group root = new Group();
-		Scene scene = new Scene(root, WIDTH, HEIGHT);
-		GridPane grid = new GridPane();
-		grid.setVgap(0);
-		grid.setHgap(0);
-		grid.setGridLinesVisible(true); // For debugging : to remove
-		grid.setAlignment(Pos.CENTER);
-		grid.prefWidthProperty().bind(scene.widthProperty());
-		grid.prefHeightProperty().bind(scene.heightProperty());
-		LevelDrawing view = new LevelDrawing(level);
-		view.draw(grid, scene);
-		grid.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-		root.getChildren().add(grid);
+		Scene scene = new Scene(root, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		view = new LevelDrawing(level, scene, solverApplied);
+
+		root.getChildren().add(view.getGridPane());
 		stage.setTitle("Phine Loops Game");
 		stage.setScene(scene);
-		stage.setMaximized(true); // Full screen
+//		stage.setMaximized(true); // Full screen
+		stage.setOnCloseRequest(e -> {
+			// Makes the solver continue to work without the stage
+			windowsOn = false;
+			synchronized (PieceDrawing.rotationMonitor) {
+				PieceDrawing.rotationMonitor.notify();
+			}
+		});
 		stage.show();
+
+		// Loop until the solver thread start to wait and then notify
+		System.out.println(solverWaiting);
+		while (solverWaiting) {
+			synchronized (startUpMonitor) {
+				startUpMonitor.notifyAll();
+			}
+		}
 	}
 
 	// Tmp method : for debugging only
@@ -82,12 +159,21 @@ public class PhineLoopsMainGUI extends Application {
 		int num =  0 ; 
 		for (File file : listOfFiles) {
 			if (file.isFile()) {
-				System.out.println(file);
+				
 				moncsp = new Csp(FileReader.getGrid(file.getAbsolutePath(), " "));
 				long debut = System.currentTimeMillis();
 				boolean aa = moncsp.solving(Extend.noExtend);
 				long fin = System.currentTimeMillis();
-				System.out.println(fin-debut + "  " + num ) ; 
+				
+				level.setGrid(moncsp.getMyLevelToSolve());
+				level.init_neighbors();
+				
+				if(aa == level.checkGrid()) {
+					System.out.println(file);
+					System.out.println(fin-debut + "  " + num + "  "+ aa ) ; 
+					
+					
+				}
 				num++ ; 
 				
 				

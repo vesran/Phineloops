@@ -5,7 +5,8 @@ import model.enumtype.Side;
 import view.pieces.BarPieceDrawing;
 import view.pieces.PieceDrawing;
 
-import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 
 public class Bar extends Piece {
 
@@ -20,6 +21,7 @@ public class Bar extends Piece {
 	public Bar(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 2;
+		this.numberOfOrientations = 2;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -38,7 +40,7 @@ public class Bar extends Piece {
 
 	
 	@Override
-	public PieceDrawing createDrawing() throws FileNotFoundException {
+	public PieceDrawing createDrawing() {
 		return new BarPieceDrawing(this);
 	}
 
@@ -103,6 +105,16 @@ public class Bar extends Piece {
 	public int numbeOfPossibleConnection() {
 		// TODO Auto-generated method stub
 		return 2;
+	}
+
+	@Override
+	public List<Orientation> orientatedTo() {
+		if (this.orientation == 0) {
+			return Arrays.asList(Orientation.NORTH, Orientation.SOUTH);
+		} else if (this.orientation == 1) {
+			return Arrays.asList(Orientation.EAST, Orientation.WEST);
+		}
+		return null;
 	}
 
 }

@@ -5,7 +5,8 @@ import model.enumtype.Side;
 import view.pieces.LPieceDrawing;
 import view.pieces.PieceDrawing;
 
-import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 
 public class L extends Piece {
 	/**
@@ -19,6 +20,7 @@ public class L extends Piece {
 	public L(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 5;
+		this.numberOfOrientations = 4;
 		// TODO Auto-generated constructor stub
 	}
 	/**
@@ -45,7 +47,7 @@ public class L extends Piece {
 	}
 
 	@Override
-	public PieceDrawing createDrawing() throws FileNotFoundException {
+	public PieceDrawing createDrawing() {
 		return new LPieceDrawing(this);
 	}
 
@@ -92,8 +94,7 @@ public class L extends Piece {
 	@Override
 	public boolean isConnectedTo(Orientation orientation) {
 		if (this.neighbor.containsKey(orientation)) {
-			System.out.println();
-			if (orientation == Orientation.NORTH && (this.orientation == 0 || this.orientation == 3)) 
+			if (orientation == Orientation.NORTH && (this.orientation == 0 || this.orientation == 3))
 				return true;
 			if (orientation == Orientation.EAST && (this.orientation == 1 || this.orientation == 0))
 				return true;
@@ -136,5 +137,19 @@ public class L extends Piece {
 	public int numbeOfPossibleConnection() {
 		// TODO Auto-generated method stub
 		return 2;
+	}
+
+	@Override
+	public List<Orientation> orientatedTo() {
+		if (this.orientation == 0) {
+			return Arrays.asList(Orientation.NORTH, Orientation.EAST);
+		} else if (this.orientation == 1) {
+			return Arrays.asList(Orientation.SOUTH, Orientation.EAST);
+		} else if (this.orientation == 2) {
+			return Arrays.asList(Orientation.WEST, Orientation.SOUTH);
+		} else if (this.orientation == 3) {
+			return Arrays.asList(Orientation.NORTH, Orientation.WEST);
+		}
+		return null;
 	}
 }

@@ -1,6 +1,7 @@
 package model.pieces;
 
-import java.io.FileNotFoundException;
+import java.util.Collections;
+import java.util.List;
 
 import model.enumtype.Orientation;
 import model.enumtype.Side;
@@ -18,7 +19,7 @@ public class Empty extends Piece {
 	public Empty(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 0;
-
+		this.numberOfOrientations = 0;
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public class Empty extends Piece {
 	}
 
 	@Override
-	public PieceDrawing createDrawing() throws FileNotFoundException {
+	public PieceDrawing createDrawing() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -61,5 +62,10 @@ public class Empty extends Piece {
 	public int numbeOfPossibleConnection() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public List<Orientation> orientatedTo() {
+		return Collections.emptyList();
 	}
 }

@@ -5,18 +5,25 @@ import model.pieces.Piece;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
 /**
- * @author KBY
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
+ *
  * 
  *         Representation of the X piece
  */
 public class XPieceDrawing extends PieceDrawing {
 	/**
 	 * @param piece the X to draw
-	 * @throws FileNotFoundException in case where the image file is not found
 	 */
-    public XPieceDrawing(Piece piece) throws FileNotFoundException {
+    public XPieceDrawing(Piece piece) {
         super(piece);
-        super.setImage(new Image(new FileInputStream("resources/pieces/X_piece.png")));
+        try {
+            super.setImage(new Image(new FileInputStream("resources/pieces/X_piece.png")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

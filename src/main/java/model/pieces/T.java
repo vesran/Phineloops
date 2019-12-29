@@ -5,7 +5,8 @@ import model.enumtype.Side;
 import view.pieces.PieceDrawing;
 import view.pieces.TPieceDrawing;
 
-import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 
 public class T extends Piece {
 	/**
@@ -19,6 +20,7 @@ public class T extends Piece {
 	public T(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 3;
+		this.numberOfOrientations = 4;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -43,7 +45,7 @@ public class T extends Piece {
 	}
 
 	@Override
-	public PieceDrawing createDrawing() throws FileNotFoundException {
+	public PieceDrawing createDrawing() {
 		return new TPieceDrawing(this);
 	}
 
@@ -145,6 +147,22 @@ public class T extends Piece {
 	public int numbeOfPossibleConnection() {
 		// TODO Auto-generated method stub
 		return 3;
+	}
+	
+	
+
+	@Override
+	public List<Orientation> orientatedTo() {
+		if (this.orientation == 0) {
+			return Arrays.asList(Orientation.NORTH, Orientation.EAST, Orientation.WEST);
+		} else if (this.orientation == 1) {
+			return Arrays.asList(Orientation.NORTH, Orientation.EAST, Orientation.SOUTH);
+		} else if (this.orientation == 2) {
+			return Arrays.asList(Orientation.SOUTH, Orientation.EAST, Orientation.WEST);
+		} else if (this.orientation == 3) {
+			return Arrays.asList(Orientation.NORTH, Orientation.SOUTH, Orientation.WEST);
+		}
+		return null;
 	}
 
 }

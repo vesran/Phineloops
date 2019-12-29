@@ -5,8 +5,17 @@ import model.pieces.Piece;
 
 import java.io.*;
 
+
+/**
+ * Contains the method to write a level instance in a file.
+ */
 public class FileCreator {
 
+    /**
+     * Writes the given level instance to the specified path.
+     * @param grid level's grid that contains pieces to write in the file.
+     * @param filename the name of the file
+     */
     public static void write(Piece[][] grid, String filename) {
         try {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename)));

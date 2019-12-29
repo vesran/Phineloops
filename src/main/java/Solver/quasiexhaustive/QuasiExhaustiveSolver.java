@@ -1,228 +1,202 @@
 package Solver.quasiexhaustive;
 
+import Solver.quasiexhaustive.comparaison.Lexicographic;
 import model.Level;
-import model.pieces.L;
-import model.pieces.Piece;
+import model.enumtype.Orientation;
+import model.pieces.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
+/**
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
+ *
+ * This class implements an algorithm for solving the InfinityLoop's grid. It is based on a tree search with an
+ * iterative exploration of the tree using stacks. It contained a main stack where each pieces has a fixed orientation
+ * ready to be tested. When this stack needs updated, ie change an orientation of a piece that is in the middle of the
+ * stack, the top of the piece is iteratively taken out and put to the anti-stack that contains pieces where the
+ * orientations are not defined yet and the last pieces to explore in the tree.
+ * All possibilities are not tested but only the relevant ones. Piece orientations that create conflict with other
+ * pieces are not tested and its subtree is not explore.
+ * The ordering of exploration (piece by piece) is determined by a comparator over pieces. It is made so that
+ * an override is possible. By default, it explores in lexicographic order.
+ */
 public class QuasiExhaustiveSolver {
 
-    private Level m_level;
+    protected Level m_level;
     private Deque<Piece> m_stack;
-    private PriorityQueue<Piece> m_antistack;
+    private Deque<Piece> m_antistack;
     private Map<Piece, Iterator<Integer>> m_nextOrientations;
+    private final Comparator<Piece> piecesComparator; // The greater a piece is, the more its orientation tends to be changed first.
 
-    public QuasiExhaustiveSolver() {
+    public QuasiExhaustiveSolver(Comparator<Piece> piecesComparator) {
         this.m_stack = new ArrayDeque<>();
-        this.m_antistack = new PriorityQueue<>(this.piecesComparator());
+        this.m_antistack = new ArrayDeque<>();
         this.m_nextOrientations = new HashMap<>();
+        this.piecesComparator = piecesComparator;
     }
 
-    public QuasiExhaustiveSolver(Level lvl) {
-        this();
+    public QuasiExhaustiveSolver(Level lvl, Comparator<Piece> piecesComparator) {
+        this(piecesComparator);
         this.m_level = lvl;
     }
 
-    public QuasiExhaustiveSolver(Piece[][] grid) {
-        this(new Level(grid));
+    public QuasiExhaustiveSolver(Level lvl) {
+        this(lvl, new Lexicographic());
+        this.m_level = lvl;
     }
 
     /**
-     * Defines a way to compare pieces in the anti-stack. It defines the order in which pieces should be considered.
-     * The greater a piece is, the more its orientation tends to be changed first.
-     * @return a Comparator of Piece that implement a way to compare pieces as described above.
+     * Method to invoke to solve the level instance. The algorithm is based on a tree search and is able to detect
+     * conflicts, ie a piece orientation that compromises the orientation of other pieces that has been considered.
+     * @return true if the solver has been able to solve the grid, false otherwise
      */
-    protected Comparator<Piece> piecesComparator() {
-        return new Comparator<Piece>() {
-            @Override
-            public int compare(Piece p1, Piece p2) {
-                if (p1.getLine_number() != p2.getLine_number()) {
-                    return p1.getLine_number() - p2.getLine_number();
-                } else {
-                    return p1.getColumn_number() - p2.getColumn_number();
-                }
-            }
-        };
-    }
-
     public boolean solving() {
-        Piece out;
         int i = 0;
-//        Set<String> instances = new HashSet<>();
+
+        List<Piece> orderingPieces = new ArrayList<>();
 
         // Init stack and set each piece to their best orientation
         for (Piece[] row : this.m_level.getGrid()) {
             for (Piece currentPiece : row) {
-                // Exclude empty and X piece
+                // Exclude empty and X piece because their orientation doesn't matter
                 if (currentPiece.getId() != 0 && currentPiece.getId() != 4) {
-                    this.m_antistack.add(currentPiece);
+                    orderingPieces.add(currentPiece); // First sorting of pieces
                 }
             }
         }
 
-        // Transfer pieces from anti-stack to stack
-        while (this.m_antistack.peek() != null) {
-            if (!this.m_stack.isEmpty()) this.setToBestOrientation(this.m_stack.peek());    // Final top of stack not rotated
-            this.m_stack.push(this.m_antistack.poll());
-        }
+        // Transfer everything to anti-stack and preserve the ordering
+        Collections.sort(orderingPieces, this.piecesComparator);
+        this.m_antistack.addAll(orderingPieces);
 
-        while (!m_stack.isEmpty()) {
-            System.out.println("Start iteration");
-            // Rotate piece at the top of the stack and add this piece to the rotated set
+        // Starting to test orientations for all pieces
+        do {
+            // Each piece of the stack does not prompt conflicts, we can import a piece from the anti-stack to the stack
+            if (!this.m_antistack.isEmpty()) {
+                this.m_stack.push(this.m_antistack.pop());
+
+            } else {
+                System.out.println("Test " + ++i + "\n" + this.m_level);
+
+                // Check if the level is solved
+                if (this.m_level.checkGrid()) {
+                    return true;
+                }
+            }
+
+            // Top piece in stack has made an entire rotation so it needs to go to the anti-stack so that the second top
+            // can be modified
+            while (!this.m_stack.isEmpty() && this.entireRotation(this.m_stack.peek())) {
+                this.goBack();
+            }
+
             this.setToBestOrientation(this.m_stack.peek());
 
-            // Add other pieces to the stack
-            while (this.m_antistack.peek() != null) {
-                this.m_stack.push(this.m_antistack.poll());
+            // Go back in the stack if any conflict in the current situation appears
+            while (this.inConflict(this.m_stack.peek())) {
+                // Go back in the stack
+                while (this.entireRotation(this.m_stack.peek())) {
+                    this.goBack();
+                }
+                // Set the new top of the stack to its new best position
                 this.setToBestOrientation(this.m_stack.peek());
             }
 
-            // If the piece has made an entire rotation, pop and remove it from the rotated set
-            while (!this.m_stack.isEmpty() && this.entireRotation(this.m_stack.peek())) {
-                out = this.m_stack.pop();
-                this.m_antistack.add(out);
-                this.m_nextOrientations.remove(out);
-            }
+        } while (!m_stack.isEmpty());
 
-            System.out.println("Test " + ++i + "\n" + this.m_level);
-//            instances.add(this.m_level.toString());
-
-            // Check if the level is solved, no modification of the stacks/pieces should follow to keep things easier
-            if (this.m_level.checkGrid()) {
-                System.out.println("SOLVED:true");
-                return true;
-
-            } else {
-                // If the piece has made an entire rotation, pop and remove it from the rotated set
-                while (!this.m_stack.isEmpty() && this.entireRotation(this.m_stack.peek())) {
-                    out = this.m_stack.pop();
-                    this.m_antistack.add(out);
-                }
-            }
-
-        }
-
-//        System.out.println(instances.size());
-
-        System.out.println("SOLVED:false");
+        // Level not solvable, all relevant possibilities has been tested
         return false;
     }
 
-    // Set top piece to its best orientation according to score function
+    /**
+     * Pops the current top of the stack to the anti-stack and clear its remaining orientations
+     */
+    private void goBack() {
+        Piece out = this.m_stack.pop();
+        this.m_nextOrientations.remove(out);
+        this.m_antistack.push(out);
+    }
+
+    /**
+     * Set the top piece of the stack to its best orientation according to score function
+     * @param piece Grid's piece to change orientation
+     */
     private void setToBestOrientation(Piece piece) {
+        if (piece == null) return;  // For the last iteration where there is no piece left to modify
         if (!this.m_nextOrientations.containsKey(piece)) {
             this.m_nextOrientations.put(piece, this.genOrientations(piece));
         }
         if (this.m_nextOrientations.get(piece).hasNext()) {
             piece.setOrientation(this.m_nextOrientations.get(piece).next());
-//            System.out.println("Current top piece set at orientation " + piece.getOrientation());
-        }
-        else {
-            throw new RuntimeException("Empty rotation");
+        } else {
+            System.out.println(piece.getLine_number() + " " + piece.getColumn_number());
+            System.out.println(this.m_level);
+            throw new RuntimeException("Piece has no more orientation left but hasn't been removed from nextOrientations");
         }
     }
 
-    private Iterator<Integer> genOrientations(Piece piece) {
-        // Generate an ordered sequence of orientations in analysing the current piece orientations and its neighborhood
-        int nbOrientations = this.numberOfOrientations(piece);
-        Map<Integer, Double> scores = new HashMap<>();  // Use Map to be sorted with Stream (easier implementation)
+    private boolean inConflict(Piece piece) {
+        if (piece == null) return false;
+        Set<Piece> neighborsInStack = this.getNeighborsInStack(piece);
 
-        // Give a score to each orientation
-        for (int orientationId = 0; orientationId < nbOrientations; orientationId++) {
-            scores.put(orientationId, this.score(piece, orientationId));
+        // Check if the given piece's branches is facing an empty piece or the grid borders
+        if (!piece.getNeighbor().keySet().containsAll(piece.orientatedTo())) {
+            return true;
         }
 
-        // Return an iterator over the index of the sorted array, orientation with null/negative score are skipped
-        // to save time
-        List<Integer> list = scores.entrySet().stream()
-                        .filter(x -> x.getValue() > 0)
-                        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                        .map(Map.Entry::getKey)
-                        .collect(Collectors.toList());
+        for (Map.Entry<Orientation, Piece> neighborInfo : piece.getNeighbor().entrySet()) {
+            if (neighborsInStack.contains(neighborInfo.getValue())) {
+                // Check if the given piece is refusing to connect to its neighborhood
+                if (neighborInfo.getValue().orientatedTo().contains(neighborInfo.getKey().opposite()) &&
+                        !piece.isConnectedTo(neighborInfo.getKey())) {
+                    return true;
 
+                    // Check if the neighborhood is refusing to connect to the given piece
+                } else if (!neighborInfo.getValue().orientatedTo().contains(neighborInfo.getKey().opposite()) &&
+                        piece.orientatedTo().contains(neighborInfo.getKey())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Computes the intersection between the neighborhood of the given piece and the current stack.
+     * @param piece Piece in which the neighborhood is taken from
+     * @return Set of pieces
+     */
+    private Set<Piece> getNeighborsInStack(Piece piece) {
+        Set<Piece> neighborsInStack = new HashSet<>(this.m_stack);
+        neighborsInStack.retainAll(piece.getNeighbor().values());
+        return neighborsInStack;
+    }
+
+    /**
+     * Computes and sorts the possible orientations for a given piece. The more an orientation is probable, the more
+     * it will be placed to the first rank
+     * @param piece Piece in which the orientations are wanted
+     * @return An iterator over the sequence of orientations.
+     */
+    private Iterator<Integer> genOrientations(Piece piece) {
+        List<Integer> list = new ArrayList<>();
+        int originalOrientation = piece.getOrientation();
+        for (int i = 0; i < piece.getNumberOfOrientations(); i++) {
+            list.add((i + originalOrientation) % piece.getNumberOfOrientations());
+        }
         return list.iterator();
     }
 
     /**
-     * Gives a score for a given orientation of the specified piece. The higher the better.
-     * Orientations will be sorted according to the score value in descending order.
-     * The more a score for an orientation is higher, the more this orientation will be tested first.
-     * @param piece
-     * @param orientationId
-     * @return score as double
+     * Determines if a piece has made an entire rotation, ie is about to come its initial orientation.
+     * @param currentPiece piece to study
+     * @return true if the given piece is about to make an entire rotation, false otherwise
      */
-    protected double score(Piece piece, Integer orientationId) {
-        return 0.25;
-    }
-
-    private int numberOfOrientations(Piece p) {
-        // TODO : move to Piece classes (use polymorphism)
-        int nbOrientations = 0;
-
-        switch(p.getId()) {
-            case 0:
-                nbOrientations = 0;
-                break;
-            case 1:
-                nbOrientations = 4;
-                break;
-
-            case 2:
-                nbOrientations = 2;
-                break;
-
-            case 3:
-                nbOrientations = 4;
-                break;
-
-            case 4:
-                nbOrientations = 1;
-                break;
-
-            case 5:
-                nbOrientations = 4;
-                break;
-
-            default:
-                throw new IllegalStateException("Unexpected value: " + p.getId());
-        }
-
-        return nbOrientations;
-    }
-
     private boolean entireRotation(Piece currentPiece) {
         if (this.m_nextOrientations.get(currentPiece) == null)  return false;
         return !this.m_nextOrientations.get(currentPiece).hasNext();
-    }
-
-    public static Level initLevel() { // To remove
-        int width = 2;
-        int height = 2;
-        Level lvl = new Level(height, width);
-        Piece[][] grid = lvl.getGrid();
-        // code d'essai
-        grid[0][0] = new L(0, 0, 0);
-        grid[0][1] = new L(0, 0, 1);
-        grid[1][0] = new L(0, 1, 0);
-        grid[1][1] = new L(0, 1, 1);
-
-        return lvl;
-    }
-
-    public static void main(String [] args) {
-        Level lvl = initLevel();
-        lvl.init_neighbors();
-
-        QuasiExhaustiveSolver solver = new QuasiExhaustiveSolver(lvl);
-
-        System.out.println("Is level solved ? " + solver.m_level.checkGrid());
-        long start = System.currentTimeMillis();
-        solver.solving();
-        long end = System.currentTimeMillis();
-        System.out.println("Is level solved ? " + solver.m_level.checkGrid());
-        System.out.println("Time : " + (end - start) / 1000);
     }
 
 }

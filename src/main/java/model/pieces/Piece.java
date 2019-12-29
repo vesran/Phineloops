@@ -6,11 +6,12 @@ import view.pieces.PieceDrawing;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.List;
 
 public abstract class Piece {
 	protected HashMap<Orientation, Piece> neighbor;
+	protected int numberOfOrientations;
 	protected int id;
 	protected int orientation;
 	protected int line_number;
@@ -27,6 +28,10 @@ public abstract class Piece {
 
 	public void addObserver(PropertyChangeListener listener) {
 		pcs.addPropertyChangeListener(listener);
+	}
+
+	public int getNumberOfOrientations() {
+		return this.numberOfOrientations;
 	}
 
 	public HashMap<Orientation, Piece> getNeighbor() {
@@ -52,7 +57,16 @@ public abstract class Piece {
 	public void setOrientation(int orientation) {
 		int oldValue = this.orientation;
 		this.orientation = orientation;
-		pcs.firePropertyChange("setting orientation", oldValue, this.orientation);
+		pcs.firePropertyChange("orientationSet", oldValue, this.orientation);
+	}
+
+	/**
+	 * Set the orientation parameter without triggering a property change. Thus, the change of orientation wouldn't
+	 * be animated/showed.
+	 * @param orientation
+	 */
+	public void silentSetOrientation(int orientation) {
+		this.orientation = orientation;
 	}
 
 	public int getLine_number() {
@@ -95,8 +109,12 @@ public abstract class Piece {
 		return neighbor;
 	}
 
-	public void addNeighbor(Piece piece, Orientation orientation) {
-		this.neighbor.put(orientation, piece);
+	public void addNeighbor(Piece piece, Orientation orientation) { //Gestion Exception
+		if(! (piece instanceof Empty)) {
+			this.neighbor.put(orientation, piece);
+			
+		}
+		
 	}
 
 	/**
@@ -114,9 +132,8 @@ public abstract class Piece {
 	/**
 	 * Instantiates a visual representation of a Piece for view part in MVC. Visual can be based on files.
 	 * @return visual representation of a Piece
-	 * @throws FileNotFoundException
 	 */
-	public abstract PieceDrawing createDrawing() throws FileNotFoundException;
+	public abstract PieceDrawing createDrawing();
 
 	/**
 	 * @return the number of Pieces that are linked to the current Piece
@@ -131,4 +148,35 @@ public abstract class Piece {
 	 *         piece whose orientation is indicated in parameter
 	 */
 	public abstract boolean isConnectedTo(Orientation orientation);
+
+	public Object clone() {
+		
+		if(this instanceof T) {
+			return new T(this.orientation,this.line_number,this.column_number) ;
+		}
+		if(this instanceof L) {
+			return new L(this.orientation,this.line_number,this.column_number) ;
+		}
+		if(this instanceof Bar) {
+			return new Bar(this.orientation,this.line_number,this.column_number) ;
+		}
+		if(this instanceof Circle) {
+			return new Circle(this.orientation,this.line_number,this.column_number) ;
+		}
+		if(this instanceof Empty) {
+			return new Empty(this.orientation,this.line_number,this.column_number) ;
+		}
+		if(this instanceof X) {
+			return new X(this.orientation,this.line_number,this.column_number) ;
+		}
+		return null ; 
+		
+		
+	}
+
+	/**
+	 * Determines if a piece has a branch that is pointing toward the specified orientation.
+	 * @return True if the piece is pointing to the given direction, false otherwise.
+	 */
+	public abstract List<Orientation> orientatedTo();
 }

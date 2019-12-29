@@ -5,7 +5,8 @@ import model.enumtype.Side;
 import view.pieces.PieceDrawing;
 import view.pieces.XPieceDrawing;
 
-import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 
 public class X extends Piece {
 	/**
@@ -19,6 +20,7 @@ public class X extends Piece {
 	public X(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 4;
+		this.numberOfOrientations = 1;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -26,14 +28,16 @@ public class X extends Piece {
 	public void translation(Side side) {
 		// TODO Auto-generated method stub
 		if (side == Side.RIGHT) {
-			this.pcs.firePropertyChange("rightTranslation", this.orientation, this.orientation);
+			// Old and new value should  be different so that the animation is triggered
+			this.pcs.firePropertyChange("rightTranslation", 1, 0);
 		} else {
-			this.pcs.firePropertyChange("leftTranslation", this.orientation, this.orientation);
+			// Old and new value should  be different so that the animation is triggered
+			this.pcs.firePropertyChange("leftTranslation", 0, 1);
 		}
 	}
 
 	@Override
-	public PieceDrawing createDrawing() throws FileNotFoundException {
+	public PieceDrawing createDrawing() {
 		return new XPieceDrawing(this);
 	}
 
@@ -75,4 +79,10 @@ public class X extends Piece {
 		// TODO Auto-generated method stub
 		return 4;
 	}
+
+	@Override
+	public List<Orientation> orientatedTo() {
+		return Arrays.asList(Orientation.values());
+	}
+
 }

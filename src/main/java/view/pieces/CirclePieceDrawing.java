@@ -7,17 +7,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 /**
- * @author KBY
+ * @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
  * 
  *         Representation of the Circle piece
  */
 public class CirclePieceDrawing extends PieceDrawing {
 	/**
 	 * @param piece the Circle to draw
-	 * @throws FileNotFoundException in case where the image file is not found
 	 */
-	public CirclePieceDrawing(Piece piece) throws FileNotFoundException {
+	public CirclePieceDrawing(Piece piece) {
 		super(piece);
-		super.setImage(new Image(new FileInputStream("resources/pieces/Circle_piece.png")));
+		try {
+			super.setImage(new Image(new FileInputStream("resources/pieces/Circle_piece.png")));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 }
