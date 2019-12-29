@@ -199,8 +199,5 @@ public class First_Generator implements Generator {
 	}
 
 	public static void main(String[] args) {
-		First_Generator f = new First_Generator(12,12 , 4);
-		PhineLoopsMainGUI.displaySolving(f.l, solver);
-		System.out.println("done");
 	}
 }

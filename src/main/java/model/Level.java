@@ -76,7 +76,7 @@ public class Level {
 
 	public boolean checkGrid() {
 		for (int i = 0; i < this.height; i++)
-			for (int j = 0; j < grid.length; j++) {
+			for (int j = 0; j < this.width; j++) {
 				if (!grid[i][j].connectedAll()) {
 					return false;
 				}

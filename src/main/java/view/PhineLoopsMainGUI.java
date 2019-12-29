@@ -6,6 +6,8 @@ import Solver.Csp;
 import Solver.Extend;
 import Solver.Satisfiability;
 import Solver.quasiexhaustive.QuasiExhaustiveSolver;
+import Solver.quasiexhaustive.comparaison.DiagonalShift;
+import Solver.quasiexhaustive.comparaison.Lexicographic;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -45,7 +47,7 @@ public class PhineLoopsMainGUI extends Application {
 
 		// Don't throw an exception, let the solver working
 		if (lvl.getGrid().length * lvl.getGrid()[0].length > 32*32) {
-			System.out.println("Grid too large to be loaded, must be 32x32 or lower. View has been cancelled but the solver is still running.");
+			System.out.println("Grid too large to be loaded, must be 32x32 or lower. View has been cancelled but the solver is still running if any.");
 
 		} else {
 			windowsOn = true;
@@ -57,9 +59,12 @@ public class PhineLoopsMainGUI extends Application {
 	 * Displays the solver working and testing different possibilities. User interactions are not taken into
 	 * consideration
 	 * @param lvl Level to solve
-	 * @param solver Solver to use, must be load with the lvl.
 	 */
-	public static void displaySolving(Level lvl, QuasiExhaustiveSolver solver) {
+	public static void displaySolving(Level lvl) {
+		lvl.init_neighbors();
+		QuasiExhaustiveSolver solver = new QuasiExhaustiveSolver(lvl, new DiagonalShift());
+		solverApplied = true;
+		solverWaiting = true;
 		Thread displayLevel = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -94,10 +99,16 @@ public class PhineLoopsMainGUI extends Application {
 				System.out.println("Solved : " + solved);
 			}
 		});
-		solverApplied = true;
-		solverWaiting = true;
 		displayLevel.start();
 		solveLevel.start();
+
+		// So that the window is displayed when jar is executed in command line
+		try {
+			displayLevel.join();
+			solveLevel.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

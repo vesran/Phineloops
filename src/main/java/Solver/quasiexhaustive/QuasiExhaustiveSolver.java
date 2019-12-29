@@ -28,12 +28,14 @@ public class QuasiExhaustiveSolver {
     private Deque<Piece> m_stack;
     private Deque<Piece> m_antistack;
     private Map<Piece, Iterator<Integer>> m_nextOrientations;
+    private Map<Piece, List<Integer>> m_initialOrientationLists;
     private final Comparator<Piece> piecesComparator; // The greater a piece is, the more its orientation tends to be changed first.
 
     public QuasiExhaustiveSolver(Comparator<Piece> piecesComparator) {
         this.m_stack = new ArrayDeque<>();
         this.m_antistack = new ArrayDeque<>();
         this.m_nextOrientations = new HashMap<>();
+        this.m_initialOrientationLists = new HashMap<>();
         this.piecesComparator = piecesComparator;
     }
 
@@ -53,8 +55,6 @@ public class QuasiExhaustiveSolver {
      * @return true if the solver has been able to solve the grid, false otherwise
      */
     public boolean solving() {
-        int i = 0;
-
         List<Piece> orderingPieces = new ArrayList<>();
 
         // Init stack and set each piece to their best orientation
@@ -78,9 +78,7 @@ public class QuasiExhaustiveSolver {
                 this.m_stack.push(this.m_antistack.pop());
 
             } else {
-                System.out.println("Test " + ++i + "\n" + this.m_level);
-
-                // Check if the level is solved
+                // Algorithm stops here if the level is solved
                 if (this.m_level.checkGrid()) {
                     return true;
                 }
@@ -181,12 +179,17 @@ public class QuasiExhaustiveSolver {
      * @return An iterator over the sequence of orientations.
      */
     private Iterator<Integer> genOrientations(Piece piece) {
-        List<Integer> list = new ArrayList<>();
-        int originalOrientation = piece.getOrientation();
-        for (int i = 0; i < piece.getNumberOfOrientations(); i++) {
-            list.add((i + originalOrientation) % piece.getNumberOfOrientations());
+        if (!this.m_initialOrientationLists.containsKey(piece)) {
+            // Creating list of orientations to test for the given piece
+            List<Integer> list = new ArrayList<>();
+            int originalOrientation = piece.getOrientation();
+            for (int i = 0; i < piece.getNumberOfOrientations(); i++) {
+                // Start from the initial orientation in case the given level instance is solved
+                list.add((i + originalOrientation) % piece.getNumberOfOrientations());
+            }
+            this.m_initialOrientationLists.put(piece, list);
         }
-        return list.iterator();
+        return this.m_initialOrientationLists.get(piece).iterator();
     }
 
     /**
