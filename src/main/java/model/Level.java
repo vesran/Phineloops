@@ -29,6 +29,9 @@ public class Level {
 		return this.grid;
 	}
 
+	/**
+	 * This functios initialises the neighbors of each piece of the grid 
+	 */
 	public void init_neighbors() {
 
 		this.grid[0][0].addNeighbor(this.grid[1][0], Orientation.SOUTH);

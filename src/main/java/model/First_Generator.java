@@ -17,16 +17,14 @@ public class First_Generator implements Generator {
 	private Level l;
 
 	public First_Generator(int width, int height, int ccnumber) {
-		
 		l = this.generate(width, height, ccnumber);
 	}
 
+	/**
+	 * @return the level created
+	 */
 	public Level getL() {
 		return l;
-	}
-
-	public void setL(Level l) {
-		this.l = l;
 	}
 
 	/**
@@ -58,7 +56,6 @@ public class First_Generator implements Generator {
 					map0.add(new Noeud(i, j, e));
 				}
 		int e = 1;
-		System.out.println(map0.size()+" "+map1.size());
 		Random random = new Random();
 		Noeud m[][] = new Noeud[width][height];
 		for (int i = 0; i < width; i++)
@@ -105,7 +102,7 @@ public class First_Generator implements Generator {
 						m[i - 1][j].murs.replace(2, true);
 					}
 		}
-//		this.createEmpty(m, height, width);
+
 		while (this.checkCc(m, width, height) > ccnumber) {
 			Noeud element = null;
 			int k = random.nextInt(map0.size());
@@ -143,12 +140,7 @@ public class First_Generator implements Generator {
 					}
 			}
 		}
-		System.out.println();
-		for (int i = 0; i < width; i++)
-			for (int j = 0; j < height; j++) {
-				l.grid[i][j] = this.guessPiece(m[i][j]);
-				System.out.println(l.grid[i][j]);
-				}
+	
 		return l;
 	}
 
@@ -187,6 +179,10 @@ public class First_Generator implements Generator {
 		}
 	}
 
+	/**
+	 * @param noeud the type of object who has to be created
+	 * @return the created piece
+	 */
 	private Piece guessPiece(Noeud noeud) {
 
 		switch (noeud.numberOfNeighbors()) {
@@ -207,8 +203,4 @@ public class First_Generator implements Generator {
 		}
 	}
 
-	public static void main(String[] args) {
-		First_Generator f = new First_Generator(6, 6, 2);
-		PhineLoopsMainGUI.displaySolving(f.l);
-	}
 }
