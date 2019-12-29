@@ -2,6 +2,8 @@ package fr.dauphine.javaavance.phineloops;
 
 import Solver.Csp;
 import Solver.Extend;
+import Solver.quasiexhaustive.QuasiExhaustiveSolver;
+import Solver.quasiexhaustive.comparaison.Lexicographic;
 import model.Level;
 import model.io.FileCreator;
 import model.io.FileReader;
@@ -12,6 +14,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import view.PhineLoopsMainGUI;
 
 public class Main {
 	private static String inputFile = null;
@@ -61,6 +64,7 @@ public class Main {
 		options.addOption("t", "threads", true, "Maximum number of solver threads. (Use only with --solve.)");
 		options.addOption("x", "nbcc", true, "Maximum number of connected components. (Use only with --generate.)");
 		options.addOption("G", "gui", true, "Run with the graphic user interface.");
+		options.addOption("GS", "guisolver", true, "Run with the graphic interface showing an exhaustive solver working.");
 		options.addOption("h", "help", false, "Display this help");
 		try {
 			cmd = parser.parse(options, args);
@@ -93,7 +97,18 @@ public class Main {
 				inputFile = cmd.getOptionValue("c");
 				boolean solved = check(inputFile);
 				System.out.println("SOLVED: " + solved);
-			} else {
+
+			} else if (cmd.hasOption("G")) {
+				System.out.println("Displaying GUI.");
+				inputFile = cmd.getOptionValue("G");
+				PhineLoopsMainGUI.display(new Level(FileReader.getGrid(inputFile, " ")));
+			} else if (cmd.hasOption("GS")) {
+				System.out.println("Displaying solver working. The solver continues to work even if the window has been closed");
+				inputFile = cmd.getOptionValue("GS");
+				PhineLoopsMainGUI.displaySolving(new Level(FileReader.getGrid(inputFile, " ")));
+			}
+
+			else {
 				throw new ParseException(
 						"You must specify at least one of the following options: -generate -check -solve ");
 			}

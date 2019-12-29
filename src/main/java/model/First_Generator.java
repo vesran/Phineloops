@@ -202,7 +202,8 @@ public class First_Generator implements Generator {
 	}
 
 	public static void main(String[] args) {
-		First_Generator f = new First_Generator(5, 7, 3);
+		First_Generator f = new First_Generator(8, 3, 2);
+		f.l.init_neighbors();
 		PhineLoopsMainGUI.display(f.l);
 	}
 }
