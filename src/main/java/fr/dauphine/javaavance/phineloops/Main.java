@@ -96,7 +96,7 @@ public class Main {
 						if (max.intValue() <= width * height / 2) {
 							maxcc = max;
 						} else {
-							throw new ParseException("Must be less than" + width * height / 2);
+							throw new ParseException("Must be less than: " + width * height / 2);
 						}
 					} catch (NumberFormatException e) {
 						throw new ParseException("Must be a integer");
