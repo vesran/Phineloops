@@ -148,27 +148,30 @@ public abstract class Piece {
 	 */
 	public abstract boolean isConnectedTo(Orientation orientation);
 
-	public Object clone() {
+	public Object clone() throws CloneNotSupportedException {
 		
 		if(this instanceof T) {
 			return new T(this.orientation,this.line_number,this.column_number) ;
 		}
-		if(this instanceof L) {
+		else if(this instanceof L) {
 			return new L(this.orientation,this.line_number,this.column_number) ;
 		}
-		if(this instanceof Bar) {
+		else if(this instanceof Bar) {
 			return new Bar(this.orientation,this.line_number,this.column_number) ;
 		}
-		if(this instanceof Circle) {
+		else if(this instanceof Circle) {
 			return new Circle(this.orientation,this.line_number,this.column_number) ;
 		}
-		if(this instanceof Empty) {
+		else if(this instanceof Empty) {
 			return new Empty(this.orientation,this.line_number,this.column_number) ;
 		}
-		if(this instanceof X) {
+		else if(this instanceof X) {
 			return new X(this.orientation,this.line_number,this.column_number) ;
+		}else {
+			throw new CloneNotSupportedException() ; 
 		}
-		return null ; 
+		
+		
 		
 		
 	}

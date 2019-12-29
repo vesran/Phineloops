@@ -2,18 +2,13 @@ package view;
 
 import java.io.File;
 
-import Solver.Csp;
-import Solver.Extend;
-import Solver.Satisfiability;
 import Solver.quasiexhaustive.QuasiExhaustiveSolver;
 import Solver.quasiexhaustive.comparaison.DiagonalShift;
-import Solver.quasiexhaustive.comparaison.Lexicographic;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Level;
-import model.io.FileReader;
 import model.pieces.Empty;
 import model.pieces.Piece;
 import model.pieces.T;
@@ -160,52 +155,6 @@ public class PhineLoopsMainGUI extends Application {
 
 	public static void main(String[] args) {
 		Level level = initLevel();
-		File folder = new File("/Users/bilal/git/phineloops-kby/instances/public/");
-		File[] listOfFiles = folder.listFiles();
-		Csp moncsp = null;
-		long duree = 0 ; 
-		int nb = 0 ;
-		level.setGrid(FileReader.getGrid(
-				"C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_32x32_dist.1_vflip.true_hflip.true_messedup.false_id.1.dat"," "));
-		int num =  0 ; 
-		for (File file : listOfFiles) {
-			if (file.isFile()) {
-				
-				moncsp = new Csp(FileReader.getGrid(file.getAbsolutePath(), " "));
-				long debut = System.currentTimeMillis();
-				boolean aa = moncsp.solving(Extend.noExtend);
-				long fin = System.currentTimeMillis();
-				
-				level.setGrid(moncsp.getMyLevelToSolve());
-				level.init_neighbors();
-				
-				if(aa == level.checkGrid()) {
-					System.out.println(file);
-					System.out.println(fin-debut + "  " + num + "  "+ aa ) ; 
-					
-					
-				}
-				num++ ; 
-				
-				
-				
-				
-				
-				
-			}
-		}
-		
-		//System.out.println(duree +"  " + nb); 
-		/*Piece[][] tab = FileReader.getGrid(
-				"C:\\Users\\Bilal\\git\\phineloops-kby\\instances\\public\\grid_8x8_dist.0_vflip.false_hflip.true_messedup.false_id.1.dat",
-				" ");// grid_32x32_dist.1_vflip.true_hflip.true_messedup.false_id.1.dat
-		// moncsp = new Csp(tab) ;
-		// moncsp.solving() ;
-		
-		
-		
-
-		System.out.println("This instruction will not be executed if the window is not closed");*/
-		}
+	}
 	}
 
