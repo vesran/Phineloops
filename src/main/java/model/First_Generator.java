@@ -140,8 +140,13 @@ public class First_Generator implements Generator {
 					}
 			}
 		}
-	
+		for (int i = 0; i < width; i++)
+
+			for (int j = 0; j < height; j++)
+
+				l.grid[i][j] = this.guessPiece(m[i][j]);
 		return l;
+	
 	}
 
 	private <T extends ObjectOfMaze> void createEmpty(T m[][], int height, int width) {
@@ -202,5 +207,8 @@ public class First_Generator implements Generator {
 			return new Empty(0, noeud.x, noeud.y);
 		}
 	}
-
+	public static void main(String[] args) {
+	First_Generator f = new First_Generator(4,4,2);
+	System.out.println(f.getL());
+}
 }

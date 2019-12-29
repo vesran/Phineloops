@@ -28,8 +28,10 @@ public class Main {
 	private static void generate(int width, int height, String outputFile) throws IllegalArgumentException {
 		// generate grid and store it to outputFile...
 		// ...
+		
 		First_Generator level = new First_Generator(width, height, 2);
-		FileCreator.write(level.getL(), outputFile);
+		level.getL().init_neighbors();
+		FileCreator.write(level.getL(),outputFile);
 	}
 
 	private static boolean solve(String inputFile, String outputFile) {
@@ -53,10 +55,12 @@ public class Main {
 		// ...
 		Piece[][] grid = FileReader.getGrid(inputFile, " ");
 		Level lvl = new Level(grid);
+		lvl.init_neighbors();
 		return lvl.checkGrid();
 	}
 
 	public static void main(String[] args) {
+		generate(4, 4, "nom");
 		Options options = new Options();
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = null;
