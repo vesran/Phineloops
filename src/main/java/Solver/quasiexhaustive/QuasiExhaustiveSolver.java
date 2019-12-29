@@ -175,7 +175,7 @@ public class QuasiExhaustiveSolver {
      * Computes and sorts the possible orientations for a given piece. The more an orientation is probable, the more
      * it will be placed to the first rank
      * @param piece Piece in which the orientations are wanted
-     * @return An iterator over the sequence of orientations.
+     * @return An iterator over the sequence of orientations .
      */
     private Iterator<Integer> genOrientations(Piece piece) {
         if (!this.m_initialOrientationLists.containsKey(piece)) {
