@@ -28,7 +28,7 @@ public class First_Generator implements Generator {
 		ArrayList<Integer> r = new ArrayList<Integer>();
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++) {
-				if (!r.contains(m[i][j].pere) && m[i][j].pere > 0)
+				if (!r.contains(m[i][j].pere) && m[i][j].pere >= 0)
 					r.add(m[i][j].pere);
 			}
 		return r.size();
@@ -37,10 +37,10 @@ public class First_Generator implements Generator {
 
 	@Override
 	public Level generate(int width, int height, int ccnumber) {
-		Level l = new Level(height, width);
+		Level l = new Level(width, height);
 		int x, y, z, w, h;
 		int p = 1;
-		int e = 0;
+		int e = 1;
 		w = width - 1;
 		h = height - 1;
 		int c = h * width + w * height;
@@ -90,7 +90,7 @@ public class First_Generator implements Generator {
 						m[i - 1][j].murs.replace(2, true);
 					}
 		}
-		this.createEmpty(m, height, width);
+//		this.createEmpty(m, height, width);
 		while (this.checkCc(m, width, height) > ccnumber) {
 			x = random.nextInt(width);
 			y = random.nextInt(height);
@@ -130,48 +130,12 @@ public class First_Generator implements Generator {
 			}
 
 		}
+		System.out.println();
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++)
 				l.grid[i][j] = this.guessPiece(m[i][j]);
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++)
-				System.out.print(l.grid[i][j].getId() + "" + l.grid[i][j]);
-			System.out.println();
-		}
 		return l;
 	}
-
-//	public void createEmpty(Noeud m[][], int height, int width) {
-//		boolean verif=false;
-//		Random random = new Random();
-//		boolean b = false;
-//		int number = random.nextInt(height * width / 4);
-//		System.out.println("voici le nb " + number);
-//		int x = random.nextInt(width);
-//		int y = random.nextInt(height);
-//		for (int i = 0; i < number; i++) {
-//			System.out.println("hhhhhhhhhhhhh");
-//			while (!b) {
-//				if (m[x][y].sizeOfConnexcomposant(m, height, width) > 1
-//						&& (m[x][y].PossibleToCreateEmpty(m, height, width))) {
-//					System.out.println("je rentre là pour "+m[x][y]+" et je change ");
-//					verif =true;
-//					m[x][y].replaceValue(m);
-//					m[x][y].murs.replace(0, false);
-//					m[x][y].murs.replace(1, false);
-//					m[x][y].murs.replace(2, false);
-//					m[x][y].murs.replace(0, false);
-//					b = true;
-//					System.out.println("je rentre là pour "+m[x][y]);
-//				} else {
-//					System.out.println("malheuresment" + x + " " + y+ " verif "+ verif+" et on est sur l'iteration "+i+ " possibilité "+m[x][y].PossibleToCreateEmpty(m, height, width)+" taille "+ m[x][y].sizeOfConnexcomposant(m, height, width));
-//					x = random.nextInt(width);
-//					y = random.nextInt(height);
-//				}
-//			}
-//			b = false;
-//		}
-//	}
 
 	public void createEmpty(Noeud m[][], int height, int width) {
 		Random random = new Random();
@@ -238,7 +202,7 @@ public class First_Generator implements Generator {
 	}
 
 	public static void main(String[] args) {
-		First_Generator f = new First_Generator(6, 6, 4);
+		First_Generator f = new First_Generator(5, 7, 3);
 		PhineLoopsMainGUI.display(f.l);
 	}
 }
