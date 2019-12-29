@@ -89,7 +89,7 @@ public class QuasiExhaustiveSolver {
             while (!this.m_stack.isEmpty() && this.entireRotation(this.m_stack.peek())) {
                 this.goBack();
             }
-
+            System.out.println(this.m_stack);
             this.setToBestOrientation(this.m_stack.peek());
 
             // Go back in the stack if any conflict in the current situation appears
@@ -123,6 +123,7 @@ public class QuasiExhaustiveSolver {
      */
     private void setToBestOrientation(Piece piece) {
         if (piece == null) return;  // For the last iteration where there is no piece left to modify
+        System.out.println(this.m_nextOrientations.containsKey(piece));
         if (!this.m_nextOrientations.containsKey(piece)) {
             this.m_nextOrientations.put(piece, this.genOrientations(piece));
         }
@@ -179,6 +180,7 @@ public class QuasiExhaustiveSolver {
      * @return An iterator over the sequence of orientations.
      */
     private Iterator<Integer> genOrientations(Piece piece) {
+        System.out.println(!this.m_initialOrientationLists.containsKey(piece));
         if (!this.m_initialOrientationLists.containsKey(piece)) {
             // Creating list of orientations to test for the given piece
             List<Integer> list = new ArrayList<>();
@@ -187,8 +189,10 @@ public class QuasiExhaustiveSolver {
                 // Start from the initial orientation in case the given level instance is solved
                 list.add((i + originalOrientation) % piece.getNumberOfOrientations());
             }
+            System.out.println("in " + list);
             this.m_initialOrientationLists.put(piece, list);
         }
+        System.out.println(this.m_initialOrientationLists.get(piece));
         return this.m_initialOrientationLists.get(piece).iterator();
     }
 

@@ -6,6 +6,7 @@ import view.pieces.CirclePieceDrawing;
 import view.pieces.PieceDrawing;
 
 import java.io.FileNotFoundException;
+import java.util.Collections;
 import java.util.List;
 
 public class Circle extends Piece {
@@ -20,13 +21,12 @@ public class Circle extends Piece {
 	public Circle(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 1;
-		// TODO Auto-generated constructor stub
+		this.numberOfOrientations = 4;
 	}
 
 	@Override
 	public void translation(Side side) {
 		int oldOrientation = this.orientation;
-		// TODO Auto-generated method stub
 		if (side == Side.RIGHT) {
 			if (this.orientation == 0)
 				this.orientation = 3;
@@ -44,7 +44,7 @@ public class Circle extends Piece {
 	}
 
 	@Override
-	public PieceDrawing createDrawing() throws FileNotFoundException {
+	public PieceDrawing createDrawing() {
 		return new CirclePieceDrawing(this);
 	}
 
@@ -82,8 +82,7 @@ public class Circle extends Piece {
 
 	@Override
 	public boolean connectedAll() {
-		// TODO Auto-generated method stub
-		return this.numberOfConnection() == this.numbeOfPossibleConnection();
+		return this.numberOfConnection() == this.numberOfPossibleConnection();
 	}
 
 	public String toString() {
@@ -108,15 +107,23 @@ public class Circle extends Piece {
 	}
 
 	@Override
-	public int numbeOfPossibleConnection() {
-		// TODO Auto-generated method stub
+	public int numberOfPossibleConnection() {
 		return 1;
 	}
 
 	@Override
 	public List<Orientation> orientatedTo() {
-		// TODO Auto-generated method stub
-		return null;
+		if (this.orientation == 0) {
+			return Collections.singletonList(Orientation.NORTH);
+		} else if (this.orientation == 1) {
+			return Collections.singletonList(Orientation.EAST);
+		} else if (this.orientation == 2) {
+			return Collections.singletonList(Orientation.SOUTH);
+		} else if (this.orientation == 3){
+			return Collections.singletonList(Orientation.WEST);
+		} else {
+			return null;
+		}
 	}
 
 }

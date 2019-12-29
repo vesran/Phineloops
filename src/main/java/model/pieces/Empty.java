@@ -24,43 +24,36 @@ public class Empty extends Piece {
 
 	@Override
 	public void translation(Side side) {
-		// TODO Auto-generated method stub
-
+		;;
 	}
 
 	@Override
 	public PieceDrawing createDrawing() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public int numberOfConnection() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public boolean isConnectedTo(Orientation orientation) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean connectedAll() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	public String toString() {
 		return " "; // Empty piece should not be seen on screen. See later what character we can
 					// print instead if needed
-
 	}
 
 	@Override
-	public int numbeOfPossibleConnection() {
-		// TODO Auto-generated method stub
+	public int numberOfPossibleConnection() {
 		return 0;
 	}
 
