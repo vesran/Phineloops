@@ -322,7 +322,7 @@ public class Csp implements Solving {
 
 	 /**
     * Method to invoke to solve the level instance. All possibilities will be returned in a ArrayList
-    * @return true if the solver has been able to solve the grid, false otherwise
+    * @return arrayList of all possibilities of solution
     */
 
 	public ArrayList<Piece[][]> getAllSolutions(Extend extend) throws CloneNotSupportedException {
