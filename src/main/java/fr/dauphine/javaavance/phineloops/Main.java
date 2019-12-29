@@ -4,6 +4,7 @@ import Solver.Csp;
 import Solver.Extend;
 import Solver.quasiexhaustive.QuasiExhaustiveSolver;
 import Solver.quasiexhaustive.comparaison.Lexicographic;
+import model.First_Generator;
 import model.Level;
 import model.io.FileCreator;
 import model.io.FileReader;
@@ -24,9 +25,11 @@ public class Main {
 	private static Integer maxcc = -1;
 	private static Integer maxThread = -1;
 
-	private static void generate(int width, int height, String outputFile) {
+	private static void generate(int width, int height, String outputFile) throws IllegalArgumentException {
 		// generate grid and store it to outputFile...
 		// ...
+		First_Generator level = new First_Generator(width, height, 2);
+		FileCreator.write(level.getL(), outputFile);
 	}
 
 	private static boolean solve(String inputFile, String outputFile) {
@@ -68,6 +71,7 @@ public class Main {
 		options.addOption("GS", "guisolver", true,
 				"Run with the graphic interface showing an exhaustive solver working.");
 		options.addOption("h", "help", false, "Display this help");
+		
 		try {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {

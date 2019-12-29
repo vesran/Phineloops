@@ -16,8 +16,17 @@ import view.PhineLoopsMainGUI;
 public class First_Generator implements Generator {
 	private Level l;
 
-	protected First_Generator(int width, int height, int ccnumber) {
+	public First_Generator(int width, int height, int ccnumber) {
+		
 		l = this.generate(width, height, ccnumber);
+	}
+
+	public Level getL() {
+		return l;
+	}
+
+	public void setL(Level l) {
+		this.l = l;
 	}
 
 	/**
@@ -199,5 +208,7 @@ public class First_Generator implements Generator {
 	}
 
 	public static void main(String[] args) {
+		First_Generator f = new First_Generator(6, 6, 2);
+		PhineLoopsMainGUI.displaySolving(f.l);
 	}
 }

@@ -37,7 +37,7 @@ public class FileCreator {
     }
 
     public static void write(Level lvl, String filename) {
-        write(lvl.getGrid(), filename);
+    	write(lvl.getGrid(), filename);
     }
 
 }
