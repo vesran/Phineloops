@@ -6,7 +6,6 @@ import view.pieces.PieceDrawing;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -132,16 +131,15 @@ public abstract class Piece {
 	/**
 	 * Instantiates a visual representation of a Piece for view part in MVC. Visual can be based on files.
 	 * @return visual representation of a Piece
-	 * @throws FileNotFoundException 
 	 */
-	public abstract PieceDrawing createDrawing() throws FileNotFoundException;
+	public abstract PieceDrawing createDrawing();
 
 	/**
 	 * @return the number of Pieces that are linked to the current Piece
 	 */
 	public abstract int numberOfConnection();
 	
-	public abstract int numbeOfPossibleConnection();
+	public abstract int numberOfPossibleConnection();
 	/**
 	 * @param orientation The direction of the piece which will be checked if the
 	 *                    current piece is connected to it
@@ -150,27 +148,30 @@ public abstract class Piece {
 	 */
 	public abstract boolean isConnectedTo(Orientation orientation);
 
-	public Object clone() {
+	public Object clone() throws CloneNotSupportedException {
 		
 		if(this instanceof T) {
 			return new T(this.orientation,this.line_number,this.column_number) ;
 		}
-		if(this instanceof L) {
+		else if(this instanceof L) {
 			return new L(this.orientation,this.line_number,this.column_number) ;
 		}
-		if(this instanceof Bar) {
+		else if(this instanceof Bar) {
 			return new Bar(this.orientation,this.line_number,this.column_number) ;
 		}
-		if(this instanceof Circle) {
+		else if(this instanceof Circle) {
 			return new Circle(this.orientation,this.line_number,this.column_number) ;
 		}
-		if(this instanceof Empty) {
+		else if(this instanceof Empty) {
 			return new Empty(this.orientation,this.line_number,this.column_number) ;
 		}
-		if(this instanceof X) {
+		else if(this instanceof X) {
 			return new X(this.orientation,this.line_number,this.column_number) ;
+		}else {
+			throw new CloneNotSupportedException() ; 
 		}
-		return null ; 
+		
+		
 		
 		
 	}

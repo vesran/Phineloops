@@ -23,6 +23,7 @@ public class Main {
 	private static Integer width = -1;
 	private static Integer height = -1;
 	private static Integer maxcc = -1;
+	private static Integer maxThread = -1;
 
 	private static void generate(int width, int height, String outputFile) throws IllegalArgumentException {
 		// generate grid and store it to outputFile...
@@ -39,7 +40,7 @@ public class Main {
 		Piece[][] outputGrid;
 		boolean solved;
 		// Solve the level
-		Csp solver = new Csp(inputGrid);
+		Csp solver = new Csp(inputGrid, maxcc.shortValue());
 		solved = solver.solving(Extend.noExtend);
 		// Save the solved level
 		outputGrid = solver.getMyLevelToSolve();
@@ -67,7 +68,8 @@ public class Main {
 		options.addOption("t", "threads", true, "Maximum number of solver threads. (Use only with --solve.)");
 		options.addOption("x", "nbcc", true, "Maximum number of connected components. (Use only with --generate.)");
 		options.addOption("G", "gui", true, "Run with the graphic user interface.");
-		options.addOption("GS", "guisolver", true, "Run with the graphic interface showing an exhaustive solver working.");
+		options.addOption("GS", "guisolver", true,
+				"Run with the graphic interface showing an exhaustive solver working.");
 		options.addOption("h", "help", false, "Display this help");
 		
 		try {
@@ -93,6 +95,20 @@ public class Main {
 				inputFile = cmd.getOptionValue("s");
 				if (!cmd.hasOption("o"))
 					throw new ParseException("Missing mandatory --output argument.");
+				if (cmd.hasOption("t")) {
+					try {
+						Integer max = Integer.valueOf(cmd.getOptionValue("t"));
+						if (max.intValue() >= 1 && max.intValue() <= 4) {
+							maxThread = max;
+						} else {
+							throw new ParseException("Must be a integer 1 to 4");
+						}
+					} catch (NumberFormatException e) {
+						throw new ParseException("Must be a integer 1 to 4");
+					}
+				} else {
+					maxThread = 1;
+				}
 				outputFile = cmd.getOptionValue("o");
 				boolean solved = solve(inputFile, outputFile);
 				System.out.println("SOLVED: " + solved);
@@ -101,18 +117,16 @@ public class Main {
 				inputFile = cmd.getOptionValue("c");
 				boolean solved = check(inputFile);
 				System.out.println("SOLVED: " + solved);
-
 			} else if (cmd.hasOption("G")) {
 				System.out.println("Displaying GUI.");
 				inputFile = cmd.getOptionValue("G");
 				PhineLoopsMainGUI.display(new Level(FileReader.getGrid(inputFile, " ")));
 			} else if (cmd.hasOption("GS")) {
-				System.out.println("Displaying solver working. The solver continues to work even if the window has been closed");
+				System.out.println(
+						"Displaying solver working. The solver continues to work even if the window has been closed");
 				inputFile = cmd.getOptionValue("GS");
 				PhineLoopsMainGUI.displaySolving(new Level(FileReader.getGrid(inputFile, " ")));
-			}
-
-			else {
+			} else {
 				throw new ParseException(
 						"You must specify at least one of the following options: -generate -check -solve ");
 			}

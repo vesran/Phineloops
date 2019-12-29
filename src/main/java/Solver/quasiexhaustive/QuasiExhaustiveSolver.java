@@ -89,7 +89,6 @@ public class QuasiExhaustiveSolver {
             while (!this.m_stack.isEmpty() && this.entireRotation(this.m_stack.peek())) {
                 this.goBack();
             }
-
             this.setToBestOrientation(this.m_stack.peek());
 
             // Go back in the stack if any conflict in the current situation appears

@@ -73,12 +73,7 @@ public class LevelDrawing {
                 Piece currentPiece = this.m_model.getGrid()[i][j];
                 // Adding image view for each non empty piece
                 if (currentPiece.getId() != 0) {
-                    try {
-						iv = currentPiece.createDrawing();
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+                    iv = currentPiece.createDrawing();
                     this.setOrientation(iv, currentPiece.getOrientation());
 
                     // Dynamic resizing of pieces

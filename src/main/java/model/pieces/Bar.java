@@ -22,13 +22,11 @@ public class Bar extends Piece {
 		super(orientation, line_number, column_number);
 		this.id = 2;
 		this.numberOfOrientations = 2;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void translation(Side side) {
 		int oldOrientation = this.orientation;
-		// TODO Auto-generated method stub
 		if (this.orientation == 1)
 			this.orientation = 0;
 		else
@@ -81,8 +79,7 @@ public class Bar extends Piece {
 
 	@Override
 	public boolean connectedAll() {
-		// TODO Auto-generated method stub
-		return this.numberOfConnection() == this.numbeOfPossibleConnection();
+		return this.numberOfConnection() == this.numberOfPossibleConnection();
 	}
 
 	@Override
@@ -102,8 +99,7 @@ public class Bar extends Piece {
 	}
 
 	@Override
-	public int numbeOfPossibleConnection() {
-		// TODO Auto-generated method stub
+	public int numberOfPossibleConnection() {
 		return 2;
 	}
 

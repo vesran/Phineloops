@@ -109,7 +109,7 @@ public class L extends Piece {
 	@Override
 	public boolean connectedAll() {
 		// TODO Auto-generated method stub
-		return this.numberOfConnection() == this.numbeOfPossibleConnection();
+		return this.numberOfConnection() == this.numberOfPossibleConnection();
 	}
 
 	@Override
@@ -134,7 +134,7 @@ public class L extends Piece {
 		return str;
 	}
 	@Override
-	public int numbeOfPossibleConnection() {
+	public int numberOfPossibleConnection() {
 		// TODO Auto-generated method stub
 		return 2;
 	}
