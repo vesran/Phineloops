@@ -1,7 +1,6 @@
 package model;
 
 import model.enumtype.Orientation;
-import model.pieces.L;
 import model.pieces.Piece;
 
 public class Level {
@@ -85,14 +84,6 @@ public class Level {
 		return true;
 	}
 
-	public boolean insolvent() {
-		for (int i = 0; i < this.height; i++)
-			for (int j = 0; j < grid.length; j++) {
-				
-			}
-		return true;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder strb = new StringBuilder();
@@ -115,25 +106,4 @@ public class Level {
 		return strb.toString();
 	}
 
-	private static void gridTest() {
-		Piece[][] grid = new Piece[2][3];
-		grid[0][0] = new L(1, 0, 0);
-		grid[0][1] = new L(2, 0, 1);
-		grid[0][2] = new L(0, 0, 2);
-		grid[1][0] = new L(0, 1, 0);
-		grid[1][1] = new L(3, 1, 1);
-		grid[1][2] = new L(0, 1, 2);
-
-		Level lvl = new Level(grid);
-		lvl.init_neighbors();
-
-		for (int k = 0; k < lvl.getGrid().length; k++) {
-			for (int l = 0; l < lvl.getGrid()[0].length; l++) {
-				System.out.println(k + " -- " + l + " orientation=" + lvl.getGrid()[k][l] + " neighbors" + lvl.getGrid()[k][l].getNeighbor());
-			}
-		}
-
-		System.out.println(lvl);
-		System.out.println(lvl.checkGrid());
-	}
 }

@@ -3,7 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.mockito.internal.matchers.InstanceOf;
 
 import model.pieces.Bar;
 import model.pieces.Circle;
@@ -15,16 +14,19 @@ import model.pieces.X;
 import view.PhineLoopsMainGUI;
 
 public class First_Generator implements Generator {
-	public int ccnumber;
-	Level l;
+	private Level l;
 
-	public First_Generator(int width, int height, int ccnumber) {
+	protected First_Generator(int width, int height, int ccnumber) {
 		l = this.generate(width, height, ccnumber);
-
-		this.ccnumber = ccnumber;
 	}
 
-	public int checkCc(Noeud m[][], int width, int height) {
+	/**
+	 * @param m grid of noeuds
+	 * @param width of the grid
+	 * @param height of the grid
+	 * @return the number of connected component 
+	 */
+	protected int checkCc(Noeud m[][], int width, int height) {
 		ArrayList<Integer> r = new ArrayList<Integer>();
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++) {
@@ -38,12 +40,16 @@ public class First_Generator implements Generator {
 	@Override
 	public Level generate(int width, int height, int ccnumber) {
 		Level l = new Level(width, height);
-		int x, y, z, w, h;
-		int p = 1;
+		ArrayList<Noeud> map0 = new ArrayList<Noeud>();
+		ArrayList<Noeud> map1 = new ArrayList<Noeud>();
+		int x, y, z;
+		for (int i = 0; i < width; i++)
+			for (int j = 0; j < height; j++)
+				for(int e=0; e<2;e++) {
+					map0.add(new Noeud(i, j, e));
+				}
 		int e = 1;
-		w = width - 1;
-		h = height - 1;
-		int c = h * width + w * height;
+		System.out.println(map0.size()+" "+map1.size());
 		Random random = new Random();
 		Noeud m[][] = new Noeud[width][height];
 		for (int i = 0; i < width; i++)
@@ -92,21 +98,22 @@ public class First_Generator implements Generator {
 		}
 //		this.createEmpty(m, height, width);
 		while (this.checkCc(m, width, height) > ccnumber) {
-			x = random.nextInt(width);
-			y = random.nextInt(height);
-			z = random.nextInt(4);
-
+			Noeud element = null;
+			int k = random.nextInt(map0.size());
+				element = map0.get(k);
+				map0.remove(element);
+			x = element.x;
+			y=element.y;
+			z= element.pere;
 			if (z == 0 && x > 0) {
 				if (!(m[x][y].find() == m[x - 1][y].find())) {
 					m[x - 1][y].union(m[x][y].pere, m, width, height);
 					m[x - 1][y].murs.replace(2, true);
 					m[x][y].murs.replace(0, true);
-					c--;
 				}
 			} else if (z == 1 && y + 1 < height) {
 				if (!(m[x][y].find() == m[x][y + 1].find())) {
 					m[x][y + 1].union(m[x][y].pere, m, width, height);
-					c--;
 					m[x][y].murs.replace(1, true);
 					m[x][y + 1].murs.replace(3, true);
 				}
@@ -114,30 +121,29 @@ public class First_Generator implements Generator {
 
 				if (!(m[x][y].find() == m[x + 1][y].find())) {
 					m[x + 1][y].union(m[x][y].pere, m, width, height);
-					c--;
 					m[x][y].murs.replace(2, true);
 					m[x + 1][y].murs.replace(0, true);
-				}
+					}
 
 			} else {
 				if (y > 0)
 					if (!(m[x][y].find() == m[x][y - 1].find())) {
 						m[x][y - 1].union(m[x][y].pere, m, width, height);
-						c--;
 						m[x][y].murs.replace(3, true);
 						m[x][y - 1].murs.replace(1, true);
 					}
 			}
-
 		}
 		System.out.println();
 		for (int i = 0; i < width; i++)
-			for (int j = 0; j < height; j++)
+			for (int j = 0; j < height; j++) {
 				l.grid[i][j] = this.guessPiece(m[i][j]);
+				System.out.println(l.grid[i][j]);
+				}
 		return l;
 	}
 
-	public void createEmpty(Noeud m[][], int height, int width) {
+	private <T extends ObjectOfMaze> void createEmpty(T m[][], int height, int width) {
 		Random random = new Random();
 		boolean b = false;
 		int number = random.nextInt(height * width / 8);
@@ -172,16 +178,7 @@ public class First_Generator implements Generator {
 		}
 	}
 
-	public int sizeOfConnexcomposant(Noeud m[][], int height, int width, Noeud noeud) {
-		int size = 0;
-		for (int i = 0; i < width; i++)
-			for (int j = 0; j < height; j++)
-				if (m[i][j].pere == noeud.pere && noeud != m[i][j])
-					size++;
-		return size;
-	}
-
-	public Piece guessPiece(Noeud noeud) {
+	private Piece guessPiece(Noeud noeud) {
 
 		switch (noeud.numberOfNeighbors()) {
 		case 4:
@@ -202,7 +199,8 @@ public class First_Generator implements Generator {
 	}
 
 	public static void main(String[] args) {
-		First_Generator f = new First_Generator(5, 7, 3);
-		PhineLoopsMainGUI.display(f.l);
+		First_Generator f = new First_Generator(12,12 , 4);
+		PhineLoopsMainGUI.displaySolving(f.l, solver);
+		System.out.println("done");
 	}
 }

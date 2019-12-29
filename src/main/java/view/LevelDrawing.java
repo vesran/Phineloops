@@ -1,5 +1,7 @@
 package view;
 
+import java.io.FileNotFoundException;
+
 import controller.RotationController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -64,14 +66,19 @@ public class LevelDrawing {
      * @param scene Scene that contains all elements.
      */
     public void draw(GridPane grid, Scene scene) {
-        PieceDrawing iv;
+        PieceDrawing iv = null;
 
         for (int i = 0; i < this.m_model.getGrid().length; i++) {
             for (int j = 0; j < this.m_model.getGrid()[0].length; j++) {
                 Piece currentPiece = this.m_model.getGrid()[i][j];
                 // Adding image view for each non empty piece
                 if (currentPiece.getId() != 0) {
-                    iv = currentPiece.createDrawing();
+                    try {
+						iv = currentPiece.createDrawing();
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
                     this.setOrientation(iv, currentPiece.getOrientation());
 
                     // Dynamic resizing of pieces

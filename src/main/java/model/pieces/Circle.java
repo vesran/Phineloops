@@ -5,7 +5,7 @@ import model.enumtype.Side;
 import view.pieces.CirclePieceDrawing;
 import view.pieces.PieceDrawing;
 
-import java.util.Collections;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class Circle extends Piece {
@@ -20,7 +20,6 @@ public class Circle extends Piece {
 	public Circle(int orientation, int line_number, int column_number) {
 		super(orientation, line_number, column_number);
 		this.id = 1;
-		this.numberOfOrientations = 4;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -45,7 +44,7 @@ public class Circle extends Piece {
 	}
 
 	@Override
-	public PieceDrawing createDrawing() {
+	public PieceDrawing createDrawing() throws FileNotFoundException {
 		return new CirclePieceDrawing(this);
 	}
 
@@ -113,21 +112,11 @@ public class Circle extends Piece {
 		// TODO Auto-generated method stub
 		return 1;
 	}
-	
 
 	@Override
 	public List<Orientation> orientatedTo() {
-		if (this.orientation == 0) {
-			return Collections.singletonList(Orientation.NORTH);
-		} else if (this.orientation == 1) {
-			return Collections.singletonList(Orientation.EAST);
-		} else if (this.orientation == 2) {
-			return Collections.singletonList(Orientation.SOUTH);
-		} else if (this.orientation == 3){
-			return Collections.singletonList(Orientation.WEST);
-		} else {
-			return Collections.emptyList();
-		}
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

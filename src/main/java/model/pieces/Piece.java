@@ -6,6 +6,7 @@ import view.pieces.PieceDrawing;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -105,7 +106,6 @@ public abstract class Piece {
 	}
 
 	public HashMap<Orientation, Piece> init_neighbors() {// � travailler
-
 		return neighbor;
 	}
 
@@ -132,8 +132,9 @@ public abstract class Piece {
 	/**
 	 * Instantiates a visual representation of a Piece for view part in MVC. Visual can be based on files.
 	 * @return visual representation of a Piece
+	 * @throws FileNotFoundException 
 	 */
-	public abstract PieceDrawing createDrawing();
+	public abstract PieceDrawing createDrawing() throws FileNotFoundException;
 
 	/**
 	 * @return the number of Pieces that are linked to the current Piece
