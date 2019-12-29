@@ -366,7 +366,10 @@ public class Csp implements Solving {
 		}
 		return retur;
 	}
-
+	 /**
+	    * Method to invoke to create a model with constraint and a search heuristic
+	    * @return the model
+	    */
 	public Model createModel(short search, Extend extend) {
 		BoolVar[] orientation = null;
 		switch (search) {
