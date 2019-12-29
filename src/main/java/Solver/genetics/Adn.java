@@ -18,6 +18,13 @@ import model.pieces.Empty;
 import model.pieces.Piece;
 import model.pieces.X;
 
+
+/**
+ *  @author Karim Amrouche
+ * @author Bilal Khaldi
+ * @author Yves Tran
+ * Class who represents a solution with a strategy of hill climbing(genetic algorithm)
+ */
 public class Adn implements Cloneable {
 	private Piece[][] m_grid;
 	private int m_fitness;
@@ -26,7 +33,11 @@ public class Adn implements Cloneable {
 	private ArrayList<Piece> m_goodOrientation;
 	private ArrayList<ArrayList<Piece[][]>> mySolutions;
 	private Random m_myRandom;
-
+	
+	
+	/**
+	 * Construct an Adn from a grid a divide the global grid to small grid 
+	 */
 	public Adn(Piece[][] myAdn) {
 		this.m_grid = myAdn;
 		new Level(this.m_grid).init_neighbors();
@@ -35,7 +46,6 @@ public class Adn implements Cloneable {
 		mySolutions = new ArrayList<ArrayList<Piece[][]>>();
 		m_myRandom = new Random();
 		short nbIter = 0;
-		Csp moncsp = null;
 		int divide = 0;
 		switch (this.m_grid.length) {
 		case 8:
@@ -73,22 +83,6 @@ public class Adn implements Cloneable {
 								+ nbIterj * (m_grid.length / divide)];
 					}
 				}
-			//	moncsp = new Csp(tabsem);
-			//	this.mySolutions.add(moncsp.getAllSolutions((Extend.allExtend)));
-				/*if (i == 0 && j == 0) {
-					ArrayList<Piece[][]> a = moncsp.getAllSolutions((Extend.northWest));
-				} else if (i + m_grid.length / divide >= m_grid.length && j + m_grid.length / divide >= m_grid.length) {
-					ArrayList<Piece[][]> a = moncsp.getAllSolutions((Extend.southEast));
-					this.mySolutions.add(a);
-				} else if (i == 0 && j + m_grid.length / divide >= m_grid.length) {
-					ArrayList<Piece[][]> a = moncsp.getAllSolutions((Extend.northEast));
-					this.mySolutions.add(a);
-				} else if (i != 0 && j == 0) {
-					this.mySolutions.add(moncsp.getAllSolutions((Extend.west)));
-				} else {
-					this.mySolutions.add(moncsp.getAllSolutions((Extend.allExtend)));
-					
-				}*/
 				nbIterj++;
 			}
 			nbIter++;
@@ -121,9 +115,11 @@ public class Adn implements Cloneable {
 				}
 			}
 		}
-		this.calSolution();
 	}
 
+	/**
+	 * Construct an Adn from an existing Adn(to avoid all computing for the fitness etc ...)
+	 */
 	public Adn(Piece[][] myAdn, int fitness, int goal, ArrayList<ArrayList<Piece[][]>> array) {
 		this.m_grid = myAdn;
 		this.m_fitness = fitness;
@@ -142,7 +138,9 @@ public class Adn implements Cloneable {
 			}
 		}
 	}
-
+	/**
+	 * Update the fitness of the Adn
+	 */
 	public void updateFitness() {
 		new Level(this.m_grid).init_neighbors();
 		int fitness = 0;
@@ -170,7 +168,8 @@ public class Adn implements Cloneable {
 			return;
 		}
 		Piece selectedPiece = this.m_wrongOrientation.get(index);
-		Class myClass = m_grid[selectedPiece.getLine_number()][selectedPiece.getColumn_number()].getClass();
+		Class<? extends Piece> myClass = m_grid[selectedPiece.getLine_number()][selectedPiece.getColumn_number()]
+				.getClass();
 		short orientationMax = 0;
 		switch (myClass.getName()) {
 		case "model.pieces.Bar":
@@ -186,13 +185,6 @@ public class Adn implements Cloneable {
 		}
 		switch (strategie) {
 		case 0:
-			/*
-			 * int nbVoisin = 0; short orientation = (short) selectedPiece.getOrientation();
-			 * for (int i = 0; i <= orientationMax; i++) { selectedPiece.setOrientation(i);
-			 * new Level(this.m_grid).init_neighbors(); int nb =
-			 * selectedPiece.numberOfConnection(); if (nb > nbVoisin) { nbVoisin = nb;
-			 * orientation = (short) i; } } selectedPiece.setOrientation(orientation);
-			 */
 			for (int i = 0; i < this.mySolutions.size(); i++) {
 				Piece[][] temp = this.mySolutions.get(i).get(this.m_myRandom.nextInt(this.mySolutions.get(i).size()));
 				for (int z = 0; z < temp.length; z++) {
@@ -223,7 +215,9 @@ public class Adn implements Cloneable {
 			System.out.println("Finish");
 		new Level(this.m_grid).init_neighbors();
 	}
-
+	/**
+	 * Mutate the Adn
+	 */
 	public void mutation() {
 		int nbPiece = 0;
 		if (this.m_wrongOrientation.size() > 0) {
@@ -234,7 +228,7 @@ public class Adn implements Cloneable {
 		int index = this.m_myRandom.nextInt(nbPiece);
 		Piece selectedPiece = null;
 		HashMap<Orientation, Piece> map = this.m_wrongOrientation.get(index).getNeighbor();
-		List<Orientation> keys = new ArrayList(map.keySet());
+		List<Orientation> keys = new ArrayList<Orientation>(map.keySet());
 		int nbNeigh = keys.size();
 		int nbTentative = 0;
 		while (selectedPiece == null) {
@@ -256,7 +250,8 @@ public class Adn implements Cloneable {
 		if (selectedPiece == null) {
 			selectedPiece = this.m_wrongOrientation.get(index);
 		}
-		Class<? extends Piece> myClass = m_grid[selectedPiece.getLine_number()][selectedPiece.getColumn_number()].getClass();
+		Class<? extends Piece> myClass = m_grid[selectedPiece.getLine_number()][selectedPiece.getColumn_number()]
+				.getClass();
 		short orientationMax = 0;
 		switch (myClass.getName()) {
 		case "model.pieces.Bar":
@@ -299,12 +294,11 @@ public class Adn implements Cloneable {
 		}
 		return new Adn(myPieces, this.getFitness(), this.goal(), this.mySolutions);
 	}
-
+	/**
+	 * Return the goal to achieve
+	 */
 	public int goal() {
 		return this.m_fitnessGoal;
-	}
-
-	public void calSolution() {
 	}
 
 	public static void main(String[] args) throws CloneNotSupportedException {
@@ -327,8 +321,6 @@ public class Adn implements Cloneable {
 			Adn enfant = (Adn) monAdn.clone();
 			monAdn.crossMySelf((short) 0);
 			if (monAdn.getFitness() < enfant.getFitness()) {
-				// System.out.println(enfant.getFitness() + "----->" + enfant.goal() + "---->"
-				// + new Level(enfant.getGrid()).checkGrid());
 				monAdn = enfant;
 				if (enfant.getFitness() == enfant.goal()) {
 					System.out.println("");
