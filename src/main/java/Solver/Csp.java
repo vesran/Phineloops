@@ -7,6 +7,7 @@ import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.variables.BoolVar;
 import model.Level;
 import model.enumtype.Orientation;
+import model.io.FileReader;
 import model.pieces.Piece;
 
 
@@ -190,11 +191,12 @@ public class Csp implements Solving {
      */
 
 	public boolean solving(Extend extend) {
-		ParallelPortfolio portfolio = new ParallelPortfolio();
+		/*ParallelPortfolio portfolio = new ParallelPortfolio();
 		for (int i = 0; i < this.m_nbThreads; i++) {
 			portfolio.addModel(this.createModel((short) i, extend));
-		}
-		this.m_solved = portfolio.solve();
+		}*/
+		this.createModel((short)0, Extend.noExtend) ; 
+		this.m_solved = this.m_lastModel.getSolver().solve() ; 
 		if (this.m_solved) {
 			for (int i = 0; i < m_myLevelToSolve.length; i++) {
 				for (int j = 0; j < this.m_myLevelToSolve[0].length; j++) {
@@ -384,21 +386,21 @@ public class Csp implements Solving {
 			this.m_lastModel = new Model("My Problem");
 			this.initConstraint(extend);
 			orientation = this.ArrayTo1D();
-			this.m_lastModel.getSolver().setSearch((domOverWDegSearch(orientation)));
+			this.m_lastModel.getSolver().setSearch((minDomUBSearch(orientation)));
 			this.m_lastModel.getSolver().limitTime("65s");
 			return this.m_lastModel;
 		case 2:
 			this.m_lastModel = new Model("My Problem");
 			this.initConstraint(extend);
 			orientation = this.ArrayTo1D();
-			this.m_lastModel.getSolver().setSearch(minDomLBSearch(orientation));
+			this.m_lastModel.getSolver().setSearch((minDomUBSearch(orientation)));
 			this.m_lastModel.getSolver().limitTime("65s");
 			return this.m_lastModel;
 		case 3:
 			this.m_lastModel = new Model("My Problem");
 			this.initConstraint(extend);
 			orientation = this.ArrayTo1D();
-			this.m_lastModel.getSolver().setSearch(activityBasedSearch(orientation));
+			this.m_lastModel.getSolver().setSearch((minDomUBSearch(orientation)));
 			this.m_lastModel.getSolver().limitTime("65s");
 			return this.m_lastModel;
 		}
@@ -418,4 +420,6 @@ public class Csp implements Solving {
 		}
 		return orientation;
 	}
+	
+
 }
