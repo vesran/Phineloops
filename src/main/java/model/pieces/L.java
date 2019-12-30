@@ -21,7 +21,6 @@ public class L extends Piece {
 		super(orientation, line_number, column_number);
 		this.id = 5;
 		this.numberOfOrientations = 4;
-		// TODO Auto-generated constructor stub
 	}
 	/**
 	 *	Translates the orientation of L 
@@ -29,7 +28,6 @@ public class L extends Piece {
 	@Override
 	public void translation(Side side) {
 		int oldOrientation = this.orientation;
-		// TODO Auto-generated method stub
 		if (side == Side.RIGHT) {
 			if (this.orientation == 0)
 				this.orientation = 3;
@@ -108,7 +106,6 @@ public class L extends Piece {
 
 	@Override
 	public boolean connectedAll() {
-		// TODO Auto-generated method stub
 		return this.numberOfConnection() == this.numberOfPossibleConnection();
 	}
 
@@ -135,7 +132,6 @@ public class L extends Piece {
 	}
 	@Override
 	public int numberOfPossibleConnection() {
-		// TODO Auto-generated method stub
 		return 2;
 	}
 
