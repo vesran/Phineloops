@@ -41,6 +41,7 @@ public class PhineLoopsMainGUI extends Application {
 		level = lvl;
 
 		// Don't throw an exception, let the solver working
+		lvl.init_neighbors();
 		if (lvl.getGrid().length * lvl.getGrid()[0].length > 32*32) {
 			System.out.println("Grid too large to be loaded, must be 32x32 or lower. View has been cancelled but the solver is still running if any.");
 
