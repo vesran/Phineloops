@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -43,6 +44,9 @@ public class LevelDrawing {
         }
 
         this.grid.setBackground(new Background(new BackgroundFill(new Color(0.0, 0.0, 0.08, 0.4), CornerRadii.EMPTY, Insets.EMPTY)));
+//        this.grid.setBackground(new Background(new BackgroundImage(new Image("https://i.pinimg.com/originals/78/81/2f/78812fd262025d24e53452a1307bbb6d.png",700,700,false,true),
+//                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+//                BackgroundSize.DEFAULT)));
     }
 
     public GridPane getGridPane() {
