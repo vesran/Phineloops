@@ -3,10 +3,15 @@
 This java project is an assignment for the Java Avancé course at University Paris-Dauphine. It implements the InfinityLoop game with multiple functionalities (intelligent solver, GUI, visualizing solver working, etc.)
 The puzzle game shows a grid of tiles that can be connected to each others by a simple rotation. The aim is to find a correct orientation for each piece to connect them all.
 
+<p align="center">
+  <img src="./resources/bgd_screen.jpg" width="190">
+  <img src="./resources/green_screen.jpg" width="190">
+</p>
+
 ## Getting Started
 
 ### Functionalities
-* Generating random levels with customizable dimensions and connex composants
+* Generating random levels with customizable dimensions and connex components
 * Checking if the level is impossible to solve or not
 * Solving levels with multiple threads
 * Displaying GUI and playing the game
